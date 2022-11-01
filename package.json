@@ -1,0 +1,22 @@
+{
+  "name": "project_f8w2b_l7a2y_q9v6m",
+  "version": "1.0.0",
+  "description": "For the project, our group will be creating a parking lot management that oversees parking spaces, and allocates to vehicles. Unlike generic retail management which focuses on ordering, our application is an inventory tracker that features a parking log, a record of both vacant and occupied parking spaces, and updates instantaneously to ensure managers are able to gain insight of the usage of the parking spots. With the given information, and based on a given vehicle’s specifications, our application will be able to assign a designated parking spot for such vehicle, and contain information regarding both the vehicle and the vehicle owner. This includes the vehicle’s parking activities, and the vehicle owner’s identifications.",
+  "main": "app.js",
+  "scripts": {
+    "test": "test",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.students.cs.ubc.ca:CPSC304-2022W-T1/project_f8w2b_l7a2y_q9v6m.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.20"
+  },
+  "type": "module"
+}
