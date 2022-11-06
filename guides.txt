@@ -1,0 +1,3 @@
+### To run a sql script. For easy start can just set ###
+
+psql --username=<username> -f <directory to script>

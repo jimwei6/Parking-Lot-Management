@@ -1,22 +1,23 @@
 import express from "express";
 import morgan from "morgan";
-import dotenv from "dotenv";
-
-dotenv.config();
+import env from "./util/env.js";
+import apiRoutes from './routes/api.js';
 
 const app = express();
-const port = 3000;
+const port = env.port || 3000;
 
-app.use(morgan('short'));
+app.use(morgan('short')); // for logging
 
+//routes
+app.use('/api', apiRoutes);
 app.get('/', (req, res) => {
   res.json({
     message: "Hello World"
   })
 });
 
-app.listen(port, () => {
-  console.log(`App started on port ${port}`);
+app.get('*', (req, res) => {
+  res.status(404);
 });
 
 app.use((error, req, res, next) => {
@@ -24,4 +25,8 @@ app.use((error, req, res, next) => {
   res.json({
     error: error.message,
   });
+});
+
+app.listen(port, () => {
+  console.log(`App started on port ${port}`);
 });
