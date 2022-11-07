@@ -109,7 +109,7 @@ CREATE TABLE parkingSessions (
 	lotID int NOT NULL,
 	allottedTime int NOT NULL, 
 	isActive bool NOT NULL DEFAULT FALSE,
-	startTime int NOT NULL,
+	startTime TIMESTAMP WITH TIME ZONE  NOT NULL,
 	isCharging bool NOT NULL DEFAULT FALSE,
 	FOREIGN KEY (licensePlate) REFERENCES vehicle ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (spotID, lotID) REFERENCES parkingSpots(spotID, lotID) ON DELETE CASCADE ON UPDATE CASCADE
@@ -125,7 +125,7 @@ CREATE TABLE tickets (
 );
 
 CREATE TABLE parkingActivities (
-	timeStamp DATE,
+	timeStamp TIMESTAMP WITH TIME ZONE ,
 	licensePlate varchar(10) NOT NULL,
 	spotID int NOT NULL,
 	lotID int NOT NULL,
