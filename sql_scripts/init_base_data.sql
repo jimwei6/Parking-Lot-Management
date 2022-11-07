@@ -49,8 +49,7 @@ INSERT INTO parkingLots(lotID, capacity, postalCode, heightLimit) VALUES
   (5, 50, 'V6T1Z1', NULL); 
 
 
--- parking lot: (1) 1-50, (2) 51 - 100, (3) 101 - 125, (4) 126 - 150, (5) 151 - 200.
---              50 normal, vip, company, reserved
+-- parking lot: (1) 1-50, (2) 1 - 50, (3) 1 - 25, (4) 1 - 25, (5) 1 - 50.
 INSERT INTO parkingSpots(spotID, lotID, availableTime, spotType, height) VALUES 
   (1, 1, 7200, 'normal', NULL), (2, 1, 7200, 'normal', NULL), (3, 1, 7200, 'normal', NULL), (4, 1, 7200, 'normal', NULL), (5, 1, 7200, 'normal', NULL), -- p1
   (6, 1, 7200, 'normal', NULL), (7, 1, 7200, 'normal', NULL), (8, 1, 7200, 'normal', NULL), (9, 1, 7200, 'normal', NULL), (10, 1, 7200, 'normal', NULL),
