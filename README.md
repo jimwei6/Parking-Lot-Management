@@ -10,4 +10,4 @@ Given the complexity of administering an immense parking lot, our database will 
  
 ## Application Platform
  
-Following the recommendations of CPSC 304’s course instructors, our group will be using Oracle for the DBMS. However, as opposed to using Java and PHP, we decided to use React with TypeScript for the frontend, and Node.js for the backend - implementing a REST API to make changes to the database. 
+Following the recommendations of CPSC 304’s course instructors, our group will be using PostgreSQL for the DBMS. However, as opposed to using Java and PHP, we decided to use React with TypeScript for the frontend, and Node.js for the backend - implementing a REST API to make changes to the database. 
