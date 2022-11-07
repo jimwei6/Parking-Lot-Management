@@ -11,3 +11,13 @@ Given the complexity of administering an immense parking lot, our database will 
 ## Application Platform
  
 Following the recommendations of CPSC 304’s course instructors, our group will be using PostgreSQL for the DBMS. However, as opposed to using Java and PHP, we decided to use React with TypeScript for the frontend, and Node.js for the backend - implementing a REST API to make changes to the database. 
+
+
+
+## Commands ##
+
+Starting postgreSQL(mac): brew services start postgresql
+Accessing postgreSQL: psql --username=postgres
+Rebuild database: psql --username=postgres -f ./sql_scripts/rebuild_db.sql
+Run server: yarn dev
+Run client: yarn start
