@@ -33,16 +33,14 @@ const App = () => {
                 </Container>
             </Navbar>
             <Routes>
-                <Route path="" element={<ProfilePage/>}/>
                 <Route element={<RedirectRoute redirectCondition={isAuthenticated} redirectTo={home}/>}>
                     <Route path="login" element={<LoginPage/>}/>
                 </Route>
-                <Route element={<RedirectRoute redirectCondition={!isAuthenticated} redirectTo="/login"/>}>
-                    <Route path="profile" element={<ProfilePage/>}/>
+                <Route element={<RedirectRoute redirectCondition={!isAuthenticated} redirectTo="login"/>}>
+                    <Route index path="profile" element={<ProfilePage/>}/>
                     <Route path="vehicle/details" element={<VehicleDetailsPage/>}/>
                     <Route path="vehicle/create" element={<VehicleCreationPage/>}/>
                 </Route>
-                <Route path="*" element={<Navigate to={home} replace/>}/>
             </Routes>
         </div>
     );
