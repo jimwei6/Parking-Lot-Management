@@ -6,9 +6,6 @@ psql --username=<username> -f <directory to script>
 
 yarn dev
 
-### to start client (make sure you are in ./client)
-
-yarn start 
 
 ### Environment Variables ###
 PG_USER=
