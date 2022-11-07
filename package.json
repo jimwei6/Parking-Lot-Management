@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "test",
-    "dev": "yarn tsc && nodemon dist/app.js"
+    "dev": "yarn tsc && nodemon dist/app.js",
+    "start": "yarn --cwd ./client start"
   },
   "repository": {
     "type": "git",

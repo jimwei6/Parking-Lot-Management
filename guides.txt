@@ -13,13 +13,17 @@
   PG_REMOTE=<GET FROM JIM>
   PG_USE_REMOTE=<1 or 0 depending if you want to connect to free remote db>
 
-### To run a sql script. For easy start can just set ###
+### To rebuild database. ###
 
-psql --username=<username> -f <directory to script>
+psql --username=postgres -f ./sql_scripts/rebuild_db.sql
 
 ### to start server (make sure db is started and you are in base directory)
 
 yarn dev
+
+### start client (in cli) ###
+
+yarn start
 
 ### Environment Variables ###
 PG_USER=
