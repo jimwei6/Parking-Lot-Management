@@ -3,6 +3,7 @@ import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 
 interface AuthContextProps {
+    home: string;
     isAuthenticated: boolean;
     username: string;
     password: string;
@@ -16,6 +17,7 @@ export const AuthProvider = ({ children }: any) => {
     const [{ username, password }, setCookie, removeCookie] = useCookies(['username', 'password']);
     const [isAuthenticated, setIsAuthenticated] = React.useState(false);
     const navigate = useNavigate();
+    const home = '/profile';
 
     useEffect(() => {
         // TODO: make a request to the server to check if username and password in the cookie are correct
@@ -30,7 +32,7 @@ export const AuthProvider = ({ children }: any) => {
             setCookie('username', username, { path: '/' });
             setCookie('password', password, { path: '/' });
             setIsAuthenticated(true);
-            navigate('/profile');
+            navigate(home);
         }
     };
 
@@ -43,6 +45,7 @@ export const AuthProvider = ({ children }: any) => {
 
     return (
         <AuthContext.Provider value={{
+            home,
             isAuthenticated,
             username,
             password,

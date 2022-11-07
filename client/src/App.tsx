@@ -10,14 +10,14 @@ const RedirectRoute = ({ redirectCondition, redirectTo }: { redirectCondition: b
 }
 
 const App = () => {
-    const { username, isAuthenticated } = useAuth();
+    const { home, username, isAuthenticated } = useAuth();
     const { logout } = useAuth();
 
     return (
         <div className="d-flex flex-column justify-content-start vh-100">
             <Navbar expand="lg">
                 <Container>
-                    <Navbar.Brand as={Link} to="profile">PLM</Navbar.Brand>
+                    <Navbar.Brand as={Link} to={home}>PLM</Navbar.Brand>
                     <Navbar.Toggle/>
                     <Navbar.Collapse className="justify-content-end">
                         {isAuthenticated && (
@@ -34,7 +34,7 @@ const App = () => {
             </Navbar>
             <Routes>
                 <Route path="" element={<ProfilePage/>}/>
-                <Route element={<RedirectRoute redirectCondition={isAuthenticated} redirectTo="/profile"/>}>
+                <Route element={<RedirectRoute redirectCondition={isAuthenticated} redirectTo={home}/>}>
                     <Route path="login" element={<LoginPage/>}/>
                 </Route>
                 <Route element={<RedirectRoute redirectCondition={!isAuthenticated} redirectTo="/login"/>}>
@@ -42,6 +42,7 @@ const App = () => {
                     <Route path="vehicle/details" element={<VehicleDetailsPage/>}/>
                     <Route path="vehicle/create" element={<VehicleCreationPage/>}/>
                 </Route>
+                <Route path="*" element={<Navigate to={home} replace/>}/>
             </Routes>
         </div>
     );
