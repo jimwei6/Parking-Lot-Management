@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "test",
-    "dev": "nodemon app.js"
+    "dev": "yarn tsc && nodemon dist/app.js"
   },
   "repository": {
     "type": "git",
@@ -14,11 +14,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/node": "^18.11.9",
+    "@types/pg": "^8.6.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.20",
-    "pg": "^8.8.0"
+    "pg": "^8.8.0",
+    "typescript": "^4.8.4"
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "@types/express": "^4.17.14",
+    "@types/morgan": "^1.9.3"
+  }
 }

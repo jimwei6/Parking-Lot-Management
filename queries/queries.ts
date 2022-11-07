@@ -1,10 +1,10 @@
 import pool from '../util/dbConnect.js';
 
-function executeQuery(query) {
+function executeQuery(query: string): any {
   return pool.query(query).then(res => res.rows);
 }
 
-function getParkingLots() {
+function getParkingLots(): any {
   return executeQuery(`SELECT * FROM parkingLots`);
 }
 

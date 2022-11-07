@@ -1,4 +1,4 @@
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 dotenv.config();
 
 export default {
@@ -8,5 +8,6 @@ export default {
   PG_PASS: process.env.PG_PASS,
   PG_PORT: process.env.PG_PORT,
   PG_REMOTE: process.env.PG_REMOTE,
-  PG_USE_REMOTE: process.env.PG_USE_REMOTE
+  PG_USE_REMOTE: process.env.PG_USE_REMOTE,
+  PORT: process.env.PORT
 }
