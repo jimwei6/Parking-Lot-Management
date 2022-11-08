@@ -1,7 +1,7 @@
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FileEarmarkText, PencilSquare, TrashFill } from "react-bootstrap-icons";
+import { Icon } from "../components/Icon";
 
 export interface Vehicle {
     licensePlate: string;
@@ -64,23 +64,26 @@ export const VehicleListPage = () => {
                                                     {licensePlate}
                                                     <div className="ms-auto">
                                                         {/* TODO: Add route to session for vehicle */}
-                                                        <Link to={`/history/vehicle/${licensePlate}`}>
-                                                            <Button variant="blue">
-                                                                <FileEarmarkText/>
-                                                            </Button>
-                                                        </Link>
-                                                        <Link to={`/vehicle/update/${licensePlate}`}>
-                                                            <Button variant="blue">
-                                                                <PencilSquare/>
-                                                            </Button>
-                                                        </Link>
-                                                        <Button
+                                                        <Icon
+                                                            variant="blue"
+                                                            iconName="FileEarmarkText"
+                                                            link={`/vehicle/${licensePlate}/history`}>
+                                                            Click to view <strong>history</strong>
+                                                        </Icon>
+                                                        <Icon
+                                                            variant="blue"
+                                                            iconName="PencilSquare"
+                                                            link={`/vehicle/update/${licensePlate}`}>
+                                                            Click to <strong>update</strong> vehicle
+                                                        </Icon>
+                                                        <Icon
                                                             variant="red"
+                                                            iconName="TrashFill"
                                                             onClick={() => {
                                                                 handleDelete(licensePlate)
                                                             }}>
-                                                            <TrashFill/>
-                                                        </Button>
+                                                            Click to <strong>delete</strong> vehicle
+                                                        </Icon>
                                                     </div>
                                                 </div>
                                             </Card.Title>
