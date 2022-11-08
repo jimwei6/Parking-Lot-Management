@@ -1,7 +1,7 @@
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { PencilSquare, TrashFill } from "react-bootstrap-icons";
+import { FileEarmarkText, PencilSquare, TrashFill } from "react-bootstrap-icons";
 
 export interface Vehicle {
     licensePlate: string;
@@ -63,6 +63,12 @@ export const VehicleListPage = () => {
                                                 <div className="d-flex justify-content-start">
                                                     {licensePlate}
                                                     <div className="ms-auto">
+                                                        {/* TODO: Add route to session for vehicle */}
+                                                        <Link to={`/history/vehicle/${licensePlate}`}>
+                                                            <Button variant="blue">
+                                                                <FileEarmarkText/>
+                                                            </Button>
+                                                        </Link>
                                                         <Link to={`/vehicle/update/${licensePlate}`}>
                                                             <Button variant="blue">
                                                                 <PencilSquare/>
