@@ -63,7 +63,7 @@ export const VehicleListPage = () => {
                                                 <div className="d-flex justify-content-start">
                                                     {licensePlate}
                                                     <div className="ms-auto">
-                                                        <Link to={`/vehicle/edit/${licensePlate}`}>
+                                                        <Link to={`/vehicle/update/${licensePlate}`}>
                                                             <Button variant="blue">
                                                                 <PencilSquare/>
                                                             </Button>

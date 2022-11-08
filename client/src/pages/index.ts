@@ -1,5 +1,5 @@
 export { LoginPage } from './LoginPage';
 export { VehicleAddPage } from './VehicleAddPage'
 export { ProfilePage } from './ProfilePage'
-export { VehicleEditPage } from './VehicleEditPage'
+export { VehicleUpdatePage } from './VehicleUpdatePage'
 export { VehicleListPage } from './VehicleListPage'

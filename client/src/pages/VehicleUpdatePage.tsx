@@ -6,7 +6,7 @@ import { boolean, number, object, string } from "yup";
 import { FormikHelpers } from "formik/dist/types";
 import { Formik } from "formik";
 
-export const VehicleEditPage = () => {
+export const VehicleUpdatePage = () => {
     interface FormFields {
         model: string;
         height: string;
@@ -56,7 +56,7 @@ export const VehicleEditPage = () => {
         setPlugTypes(['Type 1', 'Type 2', 'Type 3']);
     }, []);
 
-    const handleEdit = (values: FormFields, actions: FormikHelpers<FormFields>) => {
+    const handleUpdate = (values: FormFields, actions: FormikHelpers<FormFields>) => {
         const { model, height, color, isElectric, plugType, permit } = values;
         console.log(model, height, color, isElectric, plugType, permit)
         const { setFieldError, setSubmitting } = actions;
@@ -70,7 +70,7 @@ export const VehicleEditPage = () => {
                 <Col xs lg="8" className="align-items-center">
                     <Formik
                         validationSchema={schema}
-                        onSubmit={handleEdit}
+                        onSubmit={handleUpdate}
                         initialValues={{
                             model: vehicle?.model || '',
                             height: vehicle?.height.toString() || '',
@@ -189,7 +189,7 @@ export const VehicleEditPage = () => {
                                         type="submit"
                                         style={{ width: "100px" }}
                                         disabled={isSubmitting}>
-                                        Edit
+                                        Update
                                     </Button>
                                 </div>
                             </Form>

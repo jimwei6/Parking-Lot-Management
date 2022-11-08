@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import { Link, Navigate, Outlet, Route, Routes } from "react-router-dom";
-import { LoginPage, ProfilePage, VehicleAddPage, VehicleEditPage, VehicleListPage } from "./pages";
+import { LoginPage, ProfilePage, VehicleAddPage, VehicleListPage, VehicleUpdatePage } from "./pages";
 import { useAuth } from "./contexts/AuthContext";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 
@@ -40,7 +40,7 @@ const App = () => {
                 <Route element={<RedirectRoute redirectCondition={!isAuthenticated} redirectTo="/login"/>}>
                     <Route path="/profile" element={<ProfilePage/>}/>
                     <Route path="/vehicles" element={<VehicleListPage/>}/>
-                    <Route path="/vehicle/edit/:licensePlate" element={<VehicleEditPage/>}/>
+                    <Route path="/vehicle/update/:licensePlate" element={<VehicleUpdatePage/>}/>
                     <Route path="/vehicle/add" element={<VehicleAddPage/>}/>
                 </Route>
                 <Route path="*" element={<Navigate to={home}/>}/>
