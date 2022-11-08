@@ -5,7 +5,7 @@ Extra Information:
 
 In addition, to allow for more interesting queries, we decided to make some changes:
 
-- one-to-one relationship of vechicleOwner and vehicle => one-to-many. 
+- one-to-one relationship of vechicleOwner and vehicle => one-to-many
 - Updated field types
     - Specifically made chars into varchars so varying data length can be added
     - Added type SERIAL (PostgreSQL) which is basically just an integer that auto increments for id creation of tickits and parkingSessions
