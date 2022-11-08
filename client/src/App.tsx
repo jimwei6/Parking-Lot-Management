@@ -53,6 +53,7 @@ const App = () => {
                 </Route>
                 <Route path="*" element={<Navigate to={home}/>}/>
             </Routes>
+            <div className="py-3"></div>
         </div>
     );
 }

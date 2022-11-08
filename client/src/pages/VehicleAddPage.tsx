@@ -112,7 +112,7 @@ export const VehicleAddPage = () => {
                                     <Form.Group as={Col} controlId="model">
                                         <Form.Label>Model</Form.Label>
                                         <Form.Select
-                                            placeholder="Enter Model"
+                                            placeholder="Select Model"
                                             value={values.model}
                                             onChange={handleChange}
                                             isValid={dirty && !errors.model}
@@ -130,13 +130,13 @@ export const VehicleAddPage = () => {
                                     <Form.Group as={Col} controlId="permit">
                                         <Form.Label>Permit</Form.Label>
                                         <Form.Select
-                                            placeholder="Enter Permit"
+                                            placeholder="Select Permit Type"
                                             value={values.permit}
                                             onChange={handleChange}
                                             isValid={dirty && !errors.permit}
                                             isInvalid={touched.permit && !!errors.permit}
                                         >
-                                            <option>Select a permit</option>
+                                            <option>Select a permit type</option>
                                             {permits.map((permit) => (
                                                 <option key={permit} value={permit}>{permit}</option>
                                             ))}
@@ -178,7 +178,7 @@ export const VehicleAddPage = () => {
                                             <Form.Group controlId="plugType">
                                                 <Form.Label>Plug Type</Form.Label>
                                                 <Form.Select
-                                                    placeholder="Enter Plug Type"
+                                                    placeholder="Select Plug Type"
                                                     value={values.plugType}
                                                     onChange={handleChange}
                                                     isValid={dirty && !errors.plugType}

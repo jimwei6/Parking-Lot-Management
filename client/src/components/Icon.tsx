@@ -9,6 +9,7 @@ interface IconProps extends icons.IconProps {
     iconName: keyof typeof icons;
     link?: string;
     onClick?: () => void;
+    buttonClassname?: string;
 }
 
 const Tool = ({ children, tooltip }: { children: any, tooltip?: any }) => {
@@ -19,12 +20,12 @@ const Href = ({ children, link }: { children: any, link?: string }) => {
     return link ? <Link to={link}>{children}</Link> : children
 }
 
-export const Icon = ({ variant, iconName, link, onClick, children, ...props }: IconProps) => {
+export const Icon = ({ variant, iconName, link, onClick, buttonClassname, children, ...props }: IconProps) => {
     const BootstrapIcon = icons[iconName];
     return (
         <Href link={link}>
             <Tool tooltip={children}>
-                <Button variant={variant} onClick={onClick}>
+                <Button variant={variant} onClick={onClick} className={buttonClassname}>
                     <BootstrapIcon {...props}/>
                 </Button>
             </Tool>

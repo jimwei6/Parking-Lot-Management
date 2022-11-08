@@ -1,0 +1,6 @@
+button.eye {
+    border-right: 1px solid var(--bs-gray-400) !important;
+    border-top: 1px solid var(--bs-gray-400) !important;
+    border-bottom: 1px solid var(--bs-gray-400) !important;
+    border-left: none !important;
+}

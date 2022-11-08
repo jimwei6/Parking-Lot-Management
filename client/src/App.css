@@ -11,7 +11,7 @@
     color: var(--bs-dark);
 }
 
-.btn-red svg:hover {
+.btn-red:hover svg {
     color: var(--bs-danger);
 }
 
@@ -26,6 +26,6 @@
     color: var(--bs-dark);
 }
 
-.btn-blue svg:hover {
+.btn-blue:hover svg {
     color: var(--bs-primary);
 }
