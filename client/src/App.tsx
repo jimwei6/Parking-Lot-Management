@@ -6,7 +6,7 @@ import { useAuth } from "./contexts/AuthContext";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 
 const RedirectRoute = ({ redirectCondition, redirectTo }: { redirectCondition: boolean, redirectTo: string }) => {
-    return redirectCondition ? <Navigate to={redirectTo} replace/> : <Outlet/>;
+    return redirectCondition ? <Navigate to={redirectTo}/> : <Outlet/>;
 }
 
 const App = () => {
@@ -33,14 +33,16 @@ const App = () => {
                 </Container>
             </Navbar>
             <Routes>
+                <Route path="/" element={<Navigate to={home}/>}/>
                 <Route element={<RedirectRoute redirectCondition={isAuthenticated} redirectTo={home}/>}>
-                    <Route path="login" element={<LoginPage/>}/>
+                    <Route path="/login" element={<LoginPage/>}/>
                 </Route>
-                <Route element={<RedirectRoute redirectCondition={!isAuthenticated} redirectTo="login"/>}>
-                    <Route index path="profile" element={<ProfilePage/>}/>
-                    <Route path="vehicle/details" element={<VehicleDetailsPage/>}/>
-                    <Route path="vehicle/create" element={<VehicleCreationPage/>}/>
+                <Route element={<RedirectRoute redirectCondition={!isAuthenticated} redirectTo="/login"/>}>
+                    <Route path="/profile" element={<ProfilePage/>}/>
+                    <Route path="/vehicle/details" element={<VehicleDetailsPage/>}/>
+                    <Route path="/vehicle/create" element={<VehicleCreationPage/>}/>
                 </Route>
+                <Route path="*" element={<Navigate to={home}/>}/>
             </Routes>
         </div>
     );

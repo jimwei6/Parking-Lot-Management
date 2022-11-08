@@ -15,7 +15,7 @@ const AuthContext = createContext({} as AuthContextProps);
 
 export const AuthProvider = ({ children }: any) => {
     const [{ username, password }, setCookie, removeCookie] = useCookies(['username', 'password']);
-    const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+    const [isAuthenticated, setIsAuthenticated] = React.useState(!!username);
     const navigate = useNavigate();
     const home = 'profile';
 
