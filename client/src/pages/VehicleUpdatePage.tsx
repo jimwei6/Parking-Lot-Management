@@ -87,7 +87,6 @@ export const VehicleUpdatePage = () => {
                               values,
                               touched,
                               errors,
-                              dirty,
                               isSubmitting
                           }) => (
                             <Form noValidate onSubmit={handleSubmit}>
@@ -99,7 +98,7 @@ export const VehicleUpdatePage = () => {
                                             placeholder="Enter height (mm)"
                                             value={values.height}
                                             onChange={handleChange}
-                                            isValid={dirty && !errors.height}
+                                            isValid={!errors.height}
                                             isInvalid={touched.height && !!errors.height}
                                         />
                                         <Form.Control.Feedback type="invalid">
@@ -112,7 +111,7 @@ export const VehicleUpdatePage = () => {
                                             placeholder="Enter Model"
                                             value={values.model}
                                             onChange={handleChange}
-                                            isValid={dirty && !errors.model}
+                                            isValid={!errors.model}
                                             isInvalid={touched.model && !!errors.model}
                                         >
                                             <option>Select a model</option>
@@ -132,7 +131,7 @@ export const VehicleUpdatePage = () => {
                                             placeholder="Enter Permit"
                                             value={values.permit}
                                             onChange={handleChange}
-                                            isValid={dirty && !errors.permit}
+                                            isValid={!errors.permit}
                                             isInvalid={touched.permit && !!errors.permit}
                                         >
                                             <option>Select a permit</option>
@@ -168,7 +167,7 @@ export const VehicleUpdatePage = () => {
                                                     placeholder="Enter Plug Type"
                                                     value={values.plugType}
                                                     onChange={handleChange}
-                                                    isValid={dirty && !errors.plugType}
+                                                    isValid={!errors.plugType}
                                                     isInvalid={touched.plugType && !!errors.plugType}
                                                 >
                                                     <option>Select a plug type</option>
