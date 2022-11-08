@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }: any) => {
     const [{ username, password }, setCookie, removeCookie] = useCookies(['username', 'password']);
     const [isAuthenticated, setIsAuthenticated] = React.useState(!!username);
     const navigate = useNavigate();
-    const home = '/profile';
+    const home = '/vehicles';
 
     useEffect(() => {
         // TODO: make a request to the server to check if username and password in the cookie are correct
