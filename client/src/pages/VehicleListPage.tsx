@@ -63,11 +63,10 @@ export const VehicleListPage = () => {
                                                 <div className="d-flex justify-content-start">
                                                     {licensePlate}
                                                     <div className="ms-auto">
-                                                        {/* TODO: Add route to session for vehicle */}
                                                         <Icon
                                                             variant="blue"
                                                             iconName="FileEarmarkText"
-                                                            link={`/vehicle/${licensePlate}/history`}>
+                                                            link={`/history`}>
                                                             Click to view <strong>history</strong>
                                                         </Icon>
                                                         <Icon

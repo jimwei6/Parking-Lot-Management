@@ -1,7 +1,14 @@
 import React from 'react';
 import './App.css';
 import { Link, Navigate, Outlet, Route, Routes } from "react-router-dom";
-import { LoginPage, ProfilePage, VehicleAddPage, VehicleListPage, VehicleUpdatePage } from "./pages";
+import {
+    LoginPage,
+    ParkingHistoryPage,
+    ProfilePage,
+    VehicleAddPage,
+    VehicleListPage,
+    VehicleUpdatePage
+} from "./pages";
 import { useAuth } from "./contexts/AuthContext";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 
@@ -42,6 +49,7 @@ const App = () => {
                     <Route path="/vehicles" element={<VehicleListPage/>}/>
                     <Route path="/vehicle/:licensePlate/update/" element={<VehicleUpdatePage/>}/>
                     <Route path="/vehicle/add" element={<VehicleAddPage/>}/>
+                    <Route path="/history" element={<ParkingHistoryPage/>}/>
                 </Route>
                 <Route path="*" element={<Navigate to={home}/>}/>
             </Routes>
