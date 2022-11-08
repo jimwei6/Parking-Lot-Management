@@ -14,10 +14,14 @@ Following the recommendations of CPSC 304’s course instructors, our group will
 
 
 
-## Commands ##
+## Commands 
 
 Starting postgreSQL(mac): brew services start postgresql
+
 Accessing postgreSQL: psql -U postgres -d postgres
+
 Rebuild database: psql -U postgres -d postgres -f ./sql_scripts/rebuild_db.sql
+
 Run server: yarn dev
+
 Run client: yarn start
