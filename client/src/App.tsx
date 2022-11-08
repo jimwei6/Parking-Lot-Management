@@ -2,7 +2,9 @@ import React from 'react';
 import './App.css';
 import { Link, Navigate, Outlet, Route, Routes } from "react-router-dom";
 import {
+    AnalyticsPage,
     LoginPage,
+    NewSessionPage,
     ParkingHistoryPage,
     ProfilePage,
     VehicleAddPage,
@@ -29,9 +31,12 @@ const App = () => {
                     <Navbar.Collapse className="justify-content-end">
                         {isAuthenticated && (
                             <>
-                                <Nav.Link as={Link} to="vehicles">Vehicles</Nav.Link>
+                                <Nav.Link as={Link} to="/analytics" className="ps-lg-5">Analytics</Nav.Link>
+                                <Nav.Link as={Link} to="/session/add" className="ps-lg-5">New parking session</Nav.Link>
+                                <Nav.Link as={Link} to="/history" className="ps-lg-5">History</Nav.Link>
+                                <Nav.Link as={Link} to="/vehicles" className="ps-lg-5">Vehicles</Nav.Link>
                                 <NavDropdown title={username} id="user-dropdown" drop="down" className="px-lg-5">
-                                    <NavDropdown.Item as={Link} to="profile">Profile</NavDropdown.Item>
+                                    <NavDropdown.Item as={Link} to="/profile">Profile</NavDropdown.Item>
                                     <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
                                 </NavDropdown>
                             </>
@@ -45,6 +50,8 @@ const App = () => {
                     <Route path="/login" element={<LoginPage/>}/>
                 </Route>
                 <Route element={<RedirectRoute redirectCondition={!isAuthenticated} redirectTo="/login"/>}>
+                    <Route path="/analytics" element={<AnalyticsPage/>}/>
+                    <Route path="/session/add" element={<NewSessionPage/>}/>
                     <Route path="/profile" element={<ProfilePage/>}/>
                     <Route path="/vehicles" element={<VehicleListPage/>}/>
                     <Route path="/vehicle/:licensePlate/update/" element={<VehicleUpdatePage/>}/>
