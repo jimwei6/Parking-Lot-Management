@@ -73,7 +73,7 @@ export const VehicleListPage = () => {
                                                         <Icon
                                                             variant="blue"
                                                             iconName="PencilSquare"
-                                                            link={`/vehicle/update/${licensePlate}`}>
+                                                            link={`/vehicle/${licensePlate}/update`}>
                                                             Click to <strong>update</strong> vehicle
                                                         </Icon>
                                                         <Icon

@@ -40,7 +40,7 @@ const App = () => {
                 <Route element={<RedirectRoute redirectCondition={!isAuthenticated} redirectTo="/login"/>}>
                     <Route path="/profile" element={<ProfilePage/>}/>
                     <Route path="/vehicles" element={<VehicleListPage/>}/>
-                    <Route path="/vehicle/update/:licensePlate" element={<VehicleUpdatePage/>}/>
+                    <Route path="/vehicle/:licensePlate/update/" element={<VehicleUpdatePage/>}/>
                     <Route path="/vehicle/add" element={<VehicleAddPage/>}/>
                 </Route>
                 <Route path="*" element={<Navigate to={home}/>}/>
