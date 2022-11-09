@@ -3,33 +3,26 @@ import {
   Response,
   Router
 } from 'express';
-import util from '../util/index.js';
-import queries from '../queries/queries.js';
+import util from '../util/index';
+import queries from '../queries/queries';
 import createHttpError from 'http-errors';
 
 const router = Router();
+router.use(util.authenticateAccount()); // saves account info to res.locals
 
-router.get('/example', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
+router.get('/parkingLot', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
   const parkingLots = await queries.getParkingLots();
-  console.log(parkingLots);
   res.json({
-    parkingLots: parkingLots
+    result: parkingLots
   })
 }));
 
-router.get('/authenticate', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
-  const query: { username: string, password: string } = req.query as { username: string, password: string};
-  if(query.username && query.password) {
-    const hasAccount = await queries.getAccount(query.username, query.password);
-    if(hasAccount && hasAccount[0]) {
-      return res.json({
-        authenticated: true
-      })
-    } else {
-      next(createHttpError(401, 'Login credentials are incorrect'))
-    }
-  }
-  next(createHttpError(400, 'Missing uername or password'));
-}));
+router.get('/profile', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
+  const profile = await queries.getUserProfile(res.locals.account.username);
+  res.json({
+    ...profile,
+    email: res.locals.account.email
+  })
+}))
 
 export default router;

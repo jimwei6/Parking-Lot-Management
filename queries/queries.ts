@@ -8,15 +8,20 @@ function getParkingLots(): any {
   return executeQuery(`SELECT * FROM parkingLots`);
 }
 
-function getAccount(username: string, password?: string): any {
-  if(password) {
-    return executeQuery(`SELECT * FROM accounts WHERE username = $1 AND password = $2`, [username, password]);
-  } else {
-    return executeQuery(`SELECT * FROM accounts WHERE username = $1`, [username]);
-  }
+function getAccount(username: string, password: string): any {
+  return executeQuery(`SELECT * FROM accounts WHERE username = $1 AND password = $2`, [username, password]);
+}
+
+function getUserProfile(username: string) {
+  return executeQuery(`SELECT vo.name, vo.address, pd.phone, pd.pronouns, pd.gender, pd.dob
+    FROM vehicleOwner as vo 
+    JOIN personalDetails as pd 
+      ON pd.name = vo.name AND pd.address = vo.address
+    WHERE vo.username = $1 LIMIT 1`, [username]);
 }
 
 export default {
   getParkingLots,
-  getAccount
+  getAccount,
+  getUserProfile
 }
