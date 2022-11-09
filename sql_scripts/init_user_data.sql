@@ -20,14 +20,6 @@ INSERT INTO accounts(username, password, email) VALUES
     ('monser', 'twisomedynapa', 'kory_brakus@yahoo.com'),
     ('prankia', 'fc5p2d856n', 'mable.huel13@gmail.com');
 
--- permitType: vip, company, reserved, infant, accessibility
-INSERT INTO permitType(title) VALUES
-    ('vip'),
-    ('company'),
-    ('reserved'),
-    ('infant'),
-    ('accessibility');
-
 -- dob: YYYY-MM-DD
 INSERT INTO personalDetails(address, phoneNumber, name, pronouns, sex, dob) VALUES
     ('1567 Hastings St, Vancouver BC V6C 1B4 Canada', '604-339-4819', 'Nash Krajcik', 'He/Him/His', 'Male', '2004-08-20'),

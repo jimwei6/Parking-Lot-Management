@@ -12,10 +12,11 @@ function asyncHandler(asyncFunction: Function) {
 function authenticateAccount() {
   return asyncHandler(async (req: Request, res: Response, next: Function) => {
     const cookie: { username: string, password: string } = req.cookies as { username: string, password: string };
-    if(cookie.username) {
-      const account = queries.getAccount(cookie.username, cookie.password);
+    if(cookie.username && cookie.password) {
+      const account = await queries.getAccount(cookie.username, cookie.password);
       if(account && account[0]) {
         res.locals.account = account[0];
+        return next();
       }
     }
     return next(createHttpError(401, "Not authenticated"));

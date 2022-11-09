@@ -1,7 +1,9 @@
 import pool from '../util/dbConnect';
 
 function executeQuery(query: string, values: string[] = []): any {
-  return pool.query(query, values).then(res => res.rows);
+  return pool.query(query, values).then(res => res.rows).catch(error => {
+    console.error(error);
+  });
 }
 
 function getParkingLots(): any {

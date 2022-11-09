@@ -10,7 +10,7 @@ const config: PoolConfig = {
   port: env.PG_PORT ? parseInt(env.PG_PORT) : 5432
 }
 
-const pool: Pool = connectionString && env.PG_USE_REMOTE ?
+const pool: Pool = connectionString && env.PG_USE_REMOTE == '1' ?
   new pg.Pool({
     connectionString,
   }) : new pg.Pool(config)
