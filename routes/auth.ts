@@ -18,10 +18,10 @@ router.get('/', util.asyncHandler(async (req: Request, res: Response, next: Func
         authenticated: true
       })
     } else {
-      next(createHttpError(401, 'Login credentials are incorrect'))
+      return next(createHttpError(401, 'Login credentials are incorrect'))
     }
   }
-  next(createHttpError(400, 'Missing uername or password'));
+  next(createHttpError(400, 'Missing username or password'));
 }));
 
 export default router;
