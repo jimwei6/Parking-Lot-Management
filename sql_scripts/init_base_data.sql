@@ -1,3 +1,10 @@
+INSERT INTO permitType(title) VALUES
+    ('vip'),
+    ('company'),
+    ('reserved'),
+    ('infant'),
+    ('accessibility');
+
 INSERT INTO chargers(plugType) VALUES
     ('J1772'),
     ('Mennekes'),
