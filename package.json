@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "test",
-    "dev": "yarn tsc && nodemon dist/app.js",
+    "dev": "nodemon app.ts",
     "start": "yarn --cwd ./client start"
   },
   "repository": {
@@ -15,13 +15,17 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/http-errors": "^2.0.1",
     "@types/node": "^18.11.9",
     "@types/pg": "^8.6.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "http-errors": "^2.0.0",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.20",
     "pg": "^8.8.0",
+    "ts-node": "^10.9.1",
+    "tsc-node": "^0.0.3",
     "typescript": "^4.8.4"
   },
   "type": "module",
