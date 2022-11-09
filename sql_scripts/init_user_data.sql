@@ -1,7 +1,7 @@
 INSERT INTO accounts(username, password, email) VALUES
-    ('annonna', 'choermit', 'nash_krajcik@gmail.com'),
-    ('blicip', 'rentedwyebovi', 'joannie.bernhard69@hotmail.com'),
-    ('cepasca', 'odingleb', 'cristal7@hotmail.com'),
+    ('jim', 'jim', 'nash_krajcik@gmail.com'), -- jim
+    ('asad', 'asad', 'joannie.bernhard69@hotmail.com'), -- asad
+    ('richard', 'richard', 'cristal7@hotmail.com'), -- richard
     ('cohelm', 'ruperost', 'duncan.ratke95@gmail.com'),
     ('flyjean', 'ateudotr', 'alessandro.bernier@yahoo.com'),
     ('henrymb', 'tionat', 'emmet11@gmail.com'),
@@ -52,9 +52,9 @@ INSERT INTO personalDetails(address, phoneNumber, name, pronouns, sex, dob) VALU
     ('3536 Cardero St, Vancouver BC S4P 3Y2 Canada', '604-696-4478', 'Mable Huel', 'They/Them/Theirs', 'unspecified', '1994-11-27');
 
 INSERT INTO vehicleOwner(ownerID, username, address, name) VALUES
-    (1, 'annonna', '1567 Hastings St, Vancouver BC V6C 1B4 Canada', 'Nash Krajcik'),
-    (2, 'blicip', '4737 Cordova St, Vancouver BC V6B 1E1 Canada', 'Joannie Bernhard'),
-    (3, 'cepasca', '3622 Cardero St, Vancouver BC S4P 3Y2 Canada', 'Cristal Fung'),
+    (1, 'jim', '1567 Hastings St, Vancouver BC V6C 1B4 Canada', 'Nash Krajcik'),
+    (2, 'asad', '4737 Cordova St, Vancouver BC V6B 1E1 Canada', 'Joannie Bernhard'),
+    (3, 'richard', '3622 Cardero St, Vancouver BC S4P 3Y2 Canada', 'Cristal Fung'),
     (4, 'cohelm', '3002 Cordova St, Vancouver BC V6B 1E1 Canada', 'Duncan Ratke'),
     (5, 'flyjean', '978 St George St, Vancouver BC V5T 1Z7 Canada', 'Alessandro Bernier'),
     (6, 'henrymb', '122 Keith Road, North Vancouver BC V5T 2C1 Canada', 'Emmet Stone'),
@@ -123,7 +123,7 @@ INSERT INTO parkingSessions(licensePlate, spotID, lotID, allottedTime, isActive,
     ('144PKF', 17, 3, 3600, FALSE, '2022-11-03 10:06:08-08', FALSE), -- vip
     ('645RTM', 6, 3, 3600, FALSE, '2022-11-03 10:27:19-08', FALSE), -- accessibility, normal
     ('589WGN', 31, 5, 28800, FALSE, '2022-11-04 14:39:00-08', FALSE), -- company
-    ('CD7172', 12, 1, 7200, FALSE, '2022-11-04 20:18:49-08', FALSE), -- infant, normal
+    ('CD7172', 12, 1, 7200, FALSE, '2022-11-04 16:18:49-08', FALSE), -- infant, normal
     ('MBG091', 10, 2, 3600, FALSE, '2022-11-04 18:07:58-08', FALSE), -- electric, normal
     ('229KBX', 16, 1, 3600, TRUE, '2022-11-05 11:05:28-08', FALSE), -- normal
     ('VVF388', 10, 4, 10800, TRUE, '2022-11-05 11:27:01-08', FALSE), -- normal
@@ -142,26 +142,43 @@ INSERT INTO tickets(licensePlate, cost, paid, details) VALUES
     ('MBG091', 50, TRUE, NULL);
 
 INSERT INTO parkingActivities(timeStamp, licensePlate, spotID, lotID, activityType) VALUES
-    ('2022-11-01 06:29:10-08', 'CF346E', 21, 1, 'out'),
-    ('2022-11-01 07:05:35-08', 'CA762X', 2, 1, 'out'),
-    ('2022-11-01 09:19:05-08', 'DE310T', 5, 1, 'out'),
-    ('2022-11-01 10:01:09-08', 'XNK656', 31, 1, 'out'),
-    ('2022-11-01 15:30:03-08', 'KD978P', 46, 1, 'out'),
-    ('2022-11-02 05:59:48-08', '896REN', 16, 2, 'out'),
-    ('2022-11-02 07:23:36-08', '706SGL', 9, 2, 'out'),
-    ('2022-11-02 09:10:38-08', 'GDM839', 17, 2, 'out'),
-    ('2022-11-02 12:31:07-08', 'DPU597', 10, 2, 'out'),
-    ('2022-11-02 18:45:49-08', '985HDE', 48, 2, 'out'),
-    ('2022-11-03 10:00:15-08', 'DHR427', 11, 3, 'out'),
-    ('2022-11-03 10:05:39-08', '245AFC', 8, 3, 'out'),
-    ('2022-11-03 10:06:08-08', '144PKF', 17, 3, 'out'),
-    ('2022-11-03 10:27:19-08', '645RTM', 6, 3, 'out'),
-    ('2022-11-04 14:39:00-08', '589WGN', 31, 5, 'out'),
-    ('2022-11-04 20:18:49-08', 'CD7172', 12, 1, 'out'),
-    ('2022-11-04 18:07:58-08', 'MBG091', 10, 2, 'out'),
-    ('2022-11-05 11:05:28-08', '229KBX', 16, 1, 'in'),
-    ('2022-11-05 11:27:01-08', 'VVF388', 10, 4, 'in'),
-    ('2022-11-05 12:00:49-08', 'BH909R', 25, 4, 'in');
+    ('2022-11-01 06:29:10-08', 'CF346E', 21, 1, 'in'),
+    ('2022-11-01 06:59:29-08', 'CF346E', 21, 1, 'out'),
+    ('2022-11-01 07:05:35-08', 'CA762X', 2, 1, 'in'), -- ticket
+    ('2022-11-01 10:03:01-08', 'CA762X', 2, 1, 'out'),
+    ('2022-11-01 09:19:05-08', 'DE310T', 5, 1, 'in'),
+    ('2022-11-01 09:30:19-08', 'DE310T', 5, 1, 'out'),
+    ('2022-11-01 10:01:09-08', 'XNK656', 31, 1, 'in'), -- ticket
+    ('2022-11-01 20:25:39-08', 'XNK656', 31, 1, 'out'),
+    ('2022-11-01 15:30:03-08', 'KD978P', 46, 1, 'in'),
+    ('2022-11-01 15:48:40-08', 'KD978P', 46, 1, 'out'),
+    ('2022-11-02 05:59:48-08', '896REN', 16, 2, 'in'), -- ticket
+    ('2022-11-02 07:03:19-08', '896REN', 16, 2, 'out'),
+    ('2022-11-02 07:23:36-08', '706SGL', 9, 2, 'in'),
+    ('2022-11-02 07:48:01-08', '706SGL', 9, 2, 'out'),
+    ('2022-11-02 09:10:38-08', 'GDM839', 17, 2, 'in'), -- ticket
+    ('2022-11-02 10:39:58-08', 'GDM839', 17, 2, 'out'),
+    ('2022-11-02 12:31:07-08', 'DPU597', 10, 2, 'in'), -- ticket
+    ('2022-11-02 13:35:39-08', 'DPU597', 10, 2, 'out'),
+    ('2022-11-02 18:45:49-08', '985HDE', 48, 2, 'in'),
+    ('2022-11-02 19:57:28-08', '985HDE', 48, 2, 'out'),
+    ('2022-11-03 10:00:15-08', 'DHR427', 11, 3, 'in'),
+    ('2022-11-03 10:38:29-08', 'DHR427', 11, 3, 'out'),
+    ('2022-11-03 10:05:39-08', '245AFC', 8, 3, 'in'), -- ticket
+    ('2022-11-03 11:51:19-08', '245AFC', 8, 3, 'out'),
+    ('2022-11-03 10:06:08-08', '144PKF', 17, 3, 'in'),
+    ('2022-11-03 10:39:10-08', '144PKF', 17, 3, 'out'),
+    ('2022-11-03 10:27:19-08', '645RTM', 6, 3, 'in'),
+    ('2022-11-03 10:37:20-08', '645RTM', 6, 3, 'out'),
+    ('2022-11-04 14:39:00-08', '589WGN', 31, 5, 'in'), -- ticket
+    ('2022-11-04 23:59:03-08', '589WGN', 31, 5, 'out'),
+    ('2022-11-04 16:18:49-08', 'CD7172', 12, 1, 'in'), -- ticket
+    ('2022-11-04 19:20:20-08', 'CD7172', 12, 1, 'out'),
+    ('2022-11-04 18:07:58-08', 'MBG091', 10, 2, 'in'), -- ticket
+    ('2022-11-04 21:05:39-08', 'MBG091', 10, 2, 'out'),
+    ('2022-11-05 11:05:28-08', '229KBX', 16, 1, 'in'), -- active
+    ('2022-11-05 11:27:01-08', 'VVF388', 10, 4, 'in'), -- active
+    ('2022-11-05 12:00:49-08', 'BH909R', 25, 4, 'in'); -- active
 
 -- permitType: vip, company, reserved, infant, accessibility
 INSERT INTO permits(licensePlate, permitType) VALUES
