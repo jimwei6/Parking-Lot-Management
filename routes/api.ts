@@ -3,17 +3,26 @@ import {
   Response,
   Router
 } from 'express';
-import util from '../util/index.js';
-import queries from '../queries/queries.js';
+import util from '../util/index';
+import queries from '../queries/queries';
+import createHttpError from 'http-errors';
 
 const router = Router();
+router.use(util.authenticateAccount()); // saves account info to res.locals
 
-router.get('/example', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
+router.get('/parkingLot', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
   const parkingLots = await queries.getParkingLots();
-  console.log(parkingLots);
   res.json({
-    parkingLots: parkingLots
+    result: parkingLots
   })
 }));
+
+router.get('/profile', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
+  const profile = await queries.getUserProfile(res.locals.account.username);
+  res.json({
+    ...profile,
+    email: res.locals.account.email
+  })
+}))
 
 export default router;

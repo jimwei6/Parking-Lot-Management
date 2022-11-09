@@ -1,0 +1,31 @@
+/* custom react-bootstrap Button variants */
+
+.btn.btn-red {
+    background-color: transparent;
+    outline: none;
+    border: none;
+    color: var(--bs-danger);
+}
+
+.btn-red svg {
+    color: var(--bs-dark);
+}
+
+.btn-red:hover svg {
+    color: var(--bs-danger);
+}
+
+.btn.btn-blue {
+    background-color: transparent;
+    outline: none;
+    border: none;
+    color: var(--bs-primary);
+}
+
+.btn-blue svg {
+    color: var(--bs-dark);
+}
+
+.btn-blue:hover svg {
+    color: var(--bs-primary);
+}

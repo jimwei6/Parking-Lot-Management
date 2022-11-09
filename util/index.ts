@@ -1,7 +1,28 @@
+import createHttpError from 'http-errors';
+import queries from '../queries/queries';
+import {
+  Request,
+  Response
+} from 'express';
+
 function asyncHandler(asyncFunction: Function) {
-  return async (req: Express.Request, res: Express.Response, next: Function) => Promise.resolve(asyncFunction(req, res, next).catch(next));
+  return async (req: Request, res: Response, next: Function) => Promise.resolve(asyncFunction(req, res, next).catch(next));
+}
+
+function authenticateAccount() {
+  return asyncHandler(async (req: Request, res: Response, next: Function) => {
+    const cookie: { username: string, password: string } = req.cookies as { username: string, password: string };
+    if(cookie.username) {
+      const account = queries.getAccount(cookie.username, cookie.password);
+      if(account && account[0]) {
+        res.locals.account = account[0];
+      }
+    }
+    return next(createHttpError(401, "Not authenticated"));
+  });
 }
 
 export default {
-  asyncHandler
+  asyncHandler,
+  authenticateAccount
 }

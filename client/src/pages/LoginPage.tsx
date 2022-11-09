@@ -72,7 +72,7 @@ export const LoginPage = () => {
                                             <Form.Label>Password</Form.Label>
                                             <Form.Control
                                                 type="password"
-                                                placeholder="Enter Password"
+                                                placeholder="Enter password"
                                                 value={values.password}
                                                 onChange={handleChange}
                                                 isValid={dirty && !errors.password}

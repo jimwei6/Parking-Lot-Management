@@ -19,5 +19,9 @@
     "queries/**/*",
     "util/**/*",
     "routes/**/*",
-  ]
+  ],
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node",
+  }
 }

@@ -1,5 +1,5 @@
 import pg, { Pool, PoolConfig } from 'pg';
-import env from './env.js';
+import env from './env';
 
 const connectionString: string | undefined = env.PG_REMOTE;
 const config: PoolConfig = {

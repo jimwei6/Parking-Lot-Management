@@ -1,4 +1,8 @@
 export { LoginPage } from './LoginPage';
-export { VehicleCreationPage } from './VehicleCreationPage'
+export { VehicleAddPage } from './VehicleAddPage'
 export { ProfilePage } from './ProfilePage'
-export { VehicleDetailsPage } from './VehicleDetailsPage'
+export { VehicleUpdatePage } from './VehicleUpdatePage'
+export { VehicleListPage } from './VehicleListPage'
+export { ParkingHistoryPage } from './ParkingHistoryPage'
+export { AnalyticsPage } from './AnalyticsPage'
+export { NewSessionPage } from './NewSessionPage'
