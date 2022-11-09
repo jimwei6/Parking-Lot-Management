@@ -1,3 +1,5 @@
+REQUIRED: JOIN, INSERTION, UPDATE, DELETION, AGGREGATION GB, PROJECTION, SELECTION, AGGREGATION HV, DIVISION, NESTED AGG
+
 ROUTE: /auth
 METHOD: GET
 QUERY: username (string), password (string)
@@ -17,3 +19,4 @@ METHOD: GET
 EXPECT: username and password in cookies else 401
 RESPONSE:
   200: {name, address, phone, pronouns, gender, dob, email}
+FULFILLS: JOIN or PROJECTION
