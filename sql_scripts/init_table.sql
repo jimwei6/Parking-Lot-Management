@@ -1,4 +1,3 @@
-
 CREATE TABLE location (
 	postalCode char(6) PRIMARY KEY,
 	city varchar(256) NOT NULL,
@@ -22,7 +21,7 @@ CREATE TABLE manufacturer (
 );
 
 CREATE TABLE permitType (
-  title varchar(50) PRIMARY KEY -- vip, company, reserved, infant, accessibility 
+    title varchar(50) PRIMARY KEY -- vip, company, reserved, infant, accessibility
 );
 
 CREATE TABLE personalDetails (
@@ -47,15 +46,15 @@ CREATE TABLE vehicleOwner (
 	address varchar(100) NOT NULL,
 	name varchar(100) NOT NULL,
 	FOREIGN KEY (username) REFERENCES accounts(username) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (name, address) REFERENCES personalDetails(name, address) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (name, address) REFERENCES personalDetails(name, address) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE parkingLots (
-  lotID int PRIMARY KEY,
-  capacity int NOT NULL DEFAULT 10,
-  postalCode char(6) NOT NULL,	
-  heightLimit int,
-  FOREIGN KEY (postalCode) REFERENCES location(postalCode) ON DELETE CASCADE ON UPDATE CASCADE
+    lotID int PRIMARY KEY,
+    capacity int NOT NULL DEFAULT 10,
+    postalCode char(6) NOT NULL,
+    heightLimit int,
+    FOREIGN KEY (postalCode) REFERENCES location(postalCode) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE parkingSpots (
@@ -70,17 +69,17 @@ CREATE TABLE parkingSpots (
 
 CREATE TABLE accessibilitySpots (
 	spotID int,
-  lotID int, 
+    lotID int,
 	accessibilityType varchar(100) NOT NULL DEFAULT 'accessibility', -- infant, accessibility 
-  PRIMARY KEY (spotID, lotID),
+    PRIMARY KEY (spotID, lotID),
 	FOREIGN KEY (spotID, lotID) REFERENCES parkingSpots(spotID, lotID) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE electricSpots (
 	spotID int,
-  lotID int, 
+    lotID int,
 	plugType varchar(50) NOT NULL DEFAULT 'J1772',
-  PRIMARY KEY (spotID, lotID),
+    PRIMARY KEY (spotID, lotID),
 	FOREIGN KEY (spotID, lotID) REFERENCES parkingSpots(spotID, lotID) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (plugType) REFERENCES chargers ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -90,7 +89,7 @@ CREATE TABLE vehicle (
 	modelName varchar NOT NULL,
 	ownerID int NOT NULL,
 	height int NOT NULL,
-	color varchar(100) NOT NULL DEFAULT 'black',
+	color varchar(6) NOT NULL DEFAULT '000000', -- black
 	FOREIGN KEY (modelName) REFERENCES model(modelName) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (ownerID) REFERENCES vehicleOwner(ownerID) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -98,7 +97,7 @@ CREATE TABLE vehicle (
 CREATE TABLE electricVehicle (
 	licensePlate varchar(10) PRIMARY KEY,
 	plugType varchar(50) NOT NULL,
-  FOREIGN KEY (licensePlate) REFERENCES vehicle(licensePlate) ON DELETE CASCADE  ON UPDATE CASCADE,
+    FOREIGN KEY (licensePlate) REFERENCES vehicle(licensePlate) ON DELETE CASCADE  ON UPDATE CASCADE,
 	FOREIGN KEY (plugType) REFERENCES chargers(plugType) ON DELETE CASCADE  ON UPDATE CASCADE
 );
 
@@ -109,28 +108,28 @@ CREATE TABLE parkingSessions (
 	lotID int NOT NULL,
 	allottedTime int NOT NULL, 
 	isActive bool NOT NULL DEFAULT FALSE,
-	startTime TIMESTAMP WITH TIME ZONE  NOT NULL,
+	startTime TIMESTAMP WITH TIME ZONE NOT NULL,
 	isCharging bool NOT NULL DEFAULT FALSE,
 	FOREIGN KEY (licensePlate) REFERENCES vehicle ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (spotID, lotID) REFERENCES parkingSpots(spotID, lotID) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE tickets (
-  ticketNumber SERIAL PRIMARY KEY,
-  licensePlate varchar(10) NOT NULL,
-  cost int NOT NULL DEFAULT 10,
-  paid bool NOT NULL DEFAULT FALSE,
-  details varchar,
-  FOREIGN KEY (licensePlate) REFERENCES vehicle ON DELETE CASCADE ON UPDATE CASCADE
+    ticketNumber SERIAL PRIMARY KEY,
+    licensePlate varchar(10) NOT NULL,
+    cost int NOT NULL DEFAULT 10,
+    paid bool NOT NULL DEFAULT FALSE,
+    details varchar,
+    FOREIGN KEY (licensePlate) REFERENCES vehicle ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE parkingActivities (
-	timeStamp TIMESTAMP WITH TIME ZONE ,
+	timeStamp TIMESTAMP WITH TIME ZONE,
 	licensePlate varchar(10) NOT NULL,
 	spotID int NOT NULL,
 	lotID int NOT NULL,
 	activityType varchar(50) NOT NULL, -- 'in', 'out'
-  PRIMARY KEY (timeStamp, spotID, lotID),
+    PRIMARY KEY (timeStamp, spotID, lotID),
 	FOREIGN KEY (licensePlate) REFERENCES vehicle ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (spotID, lotID) REFERENCES parkingSpots(spotID, lotID) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -139,9 +138,5 @@ CREATE TABLE permits (
 	licensePlate varchar(10) PRIMARY KEY,
 	permitType varchar(50) NOT NULL,
 	FOREIGN KEY (licensePlate) REFERENCES vehicle(licensePlate) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (permitType) REFERENCES permitType(title) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (permitType) REFERENCES permitType(title) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
-
-
-
