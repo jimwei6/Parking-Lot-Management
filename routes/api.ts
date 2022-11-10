@@ -23,6 +23,8 @@ router.get('/profile', util.asyncHandler(async (req: Request, res: Response, nex
     ...profile,
     email: res.locals.account.email
   })
-}))
+}));
+
+
 
 export default router;

@@ -25,5 +25,6 @@ function getUserProfile(username: string) {
 export default {
   getParkingLots,
   getAccount,
-  getUserProfile
+  getUserProfile,
+  executeQuery
 }

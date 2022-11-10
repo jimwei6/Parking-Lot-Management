@@ -3,6 +3,7 @@ import morgan from "morgan";
 import env from "./util/env";
 import apiRoutes from './routes/api';
 import authRoutes from './routes/auth'
+import adminRoutes from './routes/admin'
 import createHttpError from 'http-errors';
 import cookieParser from 'cookie-parser';
 
@@ -15,6 +16,7 @@ app.use(cookieParser());
 //routes
 app.use('/api', apiRoutes);
 app.use('/auth', authRoutes);
+app.use('/admin', adminRoutes);
 
 app.get('/', (req: express.Request, res: express.Response) => {
   res.json({
