@@ -5,7 +5,6 @@ import { FormikHelpers } from "formik/dist/types";
 import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
 import { Formik } from "formik";
 import { Icon } from "../components/Icon";
-import styles from "./ProfilePage.module.css";
 
 export const ProfilePage = () => {
     interface Profile {
@@ -118,7 +117,6 @@ export const ProfilePage = () => {
                                                 {errors.password}
                                             </Form.Control.Feedback>
                                             <Icon
-                                                buttonClassname={styles.eye}
                                                 iconName={showPassword ? 'EyeSlashFill' : 'EyeFill'}
                                                 variant="blue"
                                                 onClick={() => setShowPassword(!showPassword)}
