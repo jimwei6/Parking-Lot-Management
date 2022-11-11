@@ -15,7 +15,7 @@ function getAccount(username: string, password: string): any {
 }
 
 function getUserProfile(username: string) {
-  return executeQuery(`SELECT vo.name, vo.address, pd.phone, pd.pronouns, pd.gender, pd.dob
+  return executeQuery(`SELECT vo.name, vo.address, pd.phoneNumber, pd.pronouns, pd.gender, pd.dob
     FROM vehicleOwner as vo 
     JOIN personalDetails as pd 
       ON pd.name = vo.name AND pd.address = vo.address
