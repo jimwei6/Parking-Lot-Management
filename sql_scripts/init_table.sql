@@ -28,8 +28,8 @@ CREATE TABLE personalDetails (
 	address varchar(100),
 	phoneNumber varchar(20),
 	name varchar(100) NOT NULL,
-	pronouns char(100) NOT NULL DEFAULT 'They/Them/Theirs',
-	sex char(50) NOT NULL DEFAULT 'unspecified',
+	pronouns char(100) NOT NULL DEFAULT 'They/Them/Theirs', -- He/Him/His, She/Her/Hers, They/Them/Theirs
+	gender char(50) NOT NULL DEFAULT 'Other', -- Male, Female, Non-Binary, Other
 	dob DATE NOT NULL,
 	PRIMARY KEY (address, name)
 );
@@ -89,7 +89,7 @@ CREATE TABLE vehicle (
 	modelName varchar NOT NULL,
 	ownerID int NOT NULL,
 	height int NOT NULL,
-	color varchar(6) NOT NULL DEFAULT '000000', -- black
+	color varchar(6) NOT NULL DEFAULT '000000', -- Black
 	FOREIGN KEY (modelName) REFERENCES model(modelName) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (ownerID) REFERENCES vehicleOwner(ownerID) ON DELETE CASCADE ON UPDATE CASCADE
 );
