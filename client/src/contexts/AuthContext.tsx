@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useEffect } from "react";
+import React, { createContext, useContext } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
+import { SERVER_URL } from "../constants/constants";
 
 interface AuthContextProps {
     home: string;
@@ -19,20 +20,19 @@ export const AuthProvider = ({ children }: any) => {
     const navigate = useNavigate();
     const home = '/vehicles';
 
-    useEffect(() => {
-        // TODO: make a request to the server to check if username and password in the cookie are correct
-        if (username === 'admin' && password === 'admin') {
-            setIsAuthenticated(true);
-        }
-    }, [username, password]);
-
-    const login = (username: string, password: string) => {
-        // TODO: make a request to the server to check if the username and password are correct
-        if (username === 'admin' && password === 'admin') {
-            setCookie('username', username, { path: '/' });
-            setCookie('password', password, { path: '/' });
-            setIsAuthenticated(true);
-            navigate(home);
+    const login = async (username: string, password: string) => {
+        const url = new URL(`${SERVER_URL}/auth`);
+        url.search = new URLSearchParams({ username, password }).toString();
+        try {
+            const response = await fetch(url, { method: 'GET' })
+            if (response.ok) {
+                setCookie('username', username, { path: '/' });
+                setCookie('password', password, { path: '/' });
+                setIsAuthenticated(true);
+                navigate(home);
+            }
+        } catch (e) {
+            console.error(e);
         }
     };
 

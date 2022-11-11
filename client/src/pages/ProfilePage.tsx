@@ -1,10 +1,10 @@
-import { useAuth } from "../contexts/AuthContext";
 import React, { useEffect, useState } from "react";
 import { date, object, string } from "yup";
 import { FormikHelpers } from "formik/dist/types";
 import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
 import { Formik } from "formik";
 import { Icon } from "../components/Icon";
+import { SERVER_URL } from "../constants/constants";
 
 export const ProfilePage = () => {
     interface Profile {
@@ -18,21 +18,23 @@ export const ProfilePage = () => {
         dob: string;
     }
 
-    const { username, password } = useAuth();
     const [profile, setProfile] = useState<Profile>();
 
     useEffect(() => {
-        //    TODO: make a request to the server to get the profile using the username
-        setProfile({
-            email: 'admin@test.com',
-            password: password,
-            address: '304 admin St, Vancouver, BC',
-            name: 'Admin Smith',
-            phone: `420-420-2022`,
-            pronouns: 'They/Them',
-            gender: 'Non-Binary',
-            dob: '01/01/2000',
-        });
+        const fetchProfile = async () => {
+            const url = `${SERVER_URL}/api/profile`;
+            try {
+                const response = await fetch(url, { method: 'GET', credentials: 'include' })
+                if (response.ok) {
+                    const profile = await response.json();
+                    console.log(profile);
+                    setProfile(profile);
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        fetchProfile();
     }, []);
 
     const pronouns = ['He/Him', 'She/Her', 'They/Them', 'Other'];
