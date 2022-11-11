@@ -49,7 +49,7 @@ export const ProfilePage = () => {
         password: string().required(),
         address: string().required(),
         name: string().required(),
-        phonenumber: string().required().matches(/^\d{3}-\d{3}-\d{4}$/, 'Phone number must be in the format 012-345-6789'),
+        phonenumber: string().required().matches(/^\d{3}-\d{3}-\d{4}$/, 'phone number must be in the format 012-345-6789').label('phone number'),
         pronouns: string().required().oneOf(pronouns),
         gender: string().required().oneOf(genders),
         dob: date().max(new Date(), `date of birth field must be at earlier than ${new Date().toISOString().split('T')[0]}`)
