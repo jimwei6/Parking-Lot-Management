@@ -55,7 +55,9 @@ export const ProfilePage = () => {
         phonenumber: string().required().matches(/^\d{3}-\d{3}-\d{4}$/, 'Phone number must be in the format 012-345-6789'),
         pronouns: string().required().oneOf(pronouns),
         gender: string().required().oneOf(genders),
-        dob: date().max(new Date()).min(new Date(1900, 1, 1)).required().label('date of birth'),
+        dob: date().max(new Date(), `date of birth field must be at earlier than ${new Date().toISOString().split('T')[0]}`)
+            .min(new Date(1900, 1, 1), `date of birth field must be later than 1900-01-01`)
+            .required().label('date of birth'),
     });
 
     const handleUpdate = (values: Profile, actions: FormikHelpers<Profile>) => {
@@ -150,7 +152,7 @@ export const ProfilePage = () => {
                                             {errors.name}
                                         </Form.Control.Feedback>
                                     </Form.Group>
-                                    <Form.Group as={Col} controlId="phone">
+                                    <Form.Group as={Col} controlId="phonenumber">
                                         <Form.Label>Phone Number</Form.Label>
                                         <Form.Control
                                             type="tel"
