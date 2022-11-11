@@ -79,7 +79,7 @@ export const VehicleUpdatePage = () => {
                             plugType: vehicle?.plugType || '',
                             permit: vehicle?.permit || '',
                         }}
-                        enableReinitialize={true}
+                        enableReinitialize
                     >
                         {({
                               handleSubmit,

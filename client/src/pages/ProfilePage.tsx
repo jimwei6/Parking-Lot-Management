@@ -1,10 +1,10 @@
-import { useAuth } from "../contexts/AuthContext";
 import React, { useEffect, useState } from "react";
 import { date, object, string } from "yup";
 import { FormikHelpers } from "formik/dist/types";
 import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
 import { Formik } from "formik";
 import { Icon } from "../components/Icon";
+import { SERVER_URL } from "../constants/constants";
 
 export const ProfilePage = () => {
     interface Profile {
@@ -12,30 +12,34 @@ export const ProfilePage = () => {
         password: string;
         address: string;
         name: string;
-        phone: string;
+        phonenumber: string;
         pronouns: string;
         gender: string;
         dob: string;
     }
 
-    const { username, password } = useAuth();
     const [profile, setProfile] = useState<Profile>();
 
     useEffect(() => {
-        //    TODO: make a request to the server to get the profile using the username
-        setProfile({
-            email: 'admin@test.com',
-            password: password,
-            address: '304 admin St, Vancouver, BC',
-            name: 'Admin Smith',
-            phone: `420-420-2022`,
-            pronouns: 'They/Them',
-            gender: 'Non-Binary',
-            dob: '01/01/2000',
-        });
+        const fetchProfile = async () => {
+            const url = `${SERVER_URL}/api/profile`;
+            try {
+                const response = await fetch(url, { method: 'GET', credentials: 'include' })
+                if (response.ok) {
+                    const profile = await response.json();
+                    setProfile({
+                        ...profile,
+                        dob: new Date(profile.dob).toISOString().split('T')[0],
+                    });
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        fetchProfile();
     }, []);
 
-    const pronouns = ['He/Him', 'She/Her', 'They/Them', 'Other'];
+    const pronouns = ['He/Him/His', 'She/Her/Hers', 'They/Them/Theirs', 'Other'];
     const genders = ['Male', 'Female', 'Non-Binary', 'Other'];
 
     const [showPassword, setShowPassword] = useState(false);
@@ -45,15 +49,17 @@ export const ProfilePage = () => {
         password: string().required(),
         address: string().required(),
         name: string().required(),
-        phone: string().required().matches(/^\d{3}-\d{3}-\d{4}$/, 'Phone number must be in the format 012-345-6789'),
+        phonenumber: string().required().matches(/^\d{3}-\d{3}-\d{4}$/, 'phone number must be in the format 012-345-6789').label('phone number'),
         pronouns: string().required().oneOf(pronouns),
         gender: string().required().oneOf(genders),
-        dob: date().max(new Date()).min(new Date(1900, 1, 1)).required().label('Date of Birth'),
+        dob: date().max(new Date(), `date of birth field must be at earlier than ${new Date().toISOString().split('T')[0]}`)
+            .min(new Date(1900, 1, 1), `date of birth field must be later than 1900-01-01`)
+            .required().label('date of birth'),
     });
 
     const handleUpdate = (values: Profile, actions: FormikHelpers<Profile>) => {
-        const { email, password, address, name, phone, pronouns, gender, dob } = values;
-        console.log(email, password, address, name, phone, pronouns, gender, dob);
+        const { email, password, address, name, phonenumber, pronouns, gender, dob } = values;
+        console.log(email, password, address, name, phonenumber, pronouns, gender, dob);
         const { setFieldError, setSubmitting } = actions;
         // TODO: make a request to the server to update the profile
         setSubmitting(false);
@@ -71,12 +77,12 @@ export const ProfilePage = () => {
                             password: profile?.password || '',
                             address: profile?.address || '',
                             name: profile?.name || '',
-                            phone: profile?.phone || '',
+                            phonenumber: profile?.phonenumber || '',
                             pronouns: profile?.pronouns || '',
                             gender: profile?.gender || '',
                             dob: profile?.dob || ''
                         }}
-                        enableReinitialize={true}
+                        enableReinitialize
                     >
                         {({
                               handleSubmit,
@@ -104,7 +110,7 @@ export const ProfilePage = () => {
                                     </Form.Group>
                                     <Form.Group as={Col} controlId="password">
                                         <Form.Label>Password</Form.Label>
-                                        <InputGroup>
+                                        <InputGroup hasValidation>
                                             <Form.Control
                                                 type={showPassword ? "text" : "password"}
                                                 placeholder="Enter password"
@@ -112,6 +118,10 @@ export const ProfilePage = () => {
                                                 onChange={handleChange}
                                                 isValid={!errors.password}
                                                 isInvalid={touched.password && !!errors.password}
+                                                style={{
+                                                    borderTopRightRadius: '0.375rem',
+                                                    borderBottomRightRadius: '0.375rem'
+                                                }}
                                             />
                                             <Form.Control.Feedback type="invalid">
                                                 {errors.password}
@@ -139,18 +149,18 @@ export const ProfilePage = () => {
                                             {errors.name}
                                         </Form.Control.Feedback>
                                     </Form.Group>
-                                    <Form.Group as={Col} controlId="phone">
+                                    <Form.Group as={Col} controlId="phonenumber">
                                         <Form.Label>Phone Number</Form.Label>
                                         <Form.Control
                                             type="tel"
                                             placeholder="Enter phone number"
-                                            value={values.phone}
+                                            value={values.phonenumber}
                                             onChange={handleChange}
-                                            isValid={!errors.phone}
-                                            isInvalid={touched.phone && !!errors.phone}
+                                            isValid={!errors.phonenumber}
+                                            isInvalid={touched.phonenumber && !!errors.phonenumber}
                                         />
                                         <Form.Control.Feedback type="invalid">
-                                            {errors.phone}
+                                            {errors.phonenumber}
                                         </Form.Control.Feedback>
                                     </Form.Group>
                                 </Row>
@@ -178,7 +188,7 @@ export const ProfilePage = () => {
                                             isValid={!errors.pronouns}
                                             isInvalid={touched.pronouns && !!errors.pronouns}
                                         >
-                                            <option>Select a model</option>
+                                            <option>Select pronouns</option>
                                             {pronouns.map((pronoun) => (
                                                 <option key={pronoun} value={pronoun}>{pronoun}</option>
                                             ))}
@@ -196,7 +206,7 @@ export const ProfilePage = () => {
                                             isValid={!errors.gender}
                                             isInvalid={touched.gender && !!errors.gender}
                                         >
-                                            <option>Select a model</option>
+                                            <option>Select a gender</option>
                                             {genders.map((gender) => (
                                                 <option key={gender} value={gender}>{gender}</option>
                                             ))}

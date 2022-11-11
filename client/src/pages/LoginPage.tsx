@@ -20,10 +20,11 @@ export const LoginPage = () => {
 
     const { login } = useAuth();
 
-    const handleLogin = (values: FormFields, actions: FormikHelpers<FormFields>) => {
+    const handleLogin = async (values: FormFields, actions: FormikHelpers<FormFields>) => {
         const { username, password } = values;
         const { setFieldError, setSubmitting } = actions;
-        login(username, password);
+        await login(username, password);
+        // login will handle navigation, we only reach this point if login fails
         setFieldError('username', 'Invalid username or password');
         setFieldError('password', 'Invalid username or password');
         setSubmitting(false);
