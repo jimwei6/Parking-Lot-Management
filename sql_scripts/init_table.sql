@@ -1,5 +1,5 @@
 CREATE TABLE location (
-	postalCode char(6) PRIMARY KEY,
+	postalCode varchar(6) PRIMARY KEY,
 	city varchar(256) NOT NULL,
 	province varchar(256) NOT NULL
 );
@@ -28,8 +28,8 @@ CREATE TABLE personalDetails (
 	address varchar(100),
 	phoneNumber varchar(20),
 	name varchar(100) NOT NULL,
-	pronouns char(100) NOT NULL DEFAULT 'They/Them/Theirs', -- He/Him/His, She/Her/Hers, They/Them/Theirs
-	gender char(50) NOT NULL DEFAULT 'Other', -- Male, Female, Non-Binary, Other
+	pronouns varchar(100) NOT NULL DEFAULT 'They/Them/Theirs', -- He/Him/His, She/Her/Hers, They/Them/Theirs
+	gender varchar(50) NOT NULL DEFAULT 'Other', -- Male, Female, Non-Binary, Other
 	dob DATE NOT NULL,
 	PRIMARY KEY (address, name)
 );
@@ -52,7 +52,7 @@ CREATE TABLE vehicleOwner (
 CREATE TABLE parkingLots (
     lotID int PRIMARY KEY,
     capacity int NOT NULL DEFAULT 10,
-    postalCode char(6) NOT NULL,
+    postalCode varchar(6) NOT NULL,
     heightLimit int,
     FOREIGN KEY (postalCode) REFERENCES location(postalCode) ON DELETE CASCADE ON UPDATE CASCADE
 );
