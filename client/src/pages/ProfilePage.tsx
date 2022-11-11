@@ -30,9 +30,6 @@ export const ProfilePage = () => {
                     setProfile({
                         ...profile,
                         dob: new Date(profile.dob).toISOString().split('T')[0],
-                        // TODO: remove this once the extra spaces issue is fixed
-                        gender: profile.gender.trim(),
-                        pronouns: profile.pronouns.trim()
                     });
                 }
             } catch (e) {
