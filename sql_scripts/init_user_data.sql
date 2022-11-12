@@ -66,27 +66,27 @@ INSERT INTO vehicleOwner(ownerID, username, address, name) VALUES
     (20, 'prankia', '3536 Cardero St, Vancouver BC S4P 3Y2 Canada', 'Mable Huel');
 
 -- height: mm, color: hex
-INSERT INTO vehicle(licensePlate, modelName, ownerID, height, color) VALUES
-    ('CF346E', 'Model 3', 1, 1443, 'ff0000'),
-    ('CA762X', 'Model X', 2, 1684, 'ffffff'),
+INSERT INTO vehicle(licensePlate, modelName, ownerID, height, color) VALUES -- -- vip, company, reserved, infant, accessibility
+    ('CF346E', 'Model 3', 1, 1443, 'FF0000'), -- permits: vip, company, reserved
+    ('CA762X', 'Model X', 2, 1684, 'FFFFFF'),
     ('DE310T', 'Model Y', 3, 1624, '000000'),
-    ('XNK656', 'Model S', 4, 1445, '0000ff'),
-    ('KD978P', 'Atlas', 5, 1780, '808080'),
-    ('896REN', 'Taos', 6, 1654, '00ff00'),
-    ('706SGL', 'ID.4', 7, 1654, 'c0c0c0'),
-    ('GDM839', 'Jetta', 8, 1471, 'ff0000'),
-    ('DPU597', 'Prius Prime', 9, 1473, 'ffffff'),
-    ('985HDE', 'GR86', 10, 1310, '000000'),
-    ('DHR427', 'Tundra', 11, 1984, '0000ff'),
+    ('XNK656', 'Model S', 4, 1445, '0000FF'), -- permits: company
+    ('KD978P', 'Atlas', 5, 1780, '808080'), -- permits: reserved, accessibility
+    ('896REN', 'Taos', 6, 1654, '00FF00'), -- permits: infant, reserved
+    ('706SGL', 'ID.4', 7, 1654, 'C0C0C0'),
+    ('GDM839', 'Jetta', 8, 1471, 'FF0000'), -- permits: accessibility, vip, infant, company
+    ('DPU597', 'Prius Prime', 9, 1473, 'FFFFFF'),
+    ('985HDE', 'GR86', 10, 1310, '000000'), -- permits: vip
+    ('DHR427', 'Tundra', 11, 1984, '0000FF'), -- permits: reserved
     ('245AFC', 'Sienna', 12, 1776, '808080'),
-    ('144PKF', 'Mustang', 13, 1394, '00ff00'),
-    ('645RTM', 'Shelby', 14, 1384, 'c0c0c0'),
-    ('589WGN', 'Escape', 15, 1679, 'ff0000'),
-    ('CD7172', 'F-150', 16, 2026, 'ffffff'),
+    ('144PKF', 'Mustang', 13, 1394, '00FF00'), -- permits: vip, accessibility, reserved, infant, company
+    ('645RTM', 'Shelby', 14, 1384, 'C0C0C0'), -- permits: accessibility
+    ('589WGN', 'Escape', 15, 1679, 'FF0000'), -- permits: company, infant
+    ('CD7172', 'F-150', 16, 2026, 'FFFFFF'), -- permits: infant
     ('MBG091', 'iX', 17, 1696, '000000'),
-    ('229KBX', 'X3', 18, 1676, '0000ff'),
+    ('229KBX', 'X3', 18, 1676, '0000FF'),
     ('VVF388', '8 Series Gran Coupé', 19, 1407, '808080'),
-    ('BH909R', 'M5 Competition', 20, 1473, '00ff00');
+    ('BH909R', 'M5 Competition', 20, 1473, '00FF00'); -- permits: reserved, vip
 
 -- plugType: J1772 (Type 1), Mennekes (Type 2), GB/T, CCS1, CHAdeMO
 INSERT INTO electricVehicle(licensePlate, plugType) VALUES
@@ -175,14 +175,27 @@ INSERT INTO parkingActivities(timeStamp, licensePlate, spotID, lotID, activityTy
 -- permitType: vip, company, reserved, infant, accessibility
 INSERT INTO permits(licensePlate, permitType) VALUES
     ('CF346E', 'vip'),
+    ('CF346E', 'company'),
+    ('CF346E', 'reserved'),
     ('XNK656', 'company'),
     ('KD978P', 'reserved'),
+    ('KD978P', 'accessibility'),
     ('896REN', 'infant'),
+    ('896REN', 'reserved'),
     ('GDM839', 'accessibility'),
+    ('GDM839', 'vip'),
+    ('GDM839', 'infant'),
+    ('GDM839', 'company'),
     ('985HDE', 'vip'),
     ('DHR427', 'reserved'),
     ('144PKF', 'vip'),
+    ('144PKF', 'accessibility'),
+    ('144PKF', 'reserved'),
+    ('144PKF', 'infant'),
+    ('144PKF', 'company'),
     ('645RTM', 'accessibility'),
     ('589WGN', 'company'),
+    ('589WGN', 'infant'),
     ('CD7172', 'infant'),
-    ('BH909R', 'reserved');
+    ('BH909R', 'reserved'),
+    ('BH909R', 'vip');
