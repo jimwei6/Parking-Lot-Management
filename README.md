@@ -1,11 +1,5 @@
 # Parking Lot Management  
 
-## Contributors 
-
-- Jim 'Ming Chun' Wei (jimwei/jimwei6)
-- Asad Dhorajiwala (AnimeAllstar/ad2001)
-- Richard Lee (Richard Lee/rlee2002)
-
 ## About 
 
 For the project, our group will be creating a parking lot management that oversees parking spaces, and allocates to vehicles. Unlike generic retail management which focuses on ordering, our application is an inventory tracker that features a parking log, a record of both vacant and occupied parking spaces, and updates instantaneously to ensure managers are able to gain insight of the usage of the parking spots. With the given information, and based on a given vehicle’s specifications, our application will be able to assign a designated parking spot for such vehicle, and contain information regarding both the vehicle and the vehicle owner. This includes the vehicle’s parking activities, and the vehicle owner’s identifications. 
@@ -25,3 +19,9 @@ Following the recommendations of CPSC 304’s course instructors, our group will
 - Rebuild database: psql -U postgres -d postgres -f ./sql_scripts/rebuild_db.sql 
 - Run server: yarn dev 
 - Run client: yarn start
+
+## Contributors 
+
+- Jim 'Ming Chun' Wei (jimwei/jimwei6)
+- Asad Dhorajiwala (AnimeAllstar/ad2001)
+- Richard Lee (Richard Lee/rlee2002)
