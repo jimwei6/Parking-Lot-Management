@@ -20,29 +20,6 @@ INSERT INTO accounts(username, password, email) VALUES
     ('monser', 'twisomedynapa', 'kory_brakus@yahoo.com'),
     ('prankia', 'fc5p2d856n', 'mable.huel13@gmail.com');
 
--- dob: YYYY-MM-DD
-INSERT INTO personalDetails(address, phoneNumber, name, pronouns, gender, dob) VALUES
-    ('1567 Hastings St, Vancouver BC V6C 1B4 Canada', '604-339-4819', 'Nash Krajcik', 'He/Him/His', 'Male', '2004-08-20'),
-    ('4737 Cordova St, Vancouver BC V6B 1E1 Canada', '778-998-0756', 'Joannie Bernhard', 'She/Her/Hers', 'Female', '1969-02-23'),
-    ('3622 Cardero St, Vancouver BC S4P 3Y2 Canada', '604-684-1519', 'Cristal Fung', 'They/Them/Theirs', 'Non-Binary', '1977-05-02'),
-    ('3002 Cordova St, Vancouver BC V6B 1E1 Canada', '604-418-1518', 'Duncan Ratke', 'He/Him/His', 'Male', '1980-06-14'),
-    ('978 St George St, Vancouver BC V5T 1Z7 Canada', '604-707-3783', 'Alessandro Bernier', 'She/Her/Hers', 'Female', '2001-02-07'),
-    ('122 Keith Road, North Vancouver BC V5T 2C1 Canada', '604-904-2212', 'Emmet Stone', 'They/Them/Theirs', 'Other', '1987-12-10'),
-    ('3256 Robson St, Vancouver BC V6B 3K9 Canada', '604-837-2507', 'Lauriane Blick', 'She/Her/Hers', 'Female', '1973-11-15'),
-    ('4421 Cardero St, Vancouver BC S4P 3Y2 Canada', '604-696-1931', 'Lia Kim', 'They/Them/Theirs', 'Non-Binary', '2003-06-22'),
-    ('4770  Hastings St, Vancouver BC V6C 1B4 Canada', '604-721-2960', 'Olaf Bartell', 'He/Him/His', 'Male', '1992-01-11'),
-    ('3627 Hastings St, Vancouver BC V6C 1B4 Canada', '604-618-3150', 'Emmanuelle Nguyen', 'He/Him/His', 'Male', '1978-05-25'),
-    ('1814 Robson St, Vancouver BC V6B 3K9 Canada', '604-331-3096', 'Lorenza Heathcote', 'She/Her/Hers', 'Female', '1981-09-20'),
-    ('3155 Tolmie St, Vancouver BC V6A 4E6 Canada', '604-677-5911', 'Oswald Son', 'He/Him/His', 'Male', '1970-08-22'),
-    ('3922 Tanner St, Vancouver BC V5R 2T4 Canada', '604-319-3438', 'Linnie Lang', 'She/Her/Hers', 'Female', '2000-12-25'),
-    ('2054 Keith Road, North Vancouver BC V5T 2C1 Canada', '604-903-5346', 'June Faye', 'She/Her/Hers', 'Female', '1995-06-25'),
-    ('3812 James St, Vancouver BC V5W 3C3 Canada', '604-341-9314', 'Vena Ullrich', 'She/Her/Hers', 'Female', '1976-04-21'),
-    ('1144 St George Street, Vancouver BC V5T 1Z7 Canada', '604-877-3085', 'Green Wilkinson', 'He/Him/His', 'Male', '1979-09-10'),
-    ('4308 Keith Road, North Vancouver BC V5T 2C1 Canada', '604-986-6573', 'Daisha Prohaska', 'She/Her/Hers', 'Female', '1999-12-16'),
-    ('2797 James St, Vancouver BC V5W 3C3 Canada', '604-329-9002', 'Kenyatta Knight', 'He/Him/His', 'Male', '1984-05-25'),
-    ('1574 Jade St, West Vancouver BC V7V 1Y8 Canada', '604-923-1466', 'Kory Brakus', 'He/Him/His', 'Male', '1966-10-05'),
-    ('3536 Cardero St, Vancouver BC S4P 3Y2 Canada', '604-696-4478', 'Mable Huel', 'They/Them/Theirs', 'Other', '1994-11-27');
-
 INSERT INTO vehicleOwner(ownerID, username, address, name) VALUES
     (1, 'jim', '1567 Hastings St, Vancouver BC V6C 1B4 Canada', 'Nash Krajcik'),
     (2, 'asad', '4737 Cordova St, Vancouver BC V6B 1E1 Canada', 'Joannie Bernhard'),
@@ -64,6 +41,29 @@ INSERT INTO vehicleOwner(ownerID, username, address, name) VALUES
     (18, 'simonfreak', '2797 James St, Vancouver BC V5W 3C3 Canada', 'Kenyatta Knight'),
     (19, 'monser', '1574 Jade St, West Vancouver BC V7V 1Y8 Canada', 'Kory Brakus'),
     (20, 'prankia', '3536 Cardero St, Vancouver BC S4P 3Y2 Canada', 'Mable Huel');
+
+-- dob: YYYY-MM-DD
+INSERT INTO personalDetails(ownerID, phoneNumber, pronouns, gender, dob) VALUES
+    (1, '604-339-4819', 'He/Him/His', 'Male', '2004-08-20'),
+    (2, '778-998-0756', 'She/Her/Hers', 'Female', '1969-02-23'),
+    (3, '604-684-1519', 'They/Them/Theirs', 'Non-Binary', '1977-05-02'),
+    (4, '604-418-1518', 'He/Him/His', 'Male', '1980-06-14'),
+    (5, '604-707-3783', 'She/Her/Hers', 'Female', '2001-02-07'),
+    (6, '604-904-2212', 'They/Them/Theirs', 'Other', '1987-12-10'),
+    (7, '604-837-2507', 'She/Her/Hers', 'Female', '1973-11-15'),
+    (8, '604-696-1931', 'They/Them/Theirs', 'Non-Binary', '2003-06-22'),
+    (9, '604-721-2960', 'He/Him/His', 'Male', '1992-01-11'),
+    (10, '604-618-3150', 'He/Him/His', 'Male', '1978-05-25'),
+    (11, '604-331-3096', 'She/Her/Hers', 'Female', '1981-09-20'),
+    (12, '604-677-5911', 'He/Him/His', 'Male', '1970-08-22'),
+    (13, '604-319-3438', 'She/Her/Hers', 'Female', '2000-12-25'),
+    (14, '604-903-5346', 'She/Her/Hers', 'Female', '1995-06-25'),
+    (15, '604-341-9314', 'She/Her/Hers', 'Female', '1976-04-21'),
+    (16, '604-877-3085', 'He/Him/His', 'Male', '1979-09-10'),
+    (17, '604-986-6573', 'She/Her/Hers', 'Female', '1999-12-16'),
+    (18, '604-329-9002', 'He/Him/His', 'Male', '1984-05-25'),
+    (19, '604-923-1466', 'He/Him/His', 'Male', '1966-10-05'),
+    (20, '604-696-4478', 'They/Them/Theirs', 'Other', '1994-11-27');
 
 -- height: mm, color: hex
 INSERT INTO vehicle(licensePlate, modelName, ownerID, height, color) VALUES -- -- vip, company, reserved, infant, accessibility
