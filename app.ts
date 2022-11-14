@@ -11,6 +11,7 @@ import cors from 'cors';
 const app = express();
 const port: string | number = env.PORT || 3500;
 
+app.use(express.json());
 app.use(morgan('short')); // for logging
 app.use(cookieParser());
 app.use(cors({ credentials: true, origin: true }));
