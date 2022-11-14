@@ -16,11 +16,9 @@ function getAccount(username: string, password: string): any {
 }
 
 function getUserProfile(username: string) {
-  return executeQuery(`SELECT vo.name, vo.address, pd.phoneNumber, pd.pronouns, pd.gender, pd.dob
-    FROM vehicleOwner as vo 
-    JOIN personalDetails as pd 
-      ON pd.ownerID = vo.ownerID
-    WHERE vo.username = $1 LIMIT 1`, [username]);
+  return executeQuery(`SELECT vo.name, vo.address, pd.phoneNumber, pd.pronouns, pd.gender, pd.dob, a.email, a.password
+    FROM accounts as a, vehicleOwner as vo, personalDetails as pd 
+    WHERE a.username = $1 AND vo.username = a.username AND pd.ownerID = vo.ownerID LIMIT 1`, [username]);
 }
 
 async function updateUserProfile(username: string, profile: profile) {
@@ -46,6 +44,10 @@ async function updateUserProfile(username: string, profile: profile) {
     gender: updatedDetails[0].gender,
     dob: updatedDetails[0].dob
   };
+}
+
+function getUserVehicles(username: string) {
+  // return executeQuery(  )
 }
 
 export default {

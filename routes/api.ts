@@ -21,9 +21,7 @@ router.get('/parkingLot', util.asyncHandler(async (req: Request, res: Response, 
 router.get('/profile', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
   const profile = await queries.getUserProfile(res.locals.account.username);
   res.json({
-    ...profile[0],
-    email: res.locals.account.email,
-    password: res.locals.account.password,
+    ...profile[0]
   })
 }));
 
