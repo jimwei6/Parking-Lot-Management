@@ -10,7 +10,7 @@ export interface Vehicle {
     color: string;
     isElectric: boolean;
     plugType?: string;
-    permit: string;
+    permits: ('vip' | 'company' | 'reserved' | 'infant' | 'accessibility')[];
 }
 
 export const VehicleListPage = () => {
@@ -26,21 +26,21 @@ export const VehicleListPage = () => {
             color: '#FF0000',
             isElectric: true,
             plugType: 'Type 2',
-            permit: 'Accessibility',
+            permits: ['accessibility', 'vip']
         }, {
             licensePlate: 'XYZ987',
             model: 'Toyota Prius',
             height: 1900,
             color: '#00FF00',
             isElectric: false,
-            permit: 'Accessibility',
+            permits: ['infant', 'reserved'],
         }, {
             licensePlate: 'LMN456',
             model: 'Aston Martin DB5',
             height: 1600,
             color: '#F3F3F3',
             isElectric: false,
-            permit: 'Accessibility',
+            permits: [],
         }])
     }, []);
 
@@ -55,7 +55,7 @@ export const VehicleListPage = () => {
                 <Col xs md="12" lg="12" className="align-items-center">
                     {vehicles.length > 0 ? (
                         <Row xs={1} lg={2}>
-                            {vehicles.map(({ licensePlate, model, height, color, isElectric, plugType, permit }) => (
+                            {vehicles.map(({ licensePlate, model, height, color, isElectric, plugType, permits }) => (
                                 <Col className="mb-3 align-items-center" key={licensePlate}>
                                     <Card>
                                         <Card.Body>
@@ -65,15 +65,21 @@ export const VehicleListPage = () => {
                                                     <div className="ms-auto">
                                                         <Icon
                                                             variant="blue"
+                                                            iconName="PlusCircleFill"
+                                                            link={`/session/${licensePlate}/add`}>
+                                                            new <strong>parking session</strong>
+                                                        </Icon>
+                                                        <Icon
+                                                            variant="blue"
                                                             iconName="FileEarmarkText"
-                                                            link={`/history`}>
-                                                            Click to view <strong>history</strong>
+                                                            link={`/history/${licensePlate}`}>
+                                                            view <strong>history</strong>
                                                         </Icon>
                                                         <Icon
                                                             variant="blue"
                                                             iconName="PencilSquare"
                                                             link={`/vehicle/${licensePlate}/update`}>
-                                                            Click to <strong>update</strong> vehicle
+                                                            <strong>update</strong> vehicle details
                                                         </Icon>
                                                         <Icon
                                                             variant="red"
@@ -81,7 +87,7 @@ export const VehicleListPage = () => {
                                                             onClick={() => {
                                                                 handleDelete(licensePlate)
                                                             }}>
-                                                            Click to <strong>delete</strong> vehicle
+                                                            <strong>delete</strong> vehicle
                                                         </Icon>
                                                     </div>
                                                 </div>
@@ -92,7 +98,7 @@ export const VehicleListPage = () => {
                                                 <li>Color: {color}</li>
                                                 <li>Electric: {isElectric ? 'Yes' : 'No'}</li>
                                                 {isElectric && <li>Plug Type: {plugType}</li>}
-                                                <li>Permit: {permit}</li>
+                                                <li>Permit: {permits}</li>
                                             </ul>
                                         </Card.Body>
                                     </Card>

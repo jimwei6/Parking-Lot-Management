@@ -13,7 +13,7 @@ export const VehicleUpdatePage = () => {
         color: string;
         isElectric: boolean;
         plugType: string;
-        permit: string;
+        permits: string;
     }
 
     const [models, setModels] = useState<Array<string>>([]);
@@ -35,7 +35,7 @@ export const VehicleUpdatePage = () => {
             then: string().required().label("plug type"),
             otherwise: string().notRequired(),
         }).oneOf(plugTypes, "plug type is a required field"),
-        permit: string().required().oneOf(permits, "permit is a required field"),
+        permits: string().required().oneOf(permits, "permit is a required field"),
     });
 
     useEffect(() => {
@@ -48,7 +48,7 @@ export const VehicleUpdatePage = () => {
             color: '#FF0000',
             isElectric: true,
             plugType: 'Type 2',
-            permit: 'Permit type A',
+            permits: ['accessibility', 'vip']
         })
         //    TODO: make a request to the server to get the list of models, permits, and plug types
         setModels(['Tesla Model 3', `Tesla Model S`, 'Tesla Model X', 'Tesla Model Y']);
@@ -57,8 +57,8 @@ export const VehicleUpdatePage = () => {
     }, []);
 
     const handleUpdate = (values: FormFields, actions: FormikHelpers<FormFields>) => {
-        const { model, height, color, isElectric, plugType, permit } = values;
-        console.log(model, height, color, isElectric, plugType, permit)
+        const { model, height, color, isElectric, plugType, permits } = values;
+        console.log(model, height, color, isElectric, plugType, permits)
         const { setFieldError, setSubmitting } = actions;
         // TODO: make a request to the server to add a vehicle
         navigate('/vehicles');
@@ -77,7 +77,7 @@ export const VehicleUpdatePage = () => {
                             color: vehicle?.color || '',
                             isElectric: vehicle?.isElectric || false,
                             plugType: vehicle?.plugType || '',
-                            permit: vehicle?.permit || '',
+                            permits: vehicle?.permits.join(', ') || '',
                         }}
                         enableReinitialize
                     >
@@ -125,14 +125,14 @@ export const VehicleUpdatePage = () => {
                                     </Form.Group>
                                 </Row>
                                 <Row className="mb-3" xs={1} md={2}>
-                                    <Form.Group as={Col} controlId="permit">
+                                    <Form.Group as={Col} controlId="permits">
                                         <Form.Label>Permit</Form.Label>
                                         <Form.Select
                                             placeholder="Enter Permit"
-                                            value={values.permit}
+                                            value={values.permits}
                                             onChange={handleChange}
-                                            isValid={!errors.permit}
-                                            isInvalid={touched.permit && !!errors.permit}
+                                            isValid={!errors.permits}
+                                            isInvalid={touched.permits && !!errors.permits}
                                         >
                                             <option>Select a permit</option>
                                             {permits.map((permit) => (
@@ -140,7 +140,7 @@ export const VehicleUpdatePage = () => {
                                             ))}
                                         </Form.Select>
                                         <Form.Control.Feedback type="invalid">
-                                            {errors.permit}
+                                            {errors.permits}
                                         </Form.Control.Feedback>
                                     </Form.Group>
                                     <Form.Group as={Col} className="mb-3" controlId="color">

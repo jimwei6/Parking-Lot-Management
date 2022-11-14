@@ -1,7 +1,7 @@
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 import { Formik } from "formik";
-import { boolean, number, object, string } from "yup";
+import { array, boolean, number, object, string } from "yup";
 import { FormikHelpers } from "formik/dist/types";
 import { useNavigate } from "react-router-dom";
 
@@ -13,7 +13,7 @@ export const VehicleAddPage = () => {
         color: string;
         isElectric: boolean;
         plugType: string;
-        permit: string;
+        permits: string[];
     }
 
     const [models, setModels] = useState<Array<string>>([]);
@@ -33,21 +33,21 @@ export const VehicleAddPage = () => {
             then: string().required().label("plug type"),
             otherwise: string().notRequired(),
         }).oneOf(plugTypes, "plug type is a required field"),
-        permit: string().required().oneOf(permits, "permit is a required field"),
+        permits: array().of(string()),
     });
 
     useEffect(() => {
         //    TODO: make a request to the server to get the list of models, permits, and plug types
         setModels(['Tesla Model 3', `Tesla Model S`, 'Tesla Model X', 'Tesla Model Y']);
-        setPermits(['Permit type A', 'Permit type B', 'Permit type C']);
+        setPermits(['vip', 'company', 'reserved', 'infant', 'accessibility']);
         setPlugTypes(['Type 1', 'Type 2', 'Type 3']);
     }, []);
 
     const handleSubmit = (values: FormFields, actions: FormikHelpers<FormFields>) => {
-        const { license, model, height, color, isElectric, plugType, permit } = values;
-        console.log(license, model, height, color, isElectric, plugType, permit)
+        const { license, model, height, color, isElectric, plugType, permits } = values;
+        console.log(license, model, height, color, isElectric, plugType, permits)
         const { setFieldError, setSubmitting } = actions;
-        // TODO: make a request to the server to create a vehicle
+        // TODO: make a request to the server to create a vehicle and add permits
         navigate('/vehicles');
     }
 
@@ -62,11 +62,11 @@ export const VehicleAddPage = () => {
                             license: '',
                             model: '',
                             height: '',
-                            color: '',
+                            color: '#000000',
                             isElectric: false,
                             plugType: '',
-                            permit: '',
-                        }}
+                            permits: [],
+                        } as FormFields}
                     >
                         {({
                               handleSubmit,
@@ -128,22 +128,20 @@ export const VehicleAddPage = () => {
                                         </Form.Control.Feedback>
                                     </Form.Group>
                                     <Form.Group as={Col} controlId="permit">
-                                        <Form.Label>Permit</Form.Label>
-                                        <Form.Select
-                                            placeholder="Select Permit Type"
-                                            value={values.permit}
-                                            onChange={handleChange}
-                                            isValid={dirty && !errors.permit}
-                                            isInvalid={touched.permit && !!errors.permit}
-                                        >
-                                            <option>Select a permit type</option>
-                                            {permits.map((permit) => (
-                                                <option key={permit} value={permit}>{permit}</option>
-                                            ))}
-                                        </Form.Select>
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.permit}
-                                        </Form.Control.Feedback>
+                                        <Form.Label>Permits</Form.Label>
+                                        <br/>
+                                        {permits.map((permit) => (
+                                            <Form.Check
+                                                key={permit}
+                                                inline
+                                                label={permit}
+                                                type="checkbox"
+                                                name="permits"
+                                                value={permit}
+                                                defaultChecked={values.permits.includes(permit)}
+                                                onChange={handleChange}
+                                            />
+                                        ))}
                                     </Form.Group>
                                 </Row>
                                 <Row className="mb-3 align-items-center" xs={2}>
@@ -166,7 +164,7 @@ export const VehicleAddPage = () => {
                                             type="checkbox"
                                             label="Is your vehicle electric?"
                                             value="electric"
-                                            isInvalid={touched.isElectric && !!errors.isElectric}
+                                            name="isElectric"
                                             defaultChecked={values.isElectric}
                                             onChange={handleChange}
                                         />
