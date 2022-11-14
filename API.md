@@ -1,7 +1,7 @@
 ## REQUIRED: 
-- JOIN
+- JOIN (/profile GET)
 - INSERTION 
-- UPDATE 
+- UPDATE (/profile PUT)
 - DELETION 
 - AGGREGATION GB 
 - PROJECTION 
@@ -34,7 +34,7 @@
 **ROUTE**: /api/profile  <br/>
 **METHOD**: GET  <br/>
 **EXPECT**: username and password in cookies else 401  <br/>
-**FULFILLS**: JOIN or PROJECTION  <br/>
+**FULFILLS**: JOIN <br/>
 **RESPONSE**:  
   - 200: { name, address, phonenumber, pronouns, gender, dob, email}
 
