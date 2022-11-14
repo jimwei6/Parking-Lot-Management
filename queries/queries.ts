@@ -36,13 +36,12 @@ async function updateUserProfile(username: string, profile: profile) {
     WHERE ownerID = $5 RETURNING *`, 
     [new Date(profile.dob).toLocaleDateString('en-CA'), profile.gender,
       profile.phoneNumber, profile.pronouns, updatedVO[0].ownerid]);
-
   return {
     email: updatedAccount[0].email,
     password: updatedAccount[0].password,
     name: updatedVO[0].name,
-    phoneNumber: updatedDetails[0].phoneNumber,
-    address: updatedDetails[0].address,
+    phoneNumber: updatedDetails[0].phonenumber,
+    address: updatedVO[0].address,
     pronouns: updatedDetails[0].pronouns,
     gender: updatedDetails[0].gender,
     dob: updatedDetails[0].dob
