@@ -36,6 +36,16 @@
 **EXPECT**: username and password in cookies else 401  <br/>
 **FULFILLS**: JOIN or PROJECTION  <br/>
 **RESPONSE**:  
-  - 200: { name, address, phone, pronouns, gender, dob, email}
+  - 200: { name, address, phonenumber, pronouns, gender, dob, email}
+
+<hr/>
+
+**ROUTE**: /api/profile  <br/>
+**METHOD**: PUT  <br/>
+**EXPECT**: username and password in cookies else 401  <br/>
+**FULFILLS**: UPDATE  <br/>
+**RESPONSE**:  
+  - 200: { name, address, phonenumber, pronouns, gender, dob, email}
+  - 400: 'Failed to update user profile'
 
 <hr/>
