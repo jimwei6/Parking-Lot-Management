@@ -52,9 +52,19 @@
 
 **ROUTE**: /api/vehicle <br/>
 **METHOD**: GET <br/>
+**QUERY**: licensePlate (string) (OPTIONAL)  <br/>
 **EXPECT**: username and password in cookies else 401 <br/>
 **FULFILLS**: JOIN <br/>
 **RESPONSE**:
-  - 200: {result: [] vehicle (*)}
+  - 200: [{ licenseplate, modelname, height, color, iselectric, plugtype, permits: string[] }]
+
+<hr/>
+
+**ROUTE**: /api/types <br/>
+**METHOD**: GET <br/>
+**EXPECT**: username and password in cookies else 401 <br/>
+**FULFILLS**: NONE <br/>
+**RESPONSE**:
+  - 200: [{ permits: string[], models: string[], plugTypes: string[] }]
 
 <hr/>

@@ -53,7 +53,7 @@ function getUserVehicles(username: string, licensePlate: string | null | undefin
       v.height,
       v.color,
       ev.plugType,
-      array_agg(p.permitType) AS permit,
+      array_agg(p.permitType) AS permits,
       CASE
           WHEN ev.plugType = NULL THEN FALSE
           ELSE TRUE
