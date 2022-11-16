@@ -35,9 +35,14 @@ router.put('/profile', util.asyncHandler(async (req: Request, res: Response, nex
   } catch(error) {
     console.error(error);
     return next(createHttpError(400, 'Failed to update user profile'));
-  }; 
+  };
 }));
 
-
+router.get('/vehicle', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
+  const userVehicles = await queries.getUserVehicles(res.locals.account.username);
+  res.json({
+    result: userVehicles
+  })
+}));
 
 export default router;

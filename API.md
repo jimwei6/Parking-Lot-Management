@@ -36,7 +36,7 @@
 **EXPECT**: username and password in cookies else 401  <br/>
 **FULFILLS**: JOIN <br/>
 **RESPONSE**:  
-  - 200: { name, address, phonenumber, pronouns, gender, dob, email}
+  - 200: {name, address, phonenumber, pronouns, gender, dob, email}
 
 <hr/>
 
@@ -45,7 +45,16 @@
 **EXPECT**: username and password in cookies else 401  <br/>
 **FULFILLS**: UPDATE  <br/>
 **RESPONSE**:  
-  - 200: { name, address, phonenumber, pronouns, gender, dob, email}
+  - 200: {name, address, phonenumber, pronouns, gender, dob, email}
   - 400: 'Failed to update user profile'
+
+<hr/>
+
+**ROUTE**: /api/vehicle <br/>
+**METHOD**: GET <br/>
+**EXPECT**: username and password in cookies else 401 <br/>
+**FULFILLS**: JOIN <br/>
+**RESPONSE**:
+  - 200: [{licensePlate, model, height, color, isElectric, plugType[], permit}]
 
 <hr/>
