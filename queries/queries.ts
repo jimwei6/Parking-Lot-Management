@@ -69,7 +69,7 @@ function getUserVehicles(username: string, licensePlate: string | null | undefin
 
   if(licensePlate !== null && licensePlate !== undefined) {
     return executeQuery(query + 
-      ` AND v.licensePlate = $2 GROUP BY v.licensePlate, ev.plugType`, [username, licensePlate]);
+      ` AND v.licensePlate = $2 GROUP BY v.licensePlate, ev.plugType LIMIT 1`, [username, licensePlate]);
   } else {
     return executeQuery(query + 
       ` GROUP BY v.licensePlate, ev.plugType`, [username]);
