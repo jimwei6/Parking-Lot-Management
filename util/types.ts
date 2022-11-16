@@ -8,3 +8,12 @@ export interface profile {
   gender: string;
   dob: string;
 }
+
+export interface vehicle {
+  model: string; 
+  height: string; 
+  color: string; 
+  isElectric: boolean; 
+  plugType: string; 
+  permits: string[];
+}
