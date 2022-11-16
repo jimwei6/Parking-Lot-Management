@@ -46,27 +46,46 @@ async function updateUserProfile(username: string, profile: profile) {
   };
 }
 
-function getUserVehicles(username: string): any {
-  return executeQuery(`SELECT
-        v.licensePlate,
-        v.modelName AS model,
-        v.height,
-        v.color,
-        ev.plugType,
-        array_agg(p.permitType) AS permit,
-        CASE
-            WHEN ev.plugType = NULL THEN FALSE
-            ELSE TRUE
-        END AS isElectric
+function getUserVehicles(username: string, licensePlate: string | null | undefined): any {
+  let query = `SELECT
+      v.licensePlate,
+      v.modelName AS model,
+      v.height,
+      v.color,
+      ev.plugType,
+      array_agg(p.permitType) AS permit,
+      CASE
+          WHEN ev.plugType = NULL THEN FALSE
+          ELSE TRUE
+      END AS isElectric
     FROM vehicle v
     LEFT JOIN electricVehicle ev
-        ON v.licensePlate = ev.licensePlate
+      ON v.licensePlate = ev.licensePlate
     LEFT JOIN permits p
-        ON v.licensePlate = p.licensePlate
+      ON v.licensePlate = p.licensePlate
     JOIN vehicleOwner vo
-        ON v.ownerID = vo.ownerID
-    WHERE vo.username = $1
-    GROUP BY v.licensePlate`,[username]);
+      ON v.ownerID = vo.ownerID
+    WHERE vo.username = $1 `;
+
+  if(licensePlate !== null && licensePlate !== undefined) {
+    return executeQuery(query + 
+      ` AND v.licensePlate = $2 GROUP BY v.licensePlate, ev.plugType`, [username, licensePlate]);
+  } else {
+    return executeQuery(query + 
+      ` GROUP BY v.licensePlate, ev.plugType`, [username]);
+  }
+}
+
+function getPermits(): any {
+  return executeQuery(`SELECT title FROM permitType`);
+}
+
+function getModels(): any {
+  return executeQuery(`SELECT modelname FROM model`);
+}
+
+function getPlugTypes(): any {
+  return executeQuery(`SELECT plugtype from chargers`);
 }
 
 export default {
@@ -75,5 +94,8 @@ export default {
   getUserProfile,
   executeQuery,
   updateUserProfile,
-  getUserVehicles
+  getUserVehicles,
+  getPermits,
+  getModels,
+  getPlugTypes
 }

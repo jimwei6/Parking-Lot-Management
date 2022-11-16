@@ -39,9 +39,19 @@ router.put('/profile', util.asyncHandler(async (req: Request, res: Response, nex
 }));
 
 router.get('/vehicle', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
-  const userVehicles = await queries.getUserVehicles(res.locals.account.username);
+  const param: {licensePlate: string} = req.query as {licensePlate: string};
+  const userVehicles = await queries.getUserVehicles(res.locals.account.username, param ? param.licensePlate : null);
   res.json({
     result: userVehicles
+  })
+}));
+
+router.get('/types', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
+  const [permits, plugTypes, models] = await Promise.all([queries.getPermits(), queries.getPlugTypes(), queries.getModels()]);
+  res.json({
+    permits: permits.map((p: {title: string}) => p.title),
+    plugTypes: plugTypes.map((p: {plugtype: string}) => p.plugtype),
+    models: models.map((p: {modelname: string}) => p.modelname)
   })
 }));
 
