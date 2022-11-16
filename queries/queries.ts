@@ -66,7 +66,7 @@ function getUserVehicles(username: string): any {
     JOIN vehicleOwner vo
         ON v.ownerID = vo.ownerID
     WHERE vo.username = $1
-    GROUP BY v.licensePlate`,[username]);
+    GROUP BY v.licensePlate, ev.plugType`,[username]);
 }
 
 export default {
