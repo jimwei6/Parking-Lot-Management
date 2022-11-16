@@ -55,6 +55,6 @@
 **EXPECT**: username and password in cookies else 401 <br/>
 **FULFILLS**: JOIN <br/>
 **RESPONSE**:
-  - 200: [{licensePlate, model, height, color, isElectric, plugType[], permit}]
+  - 200: {result: [] vehicle (*)}
 
 <hr/>

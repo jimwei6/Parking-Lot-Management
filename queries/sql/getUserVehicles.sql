@@ -18,4 +18,4 @@ LEFT JOIN permits p
 JOIN vehicleOwner vo
     ON v.ownerID = vo.ownerID
 WHERE vo.username = $1
-GROUP BY v.licensePlate
+GROUP BY v.licensePlate, ev.plugType
