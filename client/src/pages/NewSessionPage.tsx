@@ -96,7 +96,7 @@ export const NewSessionPage = () => {
         setIsCreating(true);
         setTimeout(() => {
             setIsCreating(false);
-            navigate('/history');
+            navigate(`/history/${licensePlate}`);
         }, 1000);
     }
 
