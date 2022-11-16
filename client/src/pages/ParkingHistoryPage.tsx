@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Col, Container, Row, Tab, Table, Tabs } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { Vehicle } from "./VehicleListPage";
@@ -154,7 +154,11 @@ export const ParkingHistoryPage = () => {
                                                     <tr
                                                         key={elem.sessionId}
                                                     >
-                                                        {!licensePlate && (<td>{elem.vehicleLicensePlate}</td>)}
+                                                        {!licensePlate && (
+                                                            <td>
+                                                                <Link to='/vehicles'>{elem.vehicleLicensePlate}</Link>
+                                                            </td>
+                                                        )}
                                                         <td>{elem.sessionId}</td>
                                                         <td>{elem.startTime.split('T')[0]}</td>
                                                         <td>{elem.startTime.split('T')[1]}</td>
@@ -194,7 +198,11 @@ export const ParkingHistoryPage = () => {
                                                     <tr
                                                         key={ticket.ticketNumber}
                                                     >
-                                                        {!licensePlate && (<td>{ticket.vehicleLicensePlate}</td>)}
+                                                        {!licensePlate && (
+                                                            <td>
+                                                                <Link to='/vehicles'>{ticket.vehicleLicensePlate}</Link>
+                                                            </td>
+                                                        )}
                                                         <td>{ticket.ticketNumber}</td>
                                                         <td>{ticket.dateReceived.split('T')[0]}</td>
                                                         <td>{ticket.dateReceived.split('T')[1]}</td>
