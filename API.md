@@ -56,7 +56,7 @@
 **EXPECT**: username and password in cookies else 401 <br/>
 **FULFILLS**: JOIN <br/>
 **RESPONSE**:
-  - 200: [{ licenseplate, modelname, height, color, iselectric, plugtype, permits: string[] }]
+  - 200: [{ licenseplate, model, height, color, plugtype, permits: string[], iselectric }]
 
 <hr/>
 
