@@ -114,11 +114,11 @@ CREATE TABLE parkingSessions (
 
 CREATE TABLE tickets (
     ticketNumber SERIAL PRIMARY KEY,
-    licensePlate varchar(10) NOT NULL,
     cost int NOT NULL DEFAULT 10,
     paid bool NOT NULL DEFAULT FALSE,
     details varchar,
-    FOREIGN KEY (licensePlate) REFERENCES vehicle ON DELETE CASCADE ON UPDATE CASCADE
+    sessionId int,
+    FOREIGN KEY (sessionId) REFERENCES parkingSessions ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE parkingActivities (

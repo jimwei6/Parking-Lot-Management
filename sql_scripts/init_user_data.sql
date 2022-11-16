@@ -122,16 +122,16 @@ INSERT INTO parkingSessions(licensePlate, spotID, lotID, allottedTime, isActive,
     ('BH909R', 25, 4, 3600, TRUE, '2022-11-05 12:00:49-08', FALSE); -- reserved
 
 -- ticketNumber: serial (automatically increments), cost: 50 (default?)
-INSERT INTO tickets(licensePlate, cost, paid, details) VALUES
-    ('CA762X', 50, TRUE, NULL),
-    ('XNK656', 50, TRUE, NULL),
-    ('896REN', 50, FALSE, NULL),
-    ('GDM839', 50, TRUE, NULL),
-    ('DPU597', 50, TRUE, NULL),
-    ('245AFC', 50, TRUE, NULL),
-    ('589WGN', 50, FALSE, NULL),
-    ('CD7172', 50, FALSE, NULL),
-    ('MBG091', 50, TRUE, NULL);
+INSERT INTO tickets(cost, paid, details, sessionId) VALUES
+    (50, TRUE, NULL, 2),
+    (50, TRUE, NULL, 4),
+    (50, FALSE, NULL, 6),
+    (50, TRUE, NULL, 8),
+    (50, TRUE, NULL, 9),
+    (50, TRUE, NULL, 12),
+    (50, FALSE, NULL, 15),
+    (50, FALSE, NULL, 16),
+    (50, TRUE, NULL, 17);
 
 INSERT INTO parkingActivities(timeStamp, licensePlate, spotID, lotID, activityType) VALUES
     ('2022-11-01 06:29:10-08', 'CF346E', 21, 1, 'in'),
