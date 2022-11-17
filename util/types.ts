@@ -10,6 +10,7 @@ export interface profile {
 }
 
 export interface vehicle {
+  licensePlate: string;
   model: string; 
   height: string; 
   color: string; 
