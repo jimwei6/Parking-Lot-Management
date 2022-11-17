@@ -2,10 +2,10 @@
 - JOIN (/vehicle GET)
 - INSERTION 
 - UPDATE (/profile PUT)
-- DELETION 
+- DELETION (/vehicle PUT)
 - AGGREGATION GB 
 - PROJECTION  (3-5 attributes) (/profile GET)
-- SELECTION 
+- SELECTION (user provides params)
 - AGGREGATION HV 
 - DIVISION 
 - NESTED AGG
@@ -54,9 +54,19 @@
 **METHOD**: GET <br/>
 **QUERY**: licensePlate (string) (OPTIONAL)  <br/>
 **EXPECT**: username and password in cookies else 401 <br/>
-**FULFILLS**: JOIN <br/>
+**FULFILLS**: JOIN, PROJECTION <br/>
 **RESPONSE**:
   - 200: [{ licenseplate, model, height, color, plugtype, permits: string[], iselectric }]
+
+<hr/>
+
+**ROUTE**: /api/vehicle <br/>
+**METHOD**: PUT <br/>
+**BODY**: { licensePlate, model, height, color, plugType, permits: string[], isElectric } <br/>
+**EXPECT**: username and password in cookies else 401 <br/>
+**FULFILLS**: DELETION, JOIN, UPDATE <br/>
+**RESPONSE**:
+  - 200: [{ licensePlate, model, height, color, plugType, permits: string[], isElectric }]
 
 <hr/>
 
