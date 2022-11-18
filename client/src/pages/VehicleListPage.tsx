@@ -98,7 +98,7 @@ export const VehicleListPage = () => {
                                                 <li>Color: {color}</li>
                                                 <li>Electric: {isElectric ? 'Yes' : 'No'}</li>
                                                 {isElectric && <li>Plug Type: {plugType}</li>}
-                                                <li>Permit: {permits}</li>
+                                                {permits.length > 0 && <li>Permits: {permits.join(', ')}</li>}
                                             </ul>
                                         </Card.Body>
                                     </Card>
