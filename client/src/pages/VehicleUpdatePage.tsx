@@ -2,7 +2,7 @@ import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Vehicle } from "./VehicleListPage";
-import { boolean, number, object, string } from "yup";
+import { array, boolean, number, object, string } from "yup";
 import { FormikHelpers } from "formik/dist/types";
 import { Formik } from "formik";
 
@@ -13,7 +13,7 @@ export const VehicleUpdatePage = () => {
         color: string;
         isElectric: boolean;
         plugType: string;
-        permits: string;
+        permits: string[];
     }
 
     const [models, setModels] = useState<Array<string>>([]);
@@ -35,7 +35,7 @@ export const VehicleUpdatePage = () => {
             then: string().required().label("plug type"),
             otherwise: string().notRequired(),
         }).oneOf(plugTypes, "plug type is a required field"),
-        permits: string().required().oneOf(permits, "permit is a required field"),
+        permits: array().of(string()),
     });
 
     useEffect(() => {
@@ -77,8 +77,8 @@ export const VehicleUpdatePage = () => {
                             color: vehicle?.color || '',
                             isElectric: vehicle?.isElectric || false,
                             plugType: vehicle?.plugType || '',
-                            permits: vehicle?.permits.join(', ') || '',
-                        }}
+                            permits: [],
+                        } as FormFields}
                         enableReinitialize
                     >
                         {({
@@ -125,23 +125,21 @@ export const VehicleUpdatePage = () => {
                                     </Form.Group>
                                 </Row>
                                 <Row className="mb-3" xs={1} md={2}>
-                                    <Form.Group as={Col} controlId="permits">
-                                        <Form.Label>Permit</Form.Label>
-                                        <Form.Select
-                                            placeholder="Enter Permit"
-                                            value={values.permits}
-                                            onChange={handleChange}
-                                            isValid={!errors.permits}
-                                            isInvalid={touched.permits && !!errors.permits}
-                                        >
-                                            <option>Select a permit</option>
-                                            {permits.map((permit) => (
-                                                <option key={permit} value={permit}>{permit}</option>
-                                            ))}
-                                        </Form.Select>
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.permits}
-                                        </Form.Control.Feedback>
+                                    <Form.Group as={Col} controlId="permit">
+                                        <Form.Label>Permits</Form.Label>
+                                        <br/>
+                                        {permits.map((permit) => (
+                                            <Form.Check
+                                                key={permit}
+                                                inline
+                                                label={permit}
+                                                type="checkbox"
+                                                name="permits"
+                                                value={permit}
+                                                defaultChecked={values.permits.includes(permit)}
+                                                onChange={handleChange}
+                                            />
+                                        ))}
                                     </Form.Group>
                                     <Form.Group as={Col} className="mb-3" controlId="color">
                                         <Form.Label>Color</Form.Label>
