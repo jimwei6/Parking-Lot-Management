@@ -28,11 +28,21 @@ interface TicketHistory {
     details?: string;
 }
 
+interface Summary {
+    parkingLotId: number;
+    parkingLotAddress: string; // postalCode city, Province eg. "V6T 1Z4 Vancouver, BC"
+    vehicleLicensePlate: string;
+    count: number;
+}
+
 export const ParkingHistoryPage = () => {
     const { licensePlate } = useParams();
     const [vehicle, setVehicle] = useState<Vehicle>();
     const [parkingHistory, setParkingHistory] = useState<ParkingHistory[]>([]);
     const [ticketHistory, setTicketHistory] = useState<TicketHistory[]>([]);
+    const [totalCost, setTotalCost] = useState<number>(0);
+    const [numTickets, setNumTickets] = useState<number>(0);
+    const [summary, setSummary] = useState<Summary[]>([]);
 
     useEffect(() => {
         if (licensePlate) {
@@ -71,6 +81,21 @@ export const ParkingHistoryPage = () => {
                 details: 'Parking in a no parking zone',
                 vehicleLicensePlate: licensePlate,
             }])
+            // TODO: Only exists if licensePlate exists, that is, route is /history/:licensePlate
+            setTotalCost(71.5);
+            setNumTickets(7);
+            // TODO: Fetch summary from the server (for the given vehicle)
+            setSummary([{
+                parkingLotId: 1,
+                parkingLotAddress: 'V6T 1Z4 Vancouver, BC',
+                vehicleLicensePlate: licensePlate,
+                count: 5,
+            }, {
+                parkingLotId: 2,
+                parkingLotAddress: 'M5T 1Z4 Toronto, ON',
+                vehicleLicensePlate: licensePlate,
+                count: 20,
+            }])
         } else {
             // TODO: Fetch parking history from the server (for all vehicles owned by the user)
             setParkingHistory([{
@@ -96,8 +121,25 @@ export const ParkingHistoryPage = () => {
                 paid: false,
                 cost: 100
             }])
+            // TODO: Fetch summary from the server (for all vehicles owned by the user)
+            setSummary([{
+                parkingLotId: 10,
+                parkingLotAddress: 'V6T 1Z4 Vancouver, BC',
+                vehicleLicensePlate: 'ABC123',
+                count: 10,
+            }, {
+                parkingLotId: 5,
+                parkingLotAddress: 'M5T 1Z4 Toronto, ON',
+                vehicleLicensePlate: 'XYZ987',
+                count: 7,
+            }, {
+                parkingLotId: 2,
+                parkingLotAddress: 'M5T 1Z4 Toronto, ON',
+                vehicleLicensePlate: 'ABC123',
+                count: 20,
+            }])
         }
-    }, []);
+    }, [licensePlate]);
 
 
     return (
@@ -105,7 +147,7 @@ export const ParkingHistoryPage = () => {
             <Row className="justify-content-center">
                 <Col xs md="12" lg="12" className="align-items-center">
                     {licensePlate && (
-                        <Row xs={1} lg={2} className="pb-4">
+                        <Row xs={1} xl={2} className="pb-4">
                             <Col>
                                 <h3>{licensePlate}</h3>
                                 <h5 className="text-muted">{vehicle?.model}</h5>
@@ -117,6 +159,10 @@ export const ParkingHistoryPage = () => {
                                     <Col>
                                         {vehicle?.isElectric && <h6>Plug Type: {vehicle?.plugType}</h6>}
                                         <h6>Permits: {vehicle?.permits.join(', ') || 'none'}</h6>
+                                    </Col>
+                                    <Col>
+                                        <h6># of tickets: {numTickets}</h6>
+                                        <h6>Total cost of tickets: ${totalCost}</h6>
                                     </Col>
                                 </Row>
                             </Col>
@@ -216,6 +262,36 @@ export const ParkingHistoryPage = () => {
                                     ) : (
                                         <h5 className="text-center py-5">No results</h5>
                                     )}
+                                </Tab>
+                                <Tab eventKey="Summary" title="Summary">
+                                    <Row xs={1}>
+                                        <Table bordered responsive>
+                                            <thead>
+                                            <tr>
+                                                {!licensePlate && (<th>Vehicle</th>)}
+                                                <th>Parking Lot ID</th>
+                                                <th>Parking Lot Address</th>
+                                                <th>Number of times parked</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {summary.map((elem) => (
+                                                <tr
+                                                    key={elem.parkingLotId + elem.vehicleLicensePlate}
+                                                >
+                                                    {!licensePlate && (
+                                                        <td>
+                                                            <Link to='/vehicles'>{elem.vehicleLicensePlate}</Link>
+                                                        </td>
+                                                    )}
+                                                    <td>{elem.parkingLotId}</td>
+                                                    <td>{elem.parkingLotAddress}</td>
+                                                    <td>{elem.count}</td>
+                                                </tr>
+                                            ))}
+                                            </tbody>
+                                        </Table>
+                                    </Row>
                                 </Tab>
                             </Tabs>
                         </Col>
