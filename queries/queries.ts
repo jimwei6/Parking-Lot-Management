@@ -4,7 +4,7 @@ import createHttpError from 'http-errors';
 import { Client } from 'pg';
 
 function executeQuery(query: string, values: string[] = [], client: Client | null = null): any {
-  if(client) {
+  if (client) {
     return client.query(query, values).then(res => res.rows);
   }
   return pool.query(query, values).then(res => res.rows);
@@ -24,7 +24,7 @@ async function transaction(fn: Function) {
     await client.query('ROLLBACK');
   } finally {
     client.release();
-    if(hasError) throw hasError;
+    if (hasError) throw hasError;
     return result;
   }
 }
@@ -203,6 +203,21 @@ async function addVehicle(username: string, vehicle: vehicle) {
   };
 }
 
+async function deleteVehicle(username: string, vehicle: vehicle) {
+  const userOwnerID = await executeQuery(`SELECT ownerID FROM vehicleOwner WHERE username = $1`, [username]);
+  const id = userOwnerID[0].ownerid;
+  await executeQuery(`DELETE FROM vehicle WHERE ownerID = $1 AND licensePlate = $2 RETURNING *`, [id, vehicle.licensePlate]);
+  return {
+    license: vehicle.licensePlate,
+    model: vehicle.model,
+    height: vehicle.height,
+    color: vehicle.color,
+    isElectric: vehicle.isElectric,
+    plugType: vehicle.plugType,
+    permits: vehicle.permits
+  };
+}
+
 export default {
   getParkingLots,
   getAccount,
@@ -216,5 +231,6 @@ export default {
   updateVehicle,
   getAccessTypes,
   getSpotTypes,
-  addVehicle
+  addVehicle,
+  deleteVehicle
 }

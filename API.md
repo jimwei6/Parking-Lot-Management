@@ -2,7 +2,7 @@
 - JOIN (/vehicle GET)
 - INSERTION (/vehicle POST)
 - UPDATE (/profile PUT)
-- DELETION (/vehicle PUT)
+- DELETION (/vehicle PUT, /vehicle DELETE)
 - AGGREGATION GB 
 - PROJECTION  (3-5 attributes) (/profile GET)
 - SELECTION (user provides params)
@@ -84,7 +84,17 @@
 **EXPECT**: username and password in cookies else 401 <br/>
 **FULFILLS**: INSERTION <br/>
 **RESPONSE**:   
-   - 200: [{ licenseplate, model, height, color, plugtype, permits: string[], iselectric }]
-   - 400: 'Failed to add user vehicle'
+  - 200: [{ licenseplate, model, height, color, plugtype, permits: string[], iselectric }]
+  - 400: 'Failed to add user vehicle'
+
+<hr/>
+
+**ROUTE**: /api/vehicle <br/>
+**METHOD**: DELETE <br/>
+**EXPECT**: username and password in cookies else 401 <br/>
+**FULFILLS**: DELETION <br/>
+**RESPONSE**:
+  - 200: [{ licenseplate, model, height, color, plugtype, permits: string[], iselectric }]
+  - 400: 'Failed to delete user vehicle'
 
 <hr/>

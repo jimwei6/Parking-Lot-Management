@@ -35,7 +35,7 @@ router.put('/profile', util.asyncHandler(async (req: Request, res: Response, nex
   } catch(error) {
     console.error(error);
     return next(createHttpError(400, 'Failed to update user profile'));
-  };
+  }
 }));
 
 router.get('/vehicle', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
@@ -80,6 +80,19 @@ router.post('/vehicle', util.asyncHandler(async (req: Request, res: Response, ne
   } catch (error) {
     console.error(error);
     return next(createHttpError(400, 'Failed to add user vehicle'));
+  }
+}));
+
+router.delete('/vehicle', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
+  try {
+    const deleteUserVehicle: vehicle = req.body;
+    const userVehicle = await queries.deleteVehicle(res.locals.account.username, deleteUserVehicle);
+    return res.json({
+      ...userVehicle
+    })
+  } catch (error) {
+    console.error(error);
+    return next(createHttpError(400, 'Failed to delete user vehicle'));
   }
 }));
 
