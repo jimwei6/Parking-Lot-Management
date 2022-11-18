@@ -57,12 +57,34 @@ export const ProfilePage = () => {
             .required().label('date of birth'),
     });
 
-    const handleUpdate = (values: Profile, actions: FormikHelpers<Profile>) => {
+    const handleUpdate = async (values: Profile, actions: FormikHelpers<Profile>) => {
         const { email, password, address, name, phonenumber, pronouns, gender, dob } = values;
         console.log(email, password, address, name, phonenumber, pronouns, gender, dob);
-        const { setFieldError, setSubmitting } = actions;
+        const { setSubmitting } = actions;
+        setSubmitting(true);
         // TODO: make a request to the server to update the profile
-        setSubmitting(false);
+        const response = await fetch(`${SERVER_URL}/api/profile`, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            }, body: JSON.stringify({
+                email,
+                password,
+                name,
+                address,
+                pronouns,
+                gender,
+                dob,
+                phoneNumber: phonenumber,
+            })
+        });
+        if (response.ok) {
+            setSubmitting(false);
+        } else {
+            alert('failed to update profile');
+            console.error(`failed to update profile: ${response.status} ${response.statusText}`);
+        }
     }
 
     return (
