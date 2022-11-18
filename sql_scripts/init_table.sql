@@ -95,7 +95,7 @@ CREATE TABLE vehicle (
 CREATE TABLE electricVehicle (
 	licensePlate varchar(10) PRIMARY KEY,
 	plugType varchar(50) NOT NULL,
-    FOREIGN KEY (licensePlate) REFERENCES vehicle(licensePlate) ON DELETE CASCADE  ON UPDATE CASCADE,
+    FOREIGN KEY (licensePlate) REFERENCES vehicle(licensePlate) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (plugType) REFERENCES chargers(plugType) ON DELETE CASCADE  ON UPDATE CASCADE
 );
 
@@ -127,7 +127,7 @@ CREATE TABLE parkingActivities (
 	spotID int NOT NULL,
 	lotID int NOT NULL,
 	activityType varchar(50) NOT NULL, -- 'in', 'out'
-  PRIMARY KEY (timeStamp, spotID, lotID),
+    PRIMARY KEY (timeStamp, spotID, lotID),
 	FOREIGN KEY (licensePlate) REFERENCES vehicle ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (spotID, lotID) REFERENCES parkingSpots(spotID, lotID) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -136,6 +136,6 @@ CREATE TABLE permits (
 	licensePlate varchar(10),
 	permitType varchar(50) NOT NULL,
 	PRIMARY KEY (licensePlate, permitType),
-  FOREIGN KEY (licensePlate) REFERENCES vehicle(licensePlate) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (permitType) REFERENCES permitType(title) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (licensePlate) REFERENCES vehicle(licensePlate) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (permitType) REFERENCES permitType(title) ON DELETE CASCADE ON UPDATE CASCADE
 );
