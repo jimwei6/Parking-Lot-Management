@@ -10,7 +10,7 @@ export interface Vehicle {
     color: string;
     isElectric: boolean;
     plugType?: string;
-    permits: ('vip' | 'company' | 'reserved' | 'infant' | 'accessibility')[];
+    permits: string[];
 }
 
 export const VehicleListPage = () => {

@@ -1,9 +1,9 @@
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import React, { useEffect, useState } from "react";
 import { Formik } from "formik";
 import { array, boolean, number, object, string } from "yup";
 import { FormikHelpers } from "formik/dist/types";
 import { useNavigate } from "react-router-dom";
+import { useAppState } from "../contexts/StateContext";
 
 export const VehicleAddPage = () => {
     interface FormFields {
@@ -16,9 +16,7 @@ export const VehicleAddPage = () => {
         permits: string[];
     }
 
-    const [models, setModels] = useState<Array<string>>([]);
-    const [permits, setPermits] = useState<Array<string>>([]);
-    const [plugTypes, setPlugTypes] = useState<Array<string>>([]);
+    const { permits, models, plugTypes } = useAppState();
 
     const navigate = useNavigate();
 
@@ -35,13 +33,6 @@ export const VehicleAddPage = () => {
         }).oneOf(plugTypes, "plug type is a required field"),
         permits: array().of(string()),
     });
-
-    useEffect(() => {
-        //    TODO: make a request to the server to get the list of models, permits, and plug types
-        setModels(['Tesla Model 3', `Tesla Model S`, 'Tesla Model X', 'Tesla Model Y']);
-        setPermits(['vip', 'company', 'reserved', 'infant', 'accessibility']);
-        setPlugTypes(['Type 1', 'Type 2', 'Type 3']);
-    }, []);
 
     const handleSubmit = (values: FormFields, actions: FormikHelpers<FormFields>) => {
         const { license, model, height, color, isElectric, plugType, permits } = values;

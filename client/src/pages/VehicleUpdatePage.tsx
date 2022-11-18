@@ -1,10 +1,11 @@
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Vehicle } from "./VehicleListPage";
 import { array, boolean, number, object, string } from "yup";
 import { FormikHelpers } from "formik/dist/types";
 import { Formik } from "formik";
+import { useAppState } from "../contexts/StateContext";
 
 export const VehicleUpdatePage = () => {
     interface FormFields {
@@ -16,9 +17,7 @@ export const VehicleUpdatePage = () => {
         permits: string[];
     }
 
-    const [models, setModels] = useState<Array<string>>([]);
-    const [permits, setPermits] = useState<Array<string>>([]);
-    const [plugTypes, setPlugTypes] = useState<Array<string>>([]);
+    const { permits, models, plugTypes } = useAppState();
 
     const { licensePlate } = useParams();
     const [vehicle, setVehicle] = useState<Vehicle>();
@@ -50,10 +49,6 @@ export const VehicleUpdatePage = () => {
             plugType: 'Type 2',
             permits: ['accessibility', 'vip']
         })
-        //    TODO: make a request to the server to get the list of models, permits, and plug types
-        setModels(['Tesla Model 3', `Tesla Model S`, 'Tesla Model X', 'Tesla Model Y']);
-        setPermits(['Permit type A', 'Permit type B', 'Permit type C']);
-        setPlugTypes(['Type 1', 'Type 2', 'Type 3']);
     }, []);
 
     const handleUpdate = (values: FormFields, actions: FormikHelpers<FormFields>) => {

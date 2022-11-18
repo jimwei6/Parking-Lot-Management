@@ -25,11 +25,11 @@ export const NewSessionPage = () => {
     interface Spot {
         spotId: number;
         availableTime: number;
-        spotType: 'reserved' | 'company' | 'vip' | 'normal';
+        spotType: string;
         isElectric: boolean;
         plugType?: string;
         isAccessible: boolean;
-        accessibilityType?: 'accessibility' | 'disabled' | 'infant';
+        accessibilityType?: string;
         lotId: number;
         postalCode: string;
         city: string;
@@ -41,13 +41,13 @@ export const NewSessionPage = () => {
     interface FormFields {
         duration: number;
         location: string; // city, province
-        spotType: '*' | 'reserved' | 'company' | 'vip' | 'normal';
-        accessibilityType: '*' | 'accessibility' | 'disabled' | 'infant';
+        spotType: '*' | 'reserved' | 'company' | 'vip';
+        accessibilityType: '*' | 'accessibility' | 'infant';
         needsCharging?: boolean;
     }
 
-    const [spotTypes, setSpotTypes] = useState<Array<string>>(['reserved', 'company', 'vip', 'normal']);
-    const [accessibilityTypes, setAccessibilityTypes] = useState<Array<string>>(['accessibility', 'disabled', 'infant']);
+    const [spotTypes, setSpotTypes] = useState(['reserved', 'company', 'vip']);
+    const [accessibilityTypes, setAccessibilityTypes] = useState(['accessibility', 'infant']);
 
     const schema = object().shape({
         duration: number().positive().required(),
@@ -69,8 +69,8 @@ export const NewSessionPage = () => {
             permits: ['accessibility', 'company', 'vip'],
         };
         setVehicle(v);
-        setSpotTypes(spotTypes.filter(spotType => v.permits.includes(spotType as any)));
-        setAccessibilityTypes(accessibilityTypes.filter(accessibilityType => v.permits.includes(accessibilityType as any)));
+        setSpotTypes(spotTypes.filter(spotType => v.permits.includes(spotType)));
+        setAccessibilityTypes(accessibilityTypes.filter(accessibilityType => v.permits.includes(accessibilityType)));
         //  TODO: make a request to the server to get the set of locations of all the lots
         setLocations([{
             postalCode: 'M5V 1A1',

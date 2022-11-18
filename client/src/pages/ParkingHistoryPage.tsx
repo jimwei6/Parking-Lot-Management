@@ -40,8 +40,8 @@ export const ParkingHistoryPage = () => {
     const [vehicle, setVehicle] = useState<Vehicle>();
     const [parkingHistory, setParkingHistory] = useState<ParkingHistory[]>([]);
     const [ticketHistory, setTicketHistory] = useState<TicketHistory[]>([]);
-    const [totalCost, setTotalCost] = useState<number>(0);
-    const [numTickets, setNumTickets] = useState<number>(0);
+    const [totalCost, setTotalCost] = useState(0);
+    const [numTickets, setNumTickets] = useState(0);
     const [summary, setSummary] = useState<Summary[]>([]);
 
     useEffect(() => {

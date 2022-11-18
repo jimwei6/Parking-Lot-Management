@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from "react";
+import { createContext, useContext, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { SERVER_URL } from "../constants/constants";
@@ -16,7 +16,7 @@ const AuthContext = createContext({} as AuthContextProps);
 
 export const AuthProvider = ({ children }: any) => {
     const [{ username, password }, setCookie, removeCookie] = useCookies(['username', 'password']);
-    const [isAuthenticated, setIsAuthenticated] = React.useState(!!username);
+    const [isAuthenticated, setIsAuthenticated] = useState(!!username);
     const navigate = useNavigate();
     const home = '/vehicles';
 
