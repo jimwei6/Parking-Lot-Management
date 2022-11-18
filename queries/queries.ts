@@ -112,6 +112,14 @@ function getPlugTypes(): any {
   return executeQuery(`SELECT plugtype from chargers`);
 }
 
+function getSpotTypes(): any {
+  return ["normal", "vip", "company", "reserved"];
+}
+
+function getAccessTypes(): any {
+  return ["infant", "accessibility"];
+}
+
 async function updateVehicle(username: string, vehicleDetails: vehicle) {
   return transaction(async (client: Client) => {
     const verifyOwner = await executeQuery(`SELECT v.ownerid, v.licenseplate, ev.plugtype FROM accounts AS a
@@ -173,5 +181,7 @@ export default {
   getPermits,
   getModels,
   getPlugTypes,
-  updateVehicle
+  updateVehicle,
+  getAccessTypes,
+  getSpotTypes
 }

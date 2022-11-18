@@ -51,7 +51,9 @@ router.get('/types', util.asyncHandler(async (req: Request, res: Response, next:
   res.json({
     permits: permits.map((p: {title: string}) => p.title),
     plugTypes: plugTypes.map((p: {plugtype: string}) => p.plugtype),
-    models: models.map((p: {modelname: string}) => p.modelname)
+    models: models.map((p: {modelname: string}) => p.modelname),
+    spotTypes: queries.getSpotTypes(),
+    accessTypes: queries.getAccessTypes()
   })
 }));
 
