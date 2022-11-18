@@ -1,4 +1,4 @@
-import { profile } from '../util/types';
+import { profile, vehicle } from '../util/types';
 import pool from '../util/dbConnect';
 
 function executeQuery(query: string, values: string[] = []): any {
@@ -67,7 +67,7 @@ function getUserVehicles(username: string, licensePlate: string | null | undefin
       ON v.ownerID = vo.ownerID
     WHERE vo.username = $1 `;
 
-  if(licensePlate !== null && licensePlate !== undefined) {
+  if (licensePlate !== null && licensePlate !== undefined) {
     return executeQuery(query + 
       ` AND v.licensePlate = $2 GROUP BY v.licensePlate, ev.plugType LIMIT 1`, [username, licensePlate]);
   } else {
@@ -85,7 +85,40 @@ function getModels(): any {
 }
 
 function getPlugTypes(): any {
-  return executeQuery(`SELECT plugtype from chargers`);
+  return executeQuery(`SELECT plugtype FROM chargers`);
+}
+
+async function addUserVehicle(username: string, vehicle: vehicle) {
+  const userOwnerID = await executeQuery(`SELECT ownerID FROM vehicleOwner WHERE username = $1`, [username]);
+  const id = userOwnerID[0].ownerid;
+  const userElectricVehicle = (): any => {
+    if (vehicle.isElectric) {
+      executeQuery(`INSERT INTO electricVehicle (licensePlate, plugType)
+      VALUES ($1, $2) RETURNING *`, [vehicle.license, vehicle.plugType])
+    }
+  }
+  const userPermits = (): any => {
+    const permits: string[] = vehicle.permits;
+    permits.forEach((c) => {
+      executeQuery(`INSERT INTO permits (licensePlate, permitType) 
+      VALUES ($1, $2) RETURNING *`, [vehicle.license, c]);
+    });
+  }
+  await Promise.all([
+    executeQuery(`INSERT INTO vehicle (licensePlate, modelName, ownerID, height, color) 
+    VALUES ($1, $2, $3, $4, $5) RETURNING *`, [vehicle.license, vehicle.model, id, vehicle.height, vehicle.color]),
+    userElectricVehicle(),
+    userPermits()
+  ]);
+  return {
+    license: vehicle.license,
+    model: vehicle.model,
+    height: vehicle.height,
+    color: vehicle.color,
+    isElectric: vehicle.isElectric,
+    plugType: vehicle.plugType,
+    permits: vehicle.permits
+  };
 }
 
 export default {
@@ -97,5 +130,6 @@ export default {
   getUserVehicles,
   getPermits,
   getModels,
-  getPlugTypes
+  getPlugTypes,
+  addUserVehicle
 }

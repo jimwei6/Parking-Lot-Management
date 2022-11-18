@@ -1,6 +1,6 @@
 ## REQUIRED: 
 - JOIN (/vehicle GET)
-- INSERTION 
+- INSERTION (/vehicle POST)
 - UPDATE (/profile PUT)
 - DELETION 
 - AGGREGATION GB 
@@ -66,5 +66,15 @@
 **FULFILLS**: NONE <br/>
 **RESPONSE**:
   - 200: [{ permits: string[], models: string[], plugTypes: string[] }]
+
+<hr/>
+
+**ROUTE**: /api/vehicle <br/>
+**METHOD**: POST <br/>
+**EXPECT**: username and password in cookies else 401 <br/>
+**FULFILLS**: INSERTION <br/>
+**RESPONSE**:   
+   - 200: [{ licenseplate, model, height, color, plugtype, permits: string[], iselectric }]
+   - 400: 'Failed to add user vehicle'
 
 <hr/>

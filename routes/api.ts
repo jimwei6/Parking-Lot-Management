@@ -6,7 +6,7 @@ import {
 import util from '../util/index';
 import queries from '../queries/queries';
 import createHttpError from 'http-errors';
-import { profile } from '../util/types';
+import { profile, vehicle } from '../util/types';
 
 const router = Router();
 router.use(util.authenticateAccount()); // saves account info to res.locals
@@ -53,6 +53,19 @@ router.get('/types', util.asyncHandler(async (req: Request, res: Response, next:
     plugTypes: plugTypes.map((p: {plugtype: string}) => p.plugtype),
     models: models.map((p: {modelname: string}) => p.modelname)
   })
+}));
+
+router.post('/vehicle', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
+  try {
+    const newUserVehicle: vehicle = req.body;
+    const userVehicle = await queries.addUserVehicle(res.locals.account.username, newUserVehicle);
+    return res.json({
+      ...userVehicle
+    });
+  } catch (error) {
+    console.error(error);
+    return next(createHttpError(400, 'Failed to add user vehicle'));
+  }
 }));
 
 export default router;
