@@ -70,7 +70,7 @@ async function updateUserProfile(username: string, profile: profile) {
   });
 }
 
-function getUserVehicles(username: string, licensePlate: string | null | undefined): any {
+function getVehicle(username: string, licensePlate: string | null | undefined): any {
   let query = `SELECT
       v.licensePlate,
       v.modelName AS model,
@@ -170,7 +170,7 @@ async function updateVehicle(username: string, vehicleDetails: vehicle) {
   });
 }
 
-async function addUserVehicle(username: string, vehicle: vehicle) {
+async function addVehicle(username: string, vehicle: vehicle) {
   const userOwnerID = await executeQuery(`SELECT ownerID FROM vehicleOwner WHERE username = $1`, [username]);
   const id = userOwnerID[0].ownerid;
   const userElectricVehicle = (): any => {
@@ -209,12 +209,12 @@ export default {
   getUserProfile,
   executeQuery,
   updateUserProfile,
-  getUserVehicles,
+  getVehicle,
   getPermits,
   getModels,
   getPlugTypes,
   updateVehicle,
   getAccessTypes,
   getSpotTypes,
-  addUserVehicle
+  addVehicle
 }

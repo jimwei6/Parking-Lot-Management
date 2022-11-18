@@ -1,4 +1,3 @@
--- VehicleListPage: licensePlate, model (modelName), height, color, isElectric, plugType, permit (permitType)
 SELECT
     v.licensePlate,
     v.modelName AS model,

@@ -40,7 +40,7 @@ router.put('/profile', util.asyncHandler(async (req: Request, res: Response, nex
 
 router.get('/vehicle', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
   const param: {licensePlate: string} = req.query as {licensePlate: string};
-  const userVehicles = await queries.getUserVehicles(res.locals.account.username, param ? param.licensePlate : null);
+  const userVehicles = await queries.getVehicle(res.locals.account.username, param ? param.licensePlate : null);
   res.json({
     result: userVehicles
   })
@@ -73,7 +73,7 @@ router.put('/vehicle', util.asyncHandler(async (req: Request, res: Response, nex
 router.post('/vehicle', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
   try {
     const newUserVehicle: vehicle = req.body;
-    const userVehicle = await queries.addUserVehicle(res.locals.account.username, newUserVehicle);
+    const userVehicle = await queries.addVehicle(res.locals.account.username, newUserVehicle);
     return res.json({
       ...userVehicle
     });
