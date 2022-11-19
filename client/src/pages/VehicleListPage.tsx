@@ -2,6 +2,7 @@ import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Icon } from "../components/Icon";
+import { SERVER_URL } from "../constants/constants";
 
 export interface Vehicle {
     licensePlate: string;
@@ -18,35 +19,44 @@ export const VehicleListPage = () => {
     const [vehicles, setVehicles] = useState<Array<Vehicle>>([]);
 
     useEffect(() => {
-        //    TODO: make a request to the server to get the list of vehicles
-        setVehicles([{
-            licensePlate: 'ABC123',
-            model: 'Tesla Model 3',
-            height: 1800,
-            color: '#FF0000',
-            isElectric: true,
-            plugType: 'Type 2',
-            permits: ['accessibility', 'vip']
-        }, {
-            licensePlate: 'XYZ987',
-            model: 'Toyota Prius',
-            height: 1900,
-            color: '#00FF00',
-            isElectric: false,
-            permits: ['infant', 'reserved'],
-        }, {
-            licensePlate: 'LMN456',
-            model: 'Aston Martin DB5',
-            height: 1600,
-            color: '#F3F3F3',
-            isElectric: false,
-            permits: [],
-        }])
+        const fetchVehicles = async () => {
+            try {
+                const response = await fetch(SERVER_URL + "/api/vehicle", {
+                    method: "GET",
+                    credentials: "include"
+                });
+                const vehicles = await response.json();
+                setVehicles(vehicles.result.map((vehicle: any) => ({
+                    ...vehicle,
+                    licensePlate: vehicle.licenseplate,
+                    plugType: vehicle.plugtype,
+                    isElectric: vehicle.iselectric,
+                    color: '#' + vehicle.color,
+                    permits: vehicle.permits.filter((permit: any) => permit !== null)
+                })));
+            } catch (e) {
+                console.error(e);
+                alert("Failed to fetch vehicles");
+            }
+        }
+        fetchVehicles();
     }, []);
 
-    const handleDelete = (licensePlate: string) => {
-        //    TODO: make a request to the server to delete the vehicle
-        setVehicles(vehicles.filter(vehicle => vehicle.licensePlate !== licensePlate));
+    const handleDelete = async (licensePlate: string) => {
+        try {
+            const response = await fetch(SERVER_URL + "/api/vehicle", {
+                method: "DELETE",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(vehicles.find(vehicle => vehicle.licensePlate === licensePlate)),
+            });
+            setVehicles(vehicles.filter(vehicle => vehicle.licensePlate !== licensePlate));
+        } catch (e) {
+            console.error(e);
+            alert("Failed to delete vehicle");
+        }
     }
 
     return (

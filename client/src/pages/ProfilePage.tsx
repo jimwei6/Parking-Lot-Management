@@ -45,10 +45,10 @@ export const ProfilePage = () => {
     const [showPassword, setShowPassword] = useState(false);
 
     const schema = object().shape({
-        email: string().email().required(),
-        password: string().required(),
-        address: string().required(),
-        name: string().required(),
+        email: string().email().required().max(100),
+        password: string().required().min(8).max(100),
+        address: string().required().max(100),
+        name: string().required().max(100),
         phonenumber: string().required().matches(/^\d{3}-\d{3}-\d{4}$/, 'phone number must be in the format 012-345-6789').label('phone number'),
         pronouns: string().required().oneOf(pronouns),
         gender: string().required().oneOf(genders),
@@ -62,7 +62,6 @@ export const ProfilePage = () => {
         console.log(email, password, address, name, phonenumber, pronouns, gender, dob);
         const { setSubmitting } = actions;
         setSubmitting(true);
-        // TODO: make a request to the server to update the profile
         const response = await fetch(`${SERVER_URL}/api/profile`, {
             method: 'PUT',
             credentials: 'include',

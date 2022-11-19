@@ -6,6 +6,7 @@ import { array, boolean, number, object, string } from "yup";
 import { FormikHelpers } from "formik/dist/types";
 import { Formik } from "formik";
 import { useAppState } from "../contexts/StateContext";
+import { SERVER_URL } from "../constants/constants";
 
 export const VehicleUpdatePage = () => {
     interface FormFields {
@@ -38,25 +39,60 @@ export const VehicleUpdatePage = () => {
     });
 
     useEffect(() => {
-        // TODO: make a request to the server to get the vehicle using the licensePlate parameter
-        //       handle the case where the vehicle is not found
-        setVehicle({
-            licensePlate: 'ABC123',
-            model: 'Tesla Model 3',
-            height: 1800,
-            color: '#FF0000',
-            isElectric: true,
-            plugType: 'Type 2',
-            permits: ['accessibility', 'vip']
-        })
+        const fetchVehicle = async () => {
+            try {
+                const response = await fetch(SERVER_URL + "/api/vehicle?licensePlate=" + licensePlate, {
+                    method: "GET",
+                    credentials: "include"
+                });
+                let vehicle = await response.json();
+                vehicle = vehicle.result.find((vehicle: any) => vehicle.licenseplate === licensePlate);
+                setVehicle({
+                    ...vehicle,
+                    licensePlate: vehicle.licenseplate,
+                    plugType: vehicle.plugtype,
+                    isElectric: vehicle.iselectric,
+                    color: '#' + vehicle.color,
+                    permits: vehicle.permits.filter((permit: any) => permit !== null)
+                });
+            } catch (e) {
+                console.error(e);
+                alert("Failed to fetch vehicles");
+            }
+        }
+        fetchVehicle();
     }, []);
 
-    const handleUpdate = (values: FormFields, actions: FormikHelpers<FormFields>) => {
+    const handleUpdate = async (values: FormFields, actions: FormikHelpers<FormFields>) => {
         const { model, height, color, isElectric, plugType, permits } = values;
-        console.log(model, height, color, isElectric, plugType, permits)
         const { setFieldError, setSubmitting } = actions;
-        // TODO: make a request to the server to add a vehicle
-        navigate('/vehicles');
+        try {
+            const response = await fetch(SERVER_URL + "/api/vehicle", {
+                method: "PUT",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    licensePlate,
+                    model,
+                    height,
+                    color: color.replace("#", ""),
+                    isElectric,
+                    plugType,
+                    permits
+                })
+            })
+            if (response.ok) {
+                navigate("/vehicles");
+            } else {
+                alert("Failed to update vehicle");
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Failed to update vehicle");
+        }
+        setSubmitting(false);
     }
 
     return (

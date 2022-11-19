@@ -14,8 +14,8 @@ export const LoginPage = () => {
     }
 
     const schema = object().shape({
-        username: string().required(),
-        password: string().required(),
+        username: string().required().max(100),
+        password: string().required().max(100)
     });
 
     const { login } = useAuth();

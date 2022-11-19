@@ -4,6 +4,7 @@ import { array, boolean, number, object, string } from "yup";
 import { FormikHelpers } from "formik/dist/types";
 import { useNavigate } from "react-router-dom";
 import { useAppState } from "../contexts/StateContext";
+import { SERVER_URL } from "../constants/constants";
 
 export const VehicleAddPage = () => {
     interface FormFields {
@@ -21,7 +22,7 @@ export const VehicleAddPage = () => {
     const navigate = useNavigate();
 
     const schema = object().shape({
-        license: string().required(),
+        license: string().required().max(10),
         model: string().required().oneOf(models, "model is a required field"),
         height: number().integer().positive().required(),
         color: string().required(),
@@ -34,12 +35,39 @@ export const VehicleAddPage = () => {
         permits: array().of(string()),
     });
 
-    const handleSubmit = (values: FormFields, actions: FormikHelpers<FormFields>) => {
+    const handleSubmit = async (values: FormFields, actions: FormikHelpers<FormFields>) => {
         const { license, model, height, color, isElectric, plugType, permits } = values;
         console.log(license, model, height, color, isElectric, plugType, permits)
-        const { setFieldError, setSubmitting } = actions;
-        // TODO: make a request to the server to create a vehicle and add permits
-        navigate('/vehicles');
+        console.log(isElectric)
+        const { setSubmitting } = actions;
+        setSubmitting(true);
+        try {
+            const response = await fetch(SERVER_URL + "/api/vehicle", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    licensePlate: license,
+                    model,
+                    height,
+                    color: color.replace("#", ""),
+                    isElectric,
+                    plugType,
+                    permits
+                }),
+            });
+            if (response.ok) {
+                navigate("/vehicles");
+            } else {
+                alert("Failed to add vehicle");
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Failed to create vehicle");
+        }
+        setSubmitting(false);
     }
 
     return (
@@ -58,6 +86,7 @@ export const VehicleAddPage = () => {
                             plugType: '',
                             permits: [],
                         } as FormFields}
+                        enableReinitialize
                     >
                         {({
                               handleSubmit,
