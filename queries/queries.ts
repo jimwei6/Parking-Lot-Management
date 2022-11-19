@@ -3,7 +3,7 @@ import pool from '../util/dbConnect';
 import createHttpError from 'http-errors';
 import { Client } from 'pg';
 
-function executeQuery(query: string, values: string[] = [], client: Client | null = null): any {
+async function executeQuery(query: string, values: string[] = [], client: Client | null = null) {
   if (client) {
     return client.query(query, values).then(res => res.rows);
   }
@@ -166,7 +166,7 @@ async function updateVehicle(username: string, vehicleDetails: vehicle) {
       height: vehicle[0].height, 
       color: vehicle[0].color,
       isElectric: verifyOwner[0].plugtype !== null,
-      plugType: verifyOwner[0].plugtype ? plugType[0].plugtype : null,
+      plugType: verifyOwner[0].plugtype && plugType && plugType[0] ? plugType[0].plugtype : null,
       permits: permits.map((p: {permittype: string}) => p.permittype)
     }
   });

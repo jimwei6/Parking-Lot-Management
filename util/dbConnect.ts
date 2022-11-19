@@ -1,6 +1,8 @@
 import pg, { Pool, PoolConfig } from 'pg';
 import env from './env';
 
+let pool: Pool;
+
 const connectionString: string | undefined = env.PG_REMOTE;
 const config: PoolConfig = {
   user: env.PG_USER,
@@ -10,7 +12,7 @@ const config: PoolConfig = {
   port: env.PG_PORT ? parseInt(env.PG_PORT) : 5432
 }
 
-const pool: Pool = connectionString && env.PG_USE_REMOTE == '1' ?
+pool = connectionString && env.PG_USE_REMOTE == '1' ?
   new pg.Pool({
     connectionString,
   }) : new pg.Pool(config)

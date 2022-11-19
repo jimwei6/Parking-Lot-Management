@@ -1,6 +1,7 @@
 import createHttpError from 'http-errors';
 import queries from '../queries/queries';
 import { Request, Response } from 'express';
+import pool from './dbConnect';
 
 function asyncHandler(asyncFunction: Function) {
     return async (req: Request, res: Response, next: Function) => Promise.resolve(asyncFunction(req, res, next).catch(next));
@@ -20,7 +21,18 @@ function authenticateAccount() {
     });
 }
 
+function testDBConnection() {
+  return asyncHandler(async (req: Request, res: Response, next: Function) => { 
+    try {
+      await pool.connect()
+    } catch(error) {
+      return next(createHttpError(500, "Server cannot connect to Database"));
+    }
+  })
+}
+
 export default {
     asyncHandler,
-    authenticateAccount
+    authenticateAccount,
+    testDBConnection
 }
