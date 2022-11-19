@@ -206,18 +206,27 @@ async function addVehicle(username: string, vehicle: vehicle) {
 }
 
 async function deleteVehicle(username: string, vehicle: vehicle) {
-  const userOwnerID = await executeQuery(`SELECT ownerID FROM vehicleOwner WHERE username = $1`, [username]);
-  const id = userOwnerID[0].ownerid;
-  await executeQuery(`DELETE FROM vehicle WHERE ownerID = $1 AND licensePlate = $2 RETURNING *`, [id, vehicle.licensePlate]);
-  return {
-    license: vehicle.licensePlate,
-    model: vehicle.model,
-    height: vehicle.height,
-    color: vehicle.color,
-    isElectric: vehicle.isElectric,
-    plugType: vehicle.plugType,
-    permits: vehicle.permits
-  };
+  return transaction(async (client: Client) => {
+    const userOwnerID = await executeQuery(`SELECT ownerID as id FROM vehicleOwner WHERE username = $1`, [username], client);
+    if(!userOwnerID || !userOwnerID.length) {
+      throw createHttpError(403, 'User is not a vehicle owner.');
+    }
+    const returned = await executeQuery(`DELETE FROM vehicle WHERE ownerID = $1 AND licensePlate = $2 RETURNING *`,
+      [userOwnerID[0].id, vehicle.licensePlate], client);
+      
+    if(returned && returned.length) {
+      return {
+        license: vehicle.licensePlate,
+        model: vehicle.model,
+        height: vehicle.height,
+        color: vehicle.color,
+        isElectric: vehicle.isElectric,
+        plugType: vehicle.plugType,
+        permits: vehicle.permits
+      };
+    }
+    throw createHttpError(403, 'Vehicle trying to delete is not found');
+  });
 }
 
 export default {
