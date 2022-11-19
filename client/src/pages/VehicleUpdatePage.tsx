@@ -161,6 +161,7 @@ export const VehicleUpdatePage = () => {
                                         <br/>
                                         {permits.map((permit) => (
                                             <Form.Check
+                                                id={permit}
                                                 key={permit}
                                                 inline
                                                 label={permit}

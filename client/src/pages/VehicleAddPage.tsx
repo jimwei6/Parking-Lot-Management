@@ -153,6 +153,7 @@ export const VehicleAddPage = () => {
                                         {permits.map((permit) => (
                                             <Form.Check
                                                 key={permit}
+                                                id={permit}
                                                 inline
                                                 label={permit}
                                                 type="checkbox"
