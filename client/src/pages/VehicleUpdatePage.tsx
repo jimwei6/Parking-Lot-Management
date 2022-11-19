@@ -108,7 +108,7 @@ export const VehicleUpdatePage = () => {
                             color: vehicle?.color || '',
                             isElectric: vehicle?.isElectric || false,
                             plugType: vehicle?.plugType || '',
-                            permits: [],
+                            permits: vehicle?.permits || [],
                         } as FormFields}
                         enableReinitialize
                     >
@@ -167,7 +167,7 @@ export const VehicleUpdatePage = () => {
                                                 type="checkbox"
                                                 name="permits"
                                                 value={permit}
-                                                defaultChecked={values.permits.includes(permit)}
+                                                checked={values.permits.includes(permit)}
                                                 onChange={handleChange}
                                             />
                                         ))}
