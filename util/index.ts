@@ -21,17 +21,9 @@ function authenticateAccount() {
     });
 }
 
-function testDBConnection() {
-  return asyncHandler(async (req: Request, res: Response, next: Function) => { 
-    try {
-      const client = await pool.connect();
-      client.release();
-      next();
-    } catch(error) {
-      console.log(error);
-      return next(createHttpError(500, "Server cannot connect to Database"));
-    }
-  })
+async function testDBConnection() {
+    const client = await pool.connect();
+    client.release();
 }
 
 export default {

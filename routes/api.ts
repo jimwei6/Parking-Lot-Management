@@ -9,9 +9,7 @@ import createHttpError from 'http-errors';
 import { profile, vehicle } from '../util/types';
 
 const router = Router();
-router.use(util.testDBConnection());
 router.use(util.authenticateAccount()); // saves account info to res.locals
-
 
 router.get('/parkingLot', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
   const parkingLots = await queries.getParkingLots();
