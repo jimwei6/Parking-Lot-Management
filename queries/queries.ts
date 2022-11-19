@@ -173,36 +173,43 @@ async function updateVehicle(username: string, vehicleDetails: vehicle) {
 }
 
 async function addVehicle(username: string, vehicle: vehicle) {
-  const userOwnerID = await executeQuery(`SELECT ownerID FROM vehicleOwner WHERE username = $1`, [username]);
-  const id = userOwnerID[0].ownerid;
-  const userElectricVehicle = (): any => {
+  return transaction(async (client: Client) => {
+    const userOwnerID = await executeQuery(`SELECT ownerID FROM vehicleOwner WHERE username = $1`, [username], client);
+    if(!userOwnerID || !userOwnerID.length) throw createHttpError(404, 'User is not a vehicle owner');
+
+    const id = userOwnerID[0].ownerid;
+    const newVehicle = await executeQuery(`INSERT INTO vehicle (licensePlate, modelName, ownerID, height, color) 
+      VALUES ($1, $2, $3, $4, $5) RETURNING *`, [vehicle.licensePlate, vehicle.model, id, vehicle.height, vehicle.color])
+    
+    const promises = [];
     if (vehicle.isElectric) {
-      executeQuery(`INSERT INTO electricVehicle (licensePlate, plugType)
-      VALUES ($1, $2) RETURNING *`, [vehicle.licensePlate, vehicle.plugType])
+      promises.push(executeQuery(`INSERT INTO electricVehicle (licensePlate, plugType)
+      VALUES ($1, $2) RETURNING *`, [vehicle.licensePlate, vehicle.plugType], client));
     }
-  }
-  const userPermits = (): any => {
-    const permits: string[] = vehicle.permits;
-    permits.forEach((c) => {
-      executeQuery(`INSERT INTO permits (licensePlate, permitType) 
-      VALUES ($1, $2) RETURNING *`, [vehicle.licensePlate, c]);
-    });
-  }
-  await Promise.all([
-    executeQuery(`INSERT INTO vehicle (licensePlate, modelName, ownerID, height, color) 
-    VALUES ($1, $2, $3, $4, $5) RETURNING *`, [vehicle.licensePlate, vehicle.model, id, vehicle.height, vehicle.color]),
-    userElectricVehicle(),
-    userPermits()
-  ]);
-  return {
-    license: vehicle.licensePlate,
-    model: vehicle.model,
-    height: vehicle.height,
-    color: vehicle.color,
-    isElectric: vehicle.isElectric,
-    plugType: vehicle.plugType,
-    permits: vehicle.permits
-  };
+
+    if (vehicle.permits && vehicle.permits.length) {
+      const permitInserts = vehicle.permits.map((p, index) => {
+        return `${index !== 0 ? ',' : ''} ($1, $${index + 2})`;
+      }).join('');
+
+      promises.push(executeQuery(`INSERT INTO permits(licenseplate, permittype) VALUES ` + 
+        permitInserts +
+        ` RETURNING *`,
+      [vehicle.licensePlate, ...vehicle.permits], client));
+    }
+
+    let [electricVehicle, permits] = await Promise.all(promises);
+
+    return {
+      license: vehicle.licensePlate,
+      model: vehicle.model,
+      height: vehicle.height,
+      color: vehicle.color,
+      isElectric: vehicle.isElectric,
+      plugType: vehicle.plugType,
+      permits: vehicle.permits
+    };
+  });
 }
 
 async function deleteVehicle(username: string, vehicle: vehicle) {
@@ -213,7 +220,7 @@ async function deleteVehicle(username: string, vehicle: vehicle) {
     }
     const returned = await executeQuery(`DELETE FROM vehicle WHERE ownerID = $1 AND licensePlate = $2 RETURNING *`,
       [userOwnerID[0].id, vehicle.licensePlate], client);
-      
+
     if(returned && returned.length) {
       return {
         license: vehicle.licensePlate,
@@ -225,7 +232,7 @@ async function deleteVehicle(username: string, vehicle: vehicle) {
         permits: vehicle.permits
       };
     }
-    throw createHttpError(403, 'Vehicle trying to delete is not found');
+    throw createHttpError(404, 'Vehicle trying to delete is not found');
   });
 }
 
