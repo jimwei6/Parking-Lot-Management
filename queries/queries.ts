@@ -76,10 +76,12 @@ function getVehicle(username: string, licensePlate: string | null | undefined): 
       v.modelName AS model,
       v.height,
       v.color,
-      ev.plugType,
+      CASE 
+          WHEN ev.plugType IS NOT NULL THEN ev.plugType
+      END AS plugType,
       array_agg(p.permitType) AS permits,
       CASE
-          WHEN ev.plugType = NULL THEN FALSE
+          WHEN ev.plugType IS NULL THEN FALSE
           ELSE TRUE
       END AS isElectric
     FROM vehicle v
@@ -91,7 +93,7 @@ function getVehicle(username: string, licensePlate: string | null | undefined): 
       ON v.ownerID = vo.ownerID
     WHERE vo.username = $1 `;
 
-  if(licensePlate !== null && licensePlate !== undefined) {
+  if (licensePlate !== null && licensePlate !== undefined) {
     return executeQuery(query + 
       ` AND v.licensePlate = $2 GROUP BY v.licensePlate, ev.plugType LIMIT 1`, [username, licensePlate]);
   } else {
@@ -128,7 +130,7 @@ async function updateVehicle(username: string, vehicleDetails: vehicle) {
     LEFT JOIN electricvehicle AS ev on ev.licenseplate = v.licenseplate
     WHERE a.username = $1 AND v.licenseplate = $2 LIMIT 1`, [username, vehicleDetails.licensePlate], client);
 
-    if(!verifyOwner || !verifyOwner[0]) {
+    if (!verifyOwner || !verifyOwner[0]) {
       throw createHttpError(404, 'Vehicle trying to update is not found.');
     }
     
@@ -142,7 +144,7 @@ async function updateVehicle(username: string, vehicleDetails: vehicle) {
     await executeQuery(`DELETE FROM permits WHERE licenseplate = $1`, [vehicleDetails.licensePlate], client);
 
     let permits = [];
-    if(vehicleDetails.permits && vehicleDetails.permits.length) {
+    if (vehicleDetails.permits && vehicleDetails.permits.length) {
       const permitInserts = vehicleDetails.permits.map((p, index) => {
         return `${index !== 0 ? ',' : ''} ($1, $${index + 2})`;
       }).join('');
@@ -153,7 +155,7 @@ async function updateVehicle(username: string, vehicleDetails: vehicle) {
     }
     
     let plugType = null;
-    if(verifyOwner[0].plugtype !== null) {
+    if (verifyOwner[0].plugtype !== null) {
       plugType = await executeQuery(`UPDATE electricvehicle SET plugtype = $1 WHERE licenseplate = $2 RETURNING *`,
       [vehicleDetails.plugType, vehicleDetails.licensePlate], client);
     }
