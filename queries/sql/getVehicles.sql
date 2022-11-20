@@ -3,7 +3,9 @@ SELECT
     v.modelName AS model,
     v.height,
     v.color,
-    ev.plugType,
+    CASE
+        WHEN ev.plugType IS NOT NULL THEN ev.plugType
+        END AS plugType,
     array_agg(p.permitType) AS permit,
     CASE
         WHEN ev.plugType = NULL THEN FALSE

@@ -70,7 +70,7 @@ async function updateUserProfile(username: string, profile: profile) {
   });
 }
 
-function getVehicle(username: string, licensePlate: string | null | undefined): any {
+function getVehicles(username: string, licensePlate: string | null | undefined): any {
   let query = `SELECT
       v.licensePlate,
       v.modelName AS model,
@@ -236,13 +236,30 @@ async function deleteVehicle(username: string, vehicle: vehicle) {
   });
 }
 
+async function getOverview() {
+  const [anyLot, allLots] = await Promise.all([executeQuery(`SELECT COUNT(DISTINCT licensePlate) as AnyLot FROM parkingSessions`),
+    executeQuery(`SELECT COUNT(DISTINCT licensePlate) as AllLots
+    FROM parkingSessions ps0
+    WHERE NOT EXISTS
+            ((SELECT lotID
+              FROM parkingSpots)
+              EXCEPT
+                (SELECT lotID
+                 FROM parkingSessions ps1
+                 WHERE ps1.licensePlate = ps0.licensePlate))`)]);
+  return {
+    ...anyLot[0],
+    ...allLots[0]
+  }
+}
+
 export default {
   getParkingLots,
   getAccount,
   getUserProfile,
   executeQuery,
   updateUserProfile,
-  getVehicle,
+  getVehicles,
   getPermits,
   getModels,
   getPlugTypes,
@@ -250,5 +267,6 @@ export default {
   getAccessTypes,
   getSpotTypes,
   addVehicle,
-  deleteVehicle
+  deleteVehicle,
+  getOverview
 }

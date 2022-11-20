@@ -40,7 +40,7 @@ router.put('/profile', util.asyncHandler(async (req: Request, res: Response, nex
 
 router.get('/vehicle', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
   const param: {licensePlate: string} = req.query as {licensePlate: string};
-  const userVehicles = await queries.getVehicle(res.locals.account.username, param ? param.licensePlate : null);
+  const userVehicles = await queries.getVehicles(res.locals.account.username, param ? param.licensePlate : null);
   res.json({
     result: userVehicles
   })
@@ -94,6 +94,13 @@ router.delete('/vehicle', util.asyncHandler(async (req: Request, res: Response, 
     console.error(error);
     return next(createHttpError(400, 'Failed to delete user vehicle'));
   }
+}));
+
+router.get('/overview', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
+  const overview = await queries.getOverview();
+  res.json({
+    ...overview
+  });
 }));
 
 export default router;

@@ -22,7 +22,7 @@ export const AnalyticsPage = () => {
     const [locationData, setLocationData] = useState<LocationData | null>(null);
 
     useEffect(() => {
-        // TODO: Fetch overview data from the API
+        // TODO: Fetch overview data from the API <= DONE
         setOverviewData({ anyLot: 200, allLots: 30 });
         // TODO: Fetch locations from the API
         setLocations([

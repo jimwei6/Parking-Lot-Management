@@ -7,7 +7,7 @@
 - PROJECTION  (3-5 attributes) (/profile GET)
 - SELECTION (user provides params)
 - AGGREGATION HV 
-- DIVISION 
+- DIVISION (/overview GET)
 - NESTED AGG
 
 ## ROUTES
@@ -96,5 +96,14 @@
 **RESPONSE**:
   - 200: [{ licenseplate, model, height, color, plugtype, permits: string[], iselectric }]
   - 400: 'Failed to delete user vehicle'
+
+<hr/>
+
+**ROUTE**: /api/overview <br/>
+**METHOD**: GET <br/>
+**EXPECT**: username and password in cookies else 401 <br/>
+**FULFILLS**: DIVISION  <br/>
+**RESPONSE**:
+  - 200: { anylot, alllots }
 
 <hr/>
