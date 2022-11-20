@@ -1,5 +1,6 @@
 import { Col, Container, Form, Row } from "react-bootstrap"
 import React, { useEffect, useState } from "react";
+import { SERVER_URL } from "../constants/constants";
 
 export const AnalyticsPage = () => {
     interface LocationData {
@@ -16,20 +17,29 @@ export const AnalyticsPage = () => {
         }[]
     }
 
-    const [overviewData, setOverviewData] = useState<{ anyLot: number; allLots: number } | null>(null);
-    const [locations, setLocations] = useState<{ id: number; postalCode: string, city: string, province: string }[]>([]);
+    const [overviewData, setOverviewData] = useState<{ anylot: string; alllots: string } | null>(null);
+    const [locations, setLocations] = useState<{ lotid: number; postalcode: string, city: string, province: string }[]>([]);
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const [locationData, setLocationData] = useState<LocationData | null>(null);
 
     useEffect(() => {
-        // TODO: Fetch overview data from the API <= DONE
-        setOverviewData({ anyLot: 200, allLots: 30 });
-        // TODO: Fetch locations from the API <= DONE
-        setLocations([
-            { id: 1, postalCode: "V6T 1Z4", city: "Vancouver", province: "BC" },
-            { id: 2, postalCode: "V1V 1V8", city: "Victoria", province: "BC" },
-            { id: 3, postalCode: "O1O 1O1", city: "Ottawa", province: "ON" },
-        ]);
+        const fetchOverviewData = async () => {
+            const promises = []
+            promises.push(await fetch(SERVER_URL + '/api/overview', {
+                method: 'GET',
+                credentials: 'include'
+            }));
+            promises.push(await fetch(SERVER_URL + '/api/location', {
+                method: 'GET',
+                credentials: 'include'
+            }));
+            const responses = await Promise.all(promises);
+            const json = await Promise.all(responses.map(response => response.json()));
+            console.log(json[0], json[1].result);
+            setOverviewData(json[0]);
+            setLocations(json[1].result);
+        }
+        fetchOverviewData();
     }, []);
 
     useEffect(() => {
@@ -69,8 +79,8 @@ export const AnalyticsPage = () => {
                             <h5 className="text-muted">For last 30 days</h5>
                             <Row>
                                 <Col>
-                                    <h6>Number of people parked at any parking lot: {overviewData?.anyLot}</h6>
-                                    <h6>Number of people parked at all parking lots: {overviewData?.allLots}</h6>
+                                    <h6>Number of people parked at any parking lot: {overviewData?.anylot}</h6>
+                                    <h6>Number of people parked at all parking lots: {overviewData?.alllots}</h6>
                                 </Col>
                             </Row>
                         </Col>
@@ -88,9 +98,9 @@ export const AnalyticsPage = () => {
                             onChange={handleChange}
                         >
                             <option>Select a parking lot</option>
-                            {locations.map(({ postalCode, city, province }, index) => (
-                                <option key={postalCode + city + province}
-                                        value={index}>{`${postalCode} ${city}, ${province}`}
+                            {locations.map(({ postalcode, city, province }, index) => (
+                                <option key={postalcode + city + province}
+                                        value={index}>{`${postalcode} ${city}, ${province}`}
                                 </option>
                             ))}
                         </Form.Select>
