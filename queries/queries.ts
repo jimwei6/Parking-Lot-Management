@@ -237,16 +237,22 @@ async function deleteVehicle(username: string, vehicle: vehicle) {
 }
 
 async function getOverview() {
-  const [anyLot, allLots] = await Promise.all([executeQuery(`SELECT COUNT(DISTINCT licensePlate) as AnyLot FROM parkingSessions`),
-    executeQuery(`SELECT COUNT(DISTINCT licensePlate) as AllLots
+  const [anyLot, allLots] = await Promise.all([executeQuery(`SELECT COUNT(DISTINCT v.ownerID) AS AnyLot
+    FROM parkingSessions ps
+    JOIN vehicle v ON ps.licensePlate = v.licensePlate
+    WHERE ps.startTime > CURRENT_TIMESTAMP - INTERVAL '30 day'`),
+    executeQuery(`SELECT COUNT(DISTINCT v0.ownerID) AS AllLots
     FROM parkingSessions ps0
-    WHERE NOT EXISTS
+    JOIN vehicle v0 ON ps0.licensePlate = v0.licensePlate
+    WHERE ps0.startTime > CURRENT_TIMESTAMP - INTERVAL '30 day'
+        AND NOT EXISTS
             ((SELECT lotID
               FROM parkingSpots)
               EXCEPT
-                (SELECT lotID
-                 FROM parkingSessions ps1
-                 WHERE ps1.licensePlate = ps0.licensePlate))`)]);
+              (SELECT ps1.lotID
+               FROM parkingSessions ps1
+               JOIN vehicle v1 ON ps1.licensePlate = v1.licensePlate
+               WHERE v1.ownerID = v0.ownerID))`)]);
   return {
     ...anyLot[0],
     ...allLots[0]
