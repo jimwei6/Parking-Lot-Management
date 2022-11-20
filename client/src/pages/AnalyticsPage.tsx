@@ -66,6 +66,7 @@ export const AnalyticsPage = () => {
                     <Row xs={1} lg={2}>
                         <Col>
                             <h3>Overview</h3>
+                            <h5 className="text-muted">For last 30 days</h5>
                             <Row>
                                 <Col>
                                     <h6>Number of people parked at any parking lot: {overviewData?.anyLot}</h6>
@@ -79,6 +80,7 @@ export const AnalyticsPage = () => {
             <hr/>
             <Row className="pb-4">
                 <h3>Parking Lot Stats</h3>
+                <h5 className="text-muted">For last 30 days</h5>
                 <Row className="mb-3" xs={1} md={3}>
                     <Form.Group as={Col} controlId="location">
                         <Form.Select
