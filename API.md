@@ -107,3 +107,11 @@
   - 200: { anylot, alllots }
 
 <hr/>
+
+**ROUTE**: /api/location <br/>
+**METHOD**: GET <br/>
+**EXPECT**: username and password in cookies else 401 <br/>
+**RESPONSE**:
+  - 200: [{ lotid, postalcode, city, province }]
+
+<hr/>

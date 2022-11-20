@@ -76,7 +76,7 @@ router.post('/vehicle', util.asyncHandler(async (req: Request, res: Response, ne
     const userVehicle = await queries.addVehicle(res.locals.account.username, newUserVehicle);
     return res.json({
       ...userVehicle
-    });
+    })
   } catch (error) {
     console.error(error);
     return next(createHttpError(400, 'Failed to add user vehicle'));
@@ -100,7 +100,14 @@ router.get('/overview', util.asyncHandler(async (req: Request, res: Response, ne
   const overview = await queries.getOverview();
   res.json({
     ...overview
-  });
+  })
+}));
+
+router.get('/location', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
+  const location = await queries.getLocations();
+  res.json({
+    result: location
+  })
 }));
 
 export default router;

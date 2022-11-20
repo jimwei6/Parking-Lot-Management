@@ -24,7 +24,7 @@ export const AnalyticsPage = () => {
     useEffect(() => {
         // TODO: Fetch overview data from the API <= DONE
         setOverviewData({ anyLot: 200, allLots: 30 });
-        // TODO: Fetch locations from the API
+        // TODO: Fetch locations from the API <= DONE
         setLocations([
             { id: 1, postalCode: "V6T 1Z4", city: "Vancouver", province: "BC" },
             { id: 2, postalCode: "V1V 1V8", city: "Victoria", province: "BC" },
