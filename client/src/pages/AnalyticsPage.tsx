@@ -54,7 +54,7 @@ export const AnalyticsPage = () => {
                     averagePark: string,
                     tickets: {name: string, email: string, num_tickets: number}[],
                     parked: {name: string, email: string, parked: number}[]
-                  } = (await response.json()).result;
+                  } = (await response.json());
                   
                   setLocationData({
                     averageParkingPerDay: json.averagePark,

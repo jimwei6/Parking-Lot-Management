@@ -3,12 +3,12 @@
 - INSERTION (/vehicle POST)
 - UPDATE (/profile PUT)
 - DELETION (/vehicle PUT, /vehicle DELETE)
-- AGGREGATION GB 
+- AGGREGATION GB (/parkingLots/stats GET)
 - PROJECTION  (3-5 attributes) (/profile GET)
 - SELECTION (user provides params)
-- AGGREGATION HV 
+- AGGREGATION HV  (/parkingLots/stats GET)
 - DIVISION (/overview GET)
-- NESTED AGG
+- NESTED AGG (/parkingLots/stats GET)
 
 ## ROUTES
 <hr/>
@@ -122,5 +122,15 @@
 **FULFILLS**: JOIN, PROJECTION <br/>
 **RESPONSE**:
   - 200: [{ sessionid, starttime, isactive, allottedtime, ischarging, parkinglotid, parkinglotaddress, vehiclelicenseplate, spotid, spottype, accessibilitytype, isaccessibilityspot, iselectricspot}]
+
+<hr/>
+
+**ROUTE**: /api/parkingLots/stats <br/>
+**METHOD**: GET <br/>
+**QUERY**: lotId (number) <br/>
+**EXPECT**: username and password in cookies else 401 <br/>
+**FULFILLS**: JOIN, PROJECTION, Aggregate GB, Aggregate GB Having, Nested AGG <br/>
+**RESPONSE**:
+  - 200: { tickets: {name, email, num_tickets}[], averagePark: string, parked: {name, email, parked}[]}
 
 <hr/>
