@@ -99,39 +99,39 @@ INSERT INTO electricVehicle(licensePlate, plugType) VALUES
     ('MBG091', 'Mennekes');
 
 -- sessionID: serial (automatically increments)
-INSERT INTO parkingSessions(sessionId, licensePlate, spotID, lotID, allottedTime, isActive, startTime, isCharging) VALUES
-    (1, 'CF346E', 21, 1, 7200, FALSE, '2022-11-01 06:29:10-08', FALSE), -- electric, vip
-    (2, 'CA762X', 2, 1, 7200, FALSE, '2022-11-01 07:05:35-08', FALSE), -- electric, normal
-    (3, 'DE310T', 5, 1, 7200, FALSE, '2022-11-01 09:19:05-08', FALSE), -- electric, normal
-    (4, 'XNK656', 31, 1, 28800, FALSE, '2022-11-01 10:01:09-08', FALSE), -- electric, company
-    (5, 'KD978P', 46, 1, 3600, FALSE, '2022-11-01 15:30:03-08', FALSE), -- reserved
-    (6, '896REN', 16, 2, 3600, FALSE, '2022-11-02 05:59:48-08', FALSE), -- infant, normal
-    (7, '706SGL', 9, 2, 3600, FALSE, '2022-11-02 07:23:36-08', FALSE), -- electric, normal
-    (8, 'GDM839', 17, 2, 3600, FALSE, '2022-11-02 09:10:38-08', FALSE), -- accessibility, normal
-    (9, 'DPU597', 10, 2, 3600, FALSE, '2022-11-02 12:31:07-08', FALSE), -- electric, normal
-    (10, '985HDE', 48, 2, 10800, FALSE, '2022-11-02 18:45:49-08', FALSE), -- vip
-    (11, 'DHR427', 11, 3, 3600, FALSE, '2022-11-03 10:00:15-08', FALSE), -- reserved
-    (12, '245AFC', 8, 3, 3600, FALSE, '2022-11-03 10:05:39-08', FALSE), -- normal
-    (13, '144PKF', 17, 3, 3600, FALSE, '2022-11-03 10:06:08-08', FALSE), -- vip
-    (14, '645RTM', 6, 3, 3600, FALSE, '2022-11-03 10:27:19-08', FALSE), -- accessibility, normal
-    (15, '589WGN', 31, 5, 28800, FALSE, '2022-11-04 14:39:00-08', FALSE), -- company
-    (16, 'CD7172', 12, 1, 7200, FALSE, '2022-11-04 16:18:49-08', FALSE), -- infant, normal
-    (17, 'MBG091', 10, 2, 3600, FALSE, '2022-11-04 18:07:58-08', FALSE), -- electric, normal
-    (18, '229KBX', 16, 1, 3600, TRUE, '2022-11-05 11:05:28-08', FALSE), -- normal
-    (19, 'VVF388', 10, 4, 10800, TRUE, '2022-11-05 11:27:01-08', FALSE), -- normal
-    (20, 'BH909R', 25, 4, 3600, TRUE, '2022-11-05 12:00:49-08', FALSE); -- reserved
+INSERT INTO parkingSessions(licensePlate, spotID, lotID, allottedTime, isActive, startTime, isCharging) VALUES
+    ('CF346E', 21, 1, 7200, FALSE, '2022-11-01 06:29:10-08', FALSE), -- electric, vip
+    ('CA762X', 2, 1, 7200, FALSE, '2022-11-01 07:05:35-08', FALSE), -- electric, normal
+    ('DE310T', 5, 1, 7200, FALSE, '2022-11-01 09:19:05-08', FALSE), -- electric, normal
+    ('XNK656', 31, 1, 28800, FALSE, '2022-11-01 10:01:09-08', FALSE), -- electric, company
+    ('KD978P', 46, 1, 3600, FALSE, '2022-11-01 15:30:03-08', FALSE), -- reserved
+    ('896REN', 16, 2, 3600, FALSE, '2022-11-02 05:59:48-08', FALSE), -- infant, normal
+    ('706SGL', 9, 2, 3600, FALSE, '2022-11-02 07:23:36-08', FALSE), -- electric, normal
+    ('GDM839', 17, 2, 3600, FALSE, '2022-11-02 09:10:38-08', FALSE), -- accessibility, normal
+    ('DPU597', 10, 2, 3600, FALSE, '2022-11-02 12:31:07-08', FALSE), -- electric, normal
+    ('985HDE', 48, 2, 10800, FALSE, '2022-11-02 18:45:49-08', FALSE), -- vip
+    ('DHR427', 11, 3, 3600, FALSE, '2022-11-03 10:00:15-08', FALSE), -- reserved
+    ('245AFC', 8, 3, 3600, FALSE, '2022-11-03 10:05:39-08', FALSE), -- normal
+    ('144PKF', 17, 3, 3600, FALSE, '2022-11-03 10:06:08-08', FALSE), -- vip
+    ('645RTM', 6, 3, 3600, FALSE, '2022-11-03 10:27:19-08', FALSE), -- accessibility, normal
+    ('589WGN', 31, 5, 28800, FALSE, '2022-11-04 14:39:00-08', FALSE), -- company
+    ('CD7172', 12, 1, 7200, FALSE, '2022-11-04 16:18:49-08', FALSE), -- infant, normal
+    ('MBG091', 10, 2, 3600, FALSE, '2022-11-04 18:07:58-08', FALSE), -- electric, normal
+    ('229KBX', 16, 1, 3600, TRUE, '2022-11-05 11:05:28-08', FALSE), -- normal
+    ('VVF388', 10, 4, 10800, TRUE, '2022-11-05 11:27:01-08', FALSE), -- normal
+    ('BH909R', 25, 4, 3600, TRUE, '2022-11-05 12:00:49-08', FALSE); -- reserved
 
 -- ticketNumber: serial (automatically increments), cost: 50 (default?)
 INSERT INTO tickets(cost, paid, details, sessionId) VALUES
-    (50, TRUE, NULL, 2),
-    (50, TRUE, NULL, 4),
-    (50, FALSE, NULL, 6),
-    (50, TRUE, NULL, 8),
-    (50, TRUE, NULL, 9),
-    (50, TRUE, NULL, 12),
-    (50, FALSE, NULL, 15),
-    (50, FALSE, NULL, 16),
-    (50, TRUE, NULL, 17);
+    (50, TRUE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-01 07:05:35-08' AND licensePlate = 'CA762X')),
+    (50, TRUE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-01 10:01:09-08' AND licensePlate = 'XNK656')),
+    (50, FALSE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-02 05:59:48-08' AND licensePlate = '896REN')),
+    (50, TRUE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-02 09:10:38-08' AND licensePlate = 'GDM839')),
+    (50, TRUE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-02 12:31:07-08' AND licensePlate = 'DPU597')),
+    (50, TRUE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-03 10:05:39-08' AND licensePlate = '245AFC')),
+    (50, FALSE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-04 14:39:00-08' AND licensePlate = '589WGN')),
+    (50, FALSE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-04 16:18:49-08' AND licensePlate = 'CD7172')),
+    (50, TRUE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-04 18:07:58-08' AND licensePlate = 'MBG091'));
 
 INSERT INTO parkingActivities(timeStamp, licensePlate, spotID, lotID, activityType) VALUES
     ('2022-11-01 06:29:10-08', 'CF346E', 21, 1, 'in'),
