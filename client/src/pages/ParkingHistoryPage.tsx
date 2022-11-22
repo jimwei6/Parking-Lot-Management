@@ -121,7 +121,7 @@ export const ParkingHistoryPage = () => {
                 paid: false,
                 cost: 100
             }])
-            // TODO: Fetch summary from the server (for all vehicles owned by the user)
+            // TODO: Fetch summary from the server (for all vehicles owned by the user) <= DONE
             setSummary([{
                 parkingLotId: 10,
                 parkingLotAddress: 'V6T 1Z4 Vancouver, BC',
@@ -140,7 +140,6 @@ export const ParkingHistoryPage = () => {
             }])
         }
     }, [licensePlate]);
-
 
     return (
         <Container fluid className="mx-auto">

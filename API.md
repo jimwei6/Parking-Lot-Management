@@ -3,7 +3,7 @@
 - INSERTION (/vehicle POST)
 - UPDATE (/profile PUT)
 - DELETION (/vehicle PUT, /vehicle DELETE)
-- AGGREGATION GB (/parkingLots/stats GET)
+- AGGREGATION GB (/parkingLots/stats GET, /summary GET)
 - PROJECTION  (3-5 attributes) (/profile GET)
 - SELECTION (user provides params)
 - AGGREGATION HV  (/parkingLots/stats GET)
@@ -141,5 +141,14 @@
 **FULFILLS**: JOIN, PROJECTION <br/>
 **RESPONSE**:
 - 200: [{ licensePlate, ticketNumber, dateReceived, paid, cost }]
+
+<hr/>
+
+**ROUTE**: /api/summary <br/>
+**METHOD**: GET <br/>
+**EXPECT**: username and password in cookies else 401 <br/>
+**FULFILLS**: JOIN, PROJECTION, AGGREGATION GB <br/>
+**RESPONSE**:
+- 200: [{ parkinglotid, parkinglotaddress, vehiclelicenseplate, count }]
 
 <hr/>

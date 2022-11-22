@@ -132,4 +132,11 @@ router.get('/ticketHistory', util.asyncHandler(async (req: Request, res: Respons
   })
 }));
 
+router.get('/summary', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
+  const summary = await queries.getSummary(res.locals.account.username);
+  res.json({
+    result: summary
+  })
+}));
+
 export default router;
