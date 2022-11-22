@@ -125,4 +125,11 @@ router.get('/parkingLot/stats', util.asyncHandler(async (req: Request, res: Resp
   });
 }));
 
+router.get('/ticketHistory', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
+  const ticketHistory = await queries.getTicketHistory(res.locals.account.username);
+  res.json({
+    result: ticketHistory
+  })
+}));
+
 export default router;
