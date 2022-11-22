@@ -115,3 +115,12 @@
   - 200: [{ lotid, postalcode, city, province }]
 
 <hr/>
+
+**ROUTE**: /api/parkingHistory <br/>
+**METHOD**: GET <br/>
+**EXPECT**: username and password in cookies else 401 <br/>
+**FULFILLS**: JOIN, PROJECTION <br/>
+**RESPONSE**:
+  - 200: [{ sessionid, starttime, isactive, allottedtime, ischarging, parkinglotid, parkinglotaddress, vehiclelicenseplate, spotid, spottype, accessibilitytype, isaccessibilityspot, iselectricspot}]
+
+<hr/>

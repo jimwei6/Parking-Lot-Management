@@ -97,7 +97,7 @@ export const ParkingHistoryPage = () => {
                 count: 20,
             }])
         } else {
-            // TODO: Fetch parking history from the server (for all vehicles owned by the user)
+            // TODO: Fetch parking history from the server (for all vehicles owned by the user) <= DONE
             setParkingHistory([{
                 sessionId: 100,
                 startTime: '2022-10-01T12:00:00',

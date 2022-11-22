@@ -5,7 +5,7 @@ SELECT
     v.color,
     CASE
         WHEN ev.plugType IS NOT NULL THEN ev.plugType
-        END AS plugType,
+    END AS plugType,
     array_agg(p.permitType) AS permit,
     CASE
         WHEN ev.plugType = NULL THEN FALSE

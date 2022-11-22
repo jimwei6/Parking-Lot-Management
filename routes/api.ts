@@ -110,4 +110,11 @@ router.get('/location', util.asyncHandler(async (req: Request, res: Response, ne
   })
 }));
 
+router.get('/parkingHistory', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
+  const parkingHistory = await queries.getParkingHistory(res.locals.account.username);
+  res.json({
+    result: parkingHistory
+  })
+}))
+
 export default router;
