@@ -26,8 +26,20 @@ async function testDBConnection() {
     client.release();
 }
 
+function removeDeadParkingSessions() {
+  return asyncHandler(async (req: Request, res: Response, next: Function) => {
+    try {
+      await queries.checkSessionAndIssueTickets();
+    } catch(e) {
+      console.log(e);
+    }
+    next();
+  });
+}
+
 export default {
     asyncHandler,
     authenticateAccount,
-    testDBConnection
+    testDBConnection,
+    removeDeadParkingSessions
 }
