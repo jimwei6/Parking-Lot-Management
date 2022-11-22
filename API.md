@@ -134,3 +134,12 @@
   - 200: { tickets: {name, email, num_tickets}[], averagePark: string, parked: {name, email, parked}[]}
 
 <hr/>
+
+**ROUTE**: /api/ticketHistory <br/>
+**METHOD**: GET <br/>
+**EXPECT**: username and password in cookies else 401 <br/>
+**FULFILLS**: JOIN, PROJECTION <br/>
+**RESPONSE**:
+- 200: [{ licensePlate, ticketNumber, dateReceived, paid, cost }]
+
+<hr/>

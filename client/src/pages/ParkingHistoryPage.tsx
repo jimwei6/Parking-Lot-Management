@@ -113,7 +113,7 @@ export const ParkingHistoryPage = () => {
                 isAccessibilitySpot: true,
                 isElectricSpot: false,
             }])
-            // TODO: Fetch ticket history from the server (for all vehicles owned by the user)
+            // TODO: Fetch ticket history from the server (for all vehicles owned by the user) <= DONE
             setTicketHistory([{
                 vehicleLicensePlate: 'ABC123',
                 ticketNumber: 1,
