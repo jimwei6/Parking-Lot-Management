@@ -130,7 +130,7 @@ router.get('/parkingSpots', util.asyncHandler(async (req: Request, res: Response
   const filters: spotFilter = req.query as unknown as spotFilter;
   const parkingSpots = await queries.getParkingSpots(filters);
   res.json({
-    ...parkingSpots
+    result: parkingSpots
   });
 }));
 

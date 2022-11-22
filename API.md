@@ -5,7 +5,7 @@
 - DELETION (/vehicle PUT, /vehicle DELETE)
 - AGGREGATION GB (/parkingLots/stats GET)
 - PROJECTION  (3-5 attributes) (/profile GET)
-- SELECTION (user provides params)
+- SELECTION (/parkingSpots GET)
 - AGGREGATION HV  (/parkingLots/stats GET)
 - DIVISION (/overview GET)
 - NESTED AGG (/parkingLots/stats GET)
@@ -132,6 +132,19 @@
 **FULFILLS**: JOIN, PROJECTION, Aggregate GB, Aggregate GB Having, Nested AGG <br/>
 **RESPONSE**:
   - 200: { tickets: {name, email, num_tickets}[], averagePark: string, parked: {name, email, parked}[]}
+
+<hr/>
+
+**ROUTE**: /api/parkingSpots <br/>
+**METHOD**: GET <br/>
+**QUERY**: licensePlate (string), spotType (string) (optional), needsCharging (boolean) (optional), duration (number) (optional), accessType (string) (optional),
+  lotId (number) (optional) <br/>
+**EXPECT**: username and password in cookies else 401 <br/>
+**FULFILLS**: SELECTION <br/>
+**RESPONSE**:
+  - 200: { result: [{ spotid, lotid, availabletime, plugtype, accessibilitytype,
+          postalcode, city, province, spottype}]
+      }
 
 <hr/>
 
