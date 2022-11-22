@@ -165,3 +165,25 @@
 - 200: [{ parkinglotid, parkinglotaddress, vehiclelicenseplate, count }]
 
 <hr/>
+
+**ROUTE**: /api/session <br/>
+**METHOD**: POST <br/>
+**BODY**: lotId: number, spotId: number, licensePlate: string
+**EXPECT**: username and password in cookies else 401 <br/>
+**FULFILLS**: PROJECTION, INSERT <br/>
+**RESPONSE**:
+- 200: {message: "session started"}
+- 4xx: user cannot park at spot due to message or have existing session
+
+<hr/>
+
+**ROUTE**: /api/session/end <br/>
+**METHOD**: PUT <br/>
+**BODY**: sessionid: number
+**EXPECT**: username and password in cookies else 401 <br/>
+**FULFILLS**: UPDATE, INSERT <br/>
+**RESPONSE**:
+- 200: {message: "session ended"}
+- 4xx: No session found etc
+
+<hr/>
