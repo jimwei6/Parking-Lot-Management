@@ -10,8 +10,9 @@ In addition, to allow for more interesting queries, we decided to make some chan
 - Changed relation ship between vehicleOwner and personalDetails
     - Rather than using (name, address) as key for personalDetails, we made it use the foreign key to owner id. It didn't make sense to use (name, address) when we already create a key ownerID.
     - Removed foreign keys constraint for (name, address) for vehicleOwner
-- Updated foreign key for tickets (licensePlate -> sessionId)
-    - since each ticket will be assigned for a specific parking session, it makes sense to connect it to sessionId rather than licensePlate
+- Updated foreign key for tickets (licensePlate -> sessionId) 
+    - since each ticket will be assigned for a specific parking session, it makes sense to connect it to sessionId rather than licensePlate. 
+    - This is a one to one relationship with partial participation for parking session and full participation for tickets
 
 As group committed to our project repository using our personal github account, our accounts are the following:
 - Jim 'Ming Chun' Wei (jimwei/jimwei6)
