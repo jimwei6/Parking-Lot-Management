@@ -148,4 +148,20 @@ router.get('/summary', util.asyncHandler(async (req: Request, res: Response, nex
   })
 }));
 
+router.post('/session', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
+  const body: { lotId: number, spotId: number, licensePlate: string} = req.body;
+  const session = await queries.createParkingSession(body.lotId, body.spotId, body.licensePlate, res.locals.account.username);
+  res.json({
+    message: "Session started"
+  })
+}));
+
+router.put('/session/end', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
+  const body: { sessionid: number } = req.body;
+  const session = await queries.endParkingSession(body.sessionid, res.locals.account.username);
+  res.json({
+    message: "Session ended"
+  })
+}));
+
 export default router;

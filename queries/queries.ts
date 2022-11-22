@@ -469,6 +469,92 @@ function getSummary(username: string) {
     GROUP BY p.licensePlate, p.lotID, l.postalCode`, [username]);
 }
 
+function createParkingSession(lotId: number, spotId: number, licensePlate: string, username: string) {
+  return transaction(async (client: Client) => {
+    const vehicle = await executeQuery(`SELECT ev.plugtype,
+      v.height,
+      array_agg(p.permittype) as permits
+      FROM accounts as a
+      INNER JOIN vehicleowner as vo ON vo.username = a.username
+      INNER JOIN vehicle as v ON v.ownerid = vo.ownerid
+      LEFT JOIN electricvehicle as ev ON ev.licenseplate = v.licenseplate
+      LEFT JOIN permits as p ON p.licenseplate = v.licenseplate
+      WHERE a.username = $1
+        AND v.licenseplate = $2
+      GROUP BY ev.plugtype, v.height`, [username, licensePlate], client);
+      
+    if(!vehicle || !vehicle.length) {
+      throw createHttpError(404, 'Vehicle not found.');
+    }
+
+    const activeSession = await executeQuery(`SELECT * FROM parkingsessions 
+      WHERE isactive = true and licenseplate = $1`, [licensePlate], client);
+
+    if(activeSession && activeSession.length) {
+      throw createHttpError(403, 'User is already parked somewhere else');
+    }
+
+    const parkingSpace = await executeQuery(`SELECT 
+      ps.spottype,
+      ps.height,
+      pl.heightlimit,
+      es.plugtype,
+      accs.accessibilitytype,
+      ps.availabletime
+      FROM parkinglots as pl
+      INNER JOIN parkingspots as ps ON ps.lotid = pl.lotid
+      LEFT JOIN electricspots as es ON es.lotid = ps.lotid AND es.spotid = ps.spotid
+      LEFT JOIN accessibilityspots as accs ON accs.lotid = ps.lotid AND accs.spotid = ps.spotid
+      WHERE pl.lotid = $1
+        AND ps.spotid = $2`, [lotId, spotId], client);
+
+    if(!parkingSpace || !parkingSpace.length) {
+      throw createHttpError(404, 'Parking spot not found');
+    }
+
+    if(parkingSpace[0].plugtype && parkingSpace[0].plugtype !== vehicle[0].plugtype) {
+      throw createHttpError(403, `Vehicle does not have the right electric plug for the spot`);
+    } else if (parkingSpace[0].height && parkingSpace[0].height < vehicle[0].height) {
+      throw createHttpError(403, `Vehicle height cannot fit in the spot`);
+    } else if (parkingSpace[0].heightlimit && parkingSpace[0].heightlimit < vehicle[0].height) {
+      throw createHttpError(403, `Vehicle height cannot fit inthe parking lot`);
+    } else if (parkingSpace[0].accessibilitytype && !(vehicle[0].permits.includes(parkingSpace[0].accessibilitytype))) {
+      throw createHttpError(403, `Vehicle does not have the permit to park in this spot`);
+    } else if (parkingSpace[0].spottype && parkingSpace[0].spottype !== 'normal' && !(vehicle[0].permits.includes(parkingSpace[0].spottype))) {
+      throw createHttpError(403, `Vehicle does not have the permit to park in this spot`);
+    }
+
+    // create session
+    return Promise.all([
+      executeQuery(`INSERT INTO parkingsessions(licenseplate, spotid, lotid, allottedtime, isactive, starttime, ischarging) 
+        VALUES ($1, $2, $3, $4, true, CURRENT_TIMESTAMP, $5)`,
+        [licensePlate, spotId, lotId, parkingSpace[0].availabletime, parkingSpace[0].plugtype !== null], client),
+      executeQuery(`INSERT INTO parkingactivities(timestamp, licenseplate, spotid, lotid, activitytype)
+        VALUES (CURRENT_TIMESTAMP, $1, $2, $3, 'in')`, 
+        [licensePlate, spotId, lotId], client)
+    ])
+  });
+}
+
+function endParkingSession(sessionid: number, username: string) {
+  return transaction(async (client: Client) => {
+    const session = await executeQuery(`SELECT * FROM parkingsessions as ps
+      INNER JOIN vehicle as v ON v.licenseplate = ps.licenseplate
+      INNER JOIN vehicleowner as vo ON vo.ownerid = v.ownerid
+      WHERE ps.sessionid = $1 AND vo.username = $2 AND isactive = true`, [sessionid, username], client);
+
+    if(!session || !session.length) {
+      throw createHttpError(404, `Session not found`);
+    }
+
+    return Promise.all([
+      executeQuery(`UPDATE parkingsessions SET isactive = false WHERE sessionid = $1`, [sessionid], client),
+      executeQuery(`INSERT INTO parkingactivities(timestamp, licenseplate, spotid, lotid, activitytype) VALUES
+        (CURRENT_TIMESTAMP, $1, $2, $3, 'out')`, [session[0].licenseplate, session[0].spotid, session[0].lotid], client)
+    ]);
+  });
+}
+
 export default {
   getParkingLots,
   getAccount,
@@ -491,5 +577,7 @@ export default {
   getParkingSpots,
   checkSessionAndIssueTickets,
   getTicketHistory,
-  getSummary
+  getSummary,
+  createParkingSession,
+  endParkingSession
 }
