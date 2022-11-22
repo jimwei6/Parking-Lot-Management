@@ -115,6 +115,14 @@ router.get('/parkingHistory', util.asyncHandler(async (req: Request, res: Respon
   res.json({
     result: parkingHistory
   })
-}))
+}));
+
+router.get('/parkingLot/stats', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
+  const query: { lotId: unknown } = req.query as { lotId: unknown };
+  const parkingLotStats = await queries.getParkingLotStats(query.lotId as number);
+  res.json({
+    result: parkingLotStats
+  });
+}));
 
 export default router;

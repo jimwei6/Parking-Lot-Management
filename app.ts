@@ -35,7 +35,8 @@ util.testDBConnection().then(() => {
 
   app.use((error: Error, req: express.Request, res: express.Response, next: Function) => {
       const err = error as createHttpError.HttpError;
-      res.status(err.status).json({
+      console.log(err);
+      res.status(err.status || 500).json({
           error: error.message,
       });
   });

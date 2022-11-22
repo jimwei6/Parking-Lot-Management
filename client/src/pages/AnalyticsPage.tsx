@@ -4,22 +4,22 @@ import { SERVER_URL } from "../constants/constants";
 
 export const AnalyticsPage = () => {
     interface LocationData {
-        averageParkingPerDay: number; // past 30 days
+        averageParkingPerDay: string; // past 30 days
         listOfUsersWithTickets: {  // past 30 days
             name: string;
             email: string;
-            tickets: number;
+            num_tickets: number;
         }[];
         listOfUsersWhoParked10Times: { // past 30 days
             name: string;
             email: string;
-            tickets: number;
+            parked: number;
         }[]
     }
 
     const [overviewData, setOverviewData] = useState<{ anylot: string; alllots: string } | null>(null);
     const [locations, setLocations] = useState<{ lotid: number; postalcode: string, city: string, province: string }[]>([]);
-    const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+    const [selectedValue, setSelectedValue] = useState<number | null>(null);
     const [locationData, setLocationData] = useState<LocationData | null>(null);
 
     useEffect(() => {
@@ -43,30 +43,37 @@ export const AnalyticsPage = () => {
     }, []);
 
     useEffect(() => {
-        if (selectedIndex !== null) {
-            // TODO: Fetch data for the selected location from the API
-            setLocationData({
-                averageParkingPerDay: 10,
-                listOfUsersWithTickets: [
-                    { name: "John Doe", email: "john.d@cpsc.com", tickets: 4 },
-                    { name: "Jane Doe", email: "jane.d@cpsc.com", tickets: 5 },
-                    { name: "John Smith", email: "john.s@cpsc.com", tickets: 6 },
-                    { name: "Jane Smith", email: "jane.s@cpsc.com", tickets: 7 },
-                ].sort((a, b) => b.tickets - a.tickets),
-                listOfUsersWhoParked10Times: [
-                    { name: "John Doe", email: "john.d@cpsc.com", tickets: 16 },
-                    { name: "Jane Doe", email: "jane.d@cpsc.com", tickets: 20 },
-                    { name: "John Smith", email: "john.s@cpsc.com", tickets: 11 },
-                    { name: "Jane Smith", email: "jane.s@cpsc.com", tickets: 10 },
-                ].sort((a, b) => b.tickets - a.tickets),
-            })
+        if (selectedValue !== null) {
+            const fetchVehicle = async () => {
+              try {
+                  const response = await fetch(SERVER_URL + "/api/parkingLot/stats?lotId=" + selectedValue, {
+                      method: "GET",
+                      credentials: "include"
+                  });
+                  let json: {
+                    averagePark: string,
+                    tickets: {name: string, email: string, num_tickets: number}[],
+                    parked: {name: string, email: string, parked: number}[]
+                  } = (await response.json()).result;
+                  
+                  setLocationData({
+                    averageParkingPerDay: json.averagePark,
+                    listOfUsersWithTickets: json.tickets.sort((a, b) => b.num_tickets - a.num_tickets),
+                    listOfUsersWhoParked10Times: json.parked.sort((a, b) => b.parked - a.parked),
+                  })
+              } catch (e) {
+                  console.error(e);
+                  alert("Failed to fetch stats");
+              }
+          }
+          fetchVehicle();
         }
-    }, [selectedIndex]);
+    }, [selectedValue]);
 
 
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const index = event.target.selectedIndex;
-        setSelectedIndex(index == 0 ? null : index - 1);
+        const val = event.target.value;
+        setSelectedValue(isNaN(parseInt(val, 10)) ? null : parseInt(val, 10));
     }
 
     return (
@@ -76,7 +83,7 @@ export const AnalyticsPage = () => {
                     <Row xs={1} lg={2}>
                         <Col>
                             <h3>Overview</h3>
-                            <h5 className="text-muted">For last 30 days</h5>
+                            <h5 className="text-muted">For last 60 days</h5>
                             <Row>
                                 <Col>
                                     <h6>Number of people parked at any parking lot: {overviewData?.anylot}</h6>
@@ -90,7 +97,7 @@ export const AnalyticsPage = () => {
             <hr/>
             <Row className="pb-4">
                 <h3>Parking Lot Stats</h3>
-                <h5 className="text-muted">For last 30 days</h5>
+                <h5 className="text-muted">For last 60 days</h5>
                 <Row className="mb-3" xs={1} md={3}>
                     <Form.Group as={Col} controlId="location">
                         <Form.Select
@@ -107,20 +114,20 @@ export const AnalyticsPage = () => {
                     </Form.Group>
                 </Row>
                 {
-                    selectedIndex !== null && (
+                    selectedValue !== null && (
                         <Row>
                             <Col>
-                                <h6>Average number of people parked per day: {locationData?.averageParkingPerDay}</h6>
-                                <h6>Users with the most tickets: </h6>
+                                <h6>Average number of vehicle parked per day: {locationData?.averageParkingPerDay}</h6>
+                                <h6>Users with 3+ tickets: </h6>
                                 <ul>
-                                    {locationData?.listOfUsersWithTickets.map(({ name, email, tickets }) => (
-                                        <li key={name + email + tickets}>{`${name} (${email}): ${tickets}`}</li>
+                                    {locationData?.listOfUsersWithTickets.map(({ name, email, num_tickets }) => (
+                                        <li key={name + email + num_tickets}>{`${name} (${email}): ${num_tickets}`}</li>
                                     ))}
                                 </ul>
-                                <h6>Users who parked 10+ times: </h6>
+                                <h6>Users who parked 3+ times: </h6>
                                 <ul>
-                                    {locationData?.listOfUsersWhoParked10Times.map(({ name, email, tickets }) => (
-                                        <li key={name + email + tickets}>{`${name} (${email}): ${tickets}`}</li>
+                                    {locationData?.listOfUsersWhoParked10Times.map(({ name, email, parked }) => (
+                                        <li key={name + email + parked}>{`${name} (${email}): ${parked}`}</li>
                                     ))}
                                 </ul>
                             </Col>

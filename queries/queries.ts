@@ -3,7 +3,7 @@ import pool from '../util/dbConnect';
 import createHttpError from 'http-errors';
 import { Client } from 'pg';
 
-async function executeQuery(query: string, values: string[] = [], client: Client | null = null) {
+async function executeQuery(query: string, values: any = [], client: Client | null = null) {
   if (client) {
     return client.query(query, values).then(res => res.rows);
   }
@@ -240,11 +240,11 @@ async function getOverview() {
   const [anyLot, allLots] = await Promise.all([executeQuery(`SELECT COUNT(DISTINCT v.ownerID) AS AnyLot
     FROM parkingSessions ps
     JOIN vehicle v ON ps.licensePlate = v.licensePlate
-    WHERE ps.startTime > CURRENT_TIMESTAMP - INTERVAL '30 day'`),
+    WHERE ps.startTime > CURRENT_TIMESTAMP - INTERVAL '60 day'`),
     executeQuery(`SELECT COUNT(DISTINCT v0.ownerID) AS AllLots
     FROM parkingSessions ps0
     JOIN vehicle v0 ON ps0.licensePlate = v0.licensePlate
-    WHERE ps0.startTime > CURRENT_TIMESTAMP - INTERVAL '30 day'
+    WHERE ps0.startTime > CURRENT_TIMESTAMP - INTERVAL '60 day'
         AND NOT EXISTS
             ((SELECT lotID
               FROM parkingSpots)
@@ -306,6 +306,45 @@ function getParkingHistory(username: string) {
     WHERE vo.username = $1`, [username]);
 }
 
+async function getParkingLotStats(lotId: number) {
+
+  const userTickets5 = executeQuery(`SELECT vo.name, a.email, COUNT(DISTINCT t.ticketnumber) as num_tickets
+      FROM tickets as t
+      INNER JOIN parkingsessions as ps ON ps.sessionid = t.sessionid
+      INNER JOIN vehicle as v ON v.licenseplate = ps.licenseplate
+      INNER JOIN vehicleowner as vo ON vo.ownerid = v.ownerid
+      INNER JOIN accounts as a ON a.username = vo.username
+      WHERE ps.lotid = $1 
+          AND ps.startTime > CURRENT_TIMESTAMP - INTERVAL '60 day'
+      GROUP BY a.username, vo.ownerid
+      HAVING COUNT(DISTINCT t.ticketnumber) > 3`, [lotId]);
+
+  const averageParkingPerDay = executeQuery(`SELECT SUM(count)/60 as average FROM
+      (SELECT COUNT(DISTINCT pa.licenseplate) as count FROM parkingactivities as pa
+      WHERE pa.timestamp > CURRENT_TIMESTAMP - INTERVAL '60 day' 
+          AND pa.activitytype = 'in' 
+          AND pa.lotid = $1
+      GROUP BY DATE(pa.timestamp)) as cbd`, [lotId]);
+
+  const userParked10 = executeQuery(`SELECT vo.name, a.email, COUNT(*) as parked
+      FROM parkingactivities as pa
+      INNER JOIN vehicle as v ON v.licenseplate = pa.licenseplate
+      INNER JOIN vehicleowner as vo ON vo.ownerid = v.ownerid
+      INNER JOIN accounts as a ON a.username = vo.username
+      WHERE pa.timestamp > CURRENT_TIMESTAMP - INTERVAL '60 day' 
+          AND pa.activitytype = 'in' 
+          AND pa.lotid = $1
+      GROUP BY a.username, vo.ownerid
+      HAVING COUNT(*) > 3`, [lotId]);
+
+  const result: any[] = await Promise.all([userTickets5, averageParkingPerDay, userParked10]);
+  return {
+    tickets: result[0],
+    averagePark: (Math.round(parseFloat(result[1][0].average || '0') * 100)/100).toFixed(2),
+    parked: result[2],
+  };
+}
+
 export default {
   getParkingLots,
   getAccount,
@@ -323,5 +362,6 @@ export default {
   deleteVehicle,
   getOverview,
   getLocations,
-  getParkingHistory
+  getParkingHistory,
+  getParkingLotStats
 }
