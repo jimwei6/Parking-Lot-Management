@@ -6,10 +6,11 @@ import {
 import util from '../util/index';
 import queries from '../queries/queries';
 import createHttpError from 'http-errors';
-import { profile, vehicle } from '../util/types';
+import { profile, vehicle, spotFilter } from '../util/types';
 
 const router = Router();
 router.use(util.authenticateAccount()); // saves account info to res.locals
+router.use(util.removeDeadParkingSessions());
 
 router.get('/parkingLot', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
   const parkingLots = await queries.getParkingLots();
@@ -122,6 +123,14 @@ router.get('/parkingLot/stats', util.asyncHandler(async (req: Request, res: Resp
   const parkingLotStats = await queries.getParkingLotStats(query.lotId as number);
   res.json({
     ...parkingLotStats
+  });
+}));
+
+router.get('/parkingSpots', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
+  const filters: spotFilter = req.query as unknown as spotFilter;
+  const parkingSpots = await queries.getParkingSpots(filters);
+  res.json({
+    result: parkingSpots
   });
 }));
 

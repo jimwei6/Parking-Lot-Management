@@ -15,6 +15,7 @@ export const NewSessionPage = () => {
         postalCode: string;
         city: string;
         province: string;
+        lotId: number;
     }[]>([]);
     const [vehicle, setVehicle] = useState<Vehicle>();
     const [isCreating, setIsCreating] = useState(false);
@@ -76,18 +77,22 @@ export const NewSessionPage = () => {
             postalCode: 'M5V 1A1',
             city: 'Toronto',
             province: 'Ontario',
+            lotId: 0
         }, {
             postalCode: 'V6T 1Z4',
             city: 'Vancouver',
             province: 'BC',
+            lotId: 1
         }, {
             postalCode: 'O6T 1Z4',
             city: 'Ottawa',
             province: 'Ontario',
+            lotId: 2
         }, {
             postalCode: 'V1V 1V1',
             city: 'Victoria',
-            province: 'BC'
+            province: 'BC',
+            lotId: 3
         }])
     }, []);
 
@@ -111,6 +116,7 @@ export const NewSessionPage = () => {
         //        duration is the number of minutes the user wants to park for
         //        the query will also accept vehicle height to filter the spots by height
         //        the query will also accept vehicle plugType to filter the spots if needsCharging is true
+
         const height = vehicle?.height || 0;
         const plugType = vehicle?.plugType || '';
         const vehiclePermits = vehicle?.permits || '';
@@ -231,9 +237,10 @@ export const NewSessionPage = () => {
                                                 onChange={handleChange}
                                             >
                                                 <option value="*">All locations</option>
-                                                {locations.map(({ postalCode, city, province }) => (
-                                                    <option key={postalCode + city + province}
-                                                            value={`${city}, ${province}`}>{`${city}, ${province}`}
+                                                {locations.map(({ postalCode, city, province, lotId }) => (
+                                                    <option key={postalCode + city + province + lotId }
+                                                            value={`${lotId}`}>
+                                                        {postalCode + ', ' + city + ', ' + province}
                                                     </option>
                                                 ))}
                                             </Form.Select>

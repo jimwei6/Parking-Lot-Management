@@ -1,4 +1,4 @@
-import { profile, vehicle } from '../util/types';
+import { profile, vehicle, spotFilter } from '../util/types';
 import pool from '../util/dbConnect';
 import createHttpError from 'http-errors';
 import { Client } from 'pg';
@@ -345,6 +345,93 @@ async function getParkingLotStats(lotId: number) {
   };
 }
 
+async function getParkingSpots(filters: spotFilter) {
+  return transaction(async (client: Client) => {
+    const vehicle = await executeQuery(`SELECT v.*, ev.plugType, ARRAY_AGG(p.permittype) as permits FROM vehicle as v
+    LEFT JOIN permits as p ON p.licenseplate = v.licenseplate
+    LEFT JOIN electricvehicle as ev ON ev.licenseplate = v.licenseplate
+    WHERE v.licenseplate = $1
+    GROUP BY v.licenseplate, ev.plugtype LIMIT 1`, [filters.licensePlate], client);
+
+    if(!vehicle?.length) {
+      throw createHttpError(404, 'Vehicle not found');
+    }
+
+    let andClauses = '';
+    let args = [vehicle[0].height];
+    if(filters.needsCharging && vehicle[0].plugType) {
+      andClauses += ` AND es.plugType = $${args.length + 1}`;
+      args.push(vehicle[0].plugType);
+    }
+
+    if(filters.lotId) {
+      andClauses += ` AND pl.lotid = $${args.length + 1}`;
+      args.push(filters.lotId);
+    }
+
+    if(filters.duration) {
+      andClauses += ` AND ps.availabletime >= $${args.length + 1}`;
+      args.push(filters.duration);
+    }
+
+    if(filters.accessType) {
+      andClauses += ` AND accs.accessibilitytype = $${args.length + 1}`;
+      args.push(filters.accessType);
+    } 
+    
+    if(filters.spotType) {
+      andClauses += ` AND ps.spottype = $${args.length + 1}`;
+      args.push(filters.spotType);
+    }
+
+    const results = await executeQuery(`SELECT ps.spotid,
+      pl.lotid,
+      ps.availabletime, 
+      es.plugType,
+      accs.accessibilitytype,
+      pl.postalcode,
+      l.city,
+      l.province,
+      ps.spottype
+      FROM parkingspots as ps 
+      INNER JOIN parkinglots as pl ON pl.lotid = ps.lotid
+      INNER JOIN location as l ON l.postalcode = pl.postalcode
+      LEFT JOIN electricspots as es ON es.spotid = ps.spotid AND es.lotid = ps.lotid
+      LEFT JOIN accessibilityspots as accs ON accs.spotid = ps.spotid AND accs.lotid = ps.lotid
+      WHERE (pl.heightlimit IS NULL OR pl.heightlimit >= $1)
+          AND (ps.height IS NULL OR ps.height >= $1)` + andClauses, args, client);
+    
+    return results;
+  });
+}
+
+async function checkSessionAndIssueTickets() {
+  return transaction(async (client: Client) => {
+    const ticketCost = Math.round(Math.random() * 100);
+    const expiredSessions = await executeQuery(`UPDATE parkingsessions
+      SET isactive = false
+      WHERE isactive = true
+          AND starttime + make_interval(secs => allottedtime) < CURRENT_TIMESTAMP
+      RETURNING *`, [], client);
+    if(expiredSessions && expiredSessions.length) { // Add parking activities kicked out, add tickets
+      let ticketInserts = expiredSessions.map((p, index) => {
+        return `${index !== 0 ? ',' : ''} ($1, 'Parked overtime.', $${index + 2})`;
+      }).join('');
+  
+      const promises = [executeQuery(`INSERT INTO tickets(cost, details, sessionid) VALUES ` + ticketInserts,
+         [ticketCost, ...expiredSessions.map(s => s.sessionid)], client)];
+  
+  
+      expiredSessions.forEach((p) => {
+        promises.push(executeQuery(`INSERT INTO parkingactivities(timestamp, licenseplate, spotid, lotid, activitytype) VALUES 
+          ($1, $2, $3, $4, 'removed')`, [(new Date(new Date(p.starttime).getTime() + p.allottedtime * 1000)).toISOString(), p.licenseplate, p.spotid, p.lotid], client));
+      });
+  
+      return Promise.all(promises);
+    }
+  });
+}
+
 function getTicketHistory(username: string) {
   return executeQuery(`SELECT p.licensePlate,
        t.ticketNumber,
@@ -401,6 +488,8 @@ export default {
   getLocations,
   getParkingHistory,
   getParkingLotStats,
+  getParkingSpots,
+  checkSessionAndIssueTickets,
   getTicketHistory,
   getSummary
 }
