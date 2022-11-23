@@ -5,34 +5,35 @@ import { Vehicle } from "./VehicleListPage";
 import { SERVER_URL } from "../constants/constants";
 
 interface ParkingHistory {
-    sessionId: number;
-    startTime: string;
-    isActive: boolean;
-    allottedTime: number;
-    isCharging: boolean;
-    parkingLotId: number;
-    parkingLotAddress: string; // postalCode city, Province eg. "V6T 1Z4 Vancouver, BC"
-    vehicleLicensePlate: string;
-    spotId: number;
-    spotType: string;
-    accessibilityType?: string;
-    isAccessibilitySpot: boolean;
-    isElectricSpot: boolean;
+    sessionid: number;
+    starttime: string;
+    isactive: boolean;
+    allottedtime: number;
+    ischarging: boolean;
+    parkinglotid: number;
+    parkinglotaddress: string; // postalCode city, Province eg. "V6T 1Z4 Vancouver, BC"
+    vehiclelicenseplate: string;
+    spotid: number;
+    spottype: string;
+    accessibilitytype?: string;
+    isaccessibilityspot: boolean;
+    iselectricspot: boolean;
 }
 
 interface TicketHistory {
-    vehicleLicensePlate: string;
-    ticketNumber: number;
-    dateReceived: string;
+    licenseplate: string;
+    ticketnumber: number;
+    datereceived: string;
+    sessionid: number;
     paid: boolean;
     cost: number;
     details?: string;
 }
 
 interface Summary {
-    parkingLotId: number;
-    parkingLotAddress: string; // postalCode city, Province eg. "V6T 1Z4 Vancouver, BC"
-    vehicleLicensePlate: string;
+    parkinglotid: number;
+    parkinglotaddress: string; // postalCode city, Province eg. "V6T 1Z4 Vancouver, BC"
+    vehiclelicenseplate: string;
     count: number;
 }
 
@@ -45,17 +46,16 @@ export const ParkingHistoryPage = () => {
     const [numTickets, setNumTickets] = useState(0);
     const [summary, setSummary] = useState<Summary[]>([]);
     const ticketColsArray = [{
-        label: "Ticket Number",
-        value: "t.ticketNumber"
-    }, {
         label: "Session ID",
         value: "p.sessionId"
     }, {
         label: "Details",
         value: "t.details"
+    }, {
+      label:"Cost",
+      value:"t.cost"
     }]
     const [ticketCols, setTicketCols] = useState([
-        "t.ticketNumber",
         "t.details"
     ])
     const parkingColsArray = [{
@@ -65,19 +65,16 @@ export const ParkingHistoryPage = () => {
         label: "Charging used?",
         value: "p.isCharging"
     }, {
-        label: "Session ID",
-        value: "p.sessionID"
-    }, {
         label: "Spot ID",
         value: "p.spotID"
     }, {
         label: "Spot Type",
-        value: "p.spotType"
+        value: "ps.spotType"
     }]
     const [parkingCols, setParkingCols] = useState([
         "p.allottedTime",
         "p.isCharging",
-        "p.spotType"
+        "ps.spotType"
     ])
 
     useEffect(() => {
@@ -93,30 +90,30 @@ export const ParkingHistoryPage = () => {
                     historyUrl.searchParams.append("licensePlate", licensePlate);
                     ticketUrl.searchParams.append("licensePlate", licensePlate);
                 }
-                promises.push(await fetch(summaryUrl, {
+                promises.push(fetch(summaryUrl, {
                     method: "GET",
                     credentials: "include"
                 }))
-                historyUrl.searchParams.append("attr", `[${parkingCols.join(",")}]`)
-                promises.push(await fetch(historyUrl, {
+                historyUrl.searchParams.append("attr", JSON.stringify(parkingCols))
+                promises.push(fetch(historyUrl, {
                     method: "GET",
                     credentials: "include"
                 }))
-                ticketUrl.searchParams.append("attr", `[${ticketCols.join(",")}]`)
-                promises.push(await fetch(ticketUrl, {
+                ticketUrl.searchParams.append("attr", JSON.stringify(ticketCols))
+                promises.push(fetch(ticketUrl, {
                     method: "GET",
                     credentials: "include"
                 }))
                 if (licensePlate) {
-                    promises.push(await fetch(SERVER_URL + "/api/vehicle?licensePlate=" + licensePlate, {
+                    promises.push(fetch(SERVER_URL + "/api/vehicle?licensePlate=" + licensePlate, {
                         method: "GET",
                         credentials: "include"
                     }))
-                    promises.push(await fetch(SERVER_URL + "/api/numTickets/" + licensePlate, {
+                    promises.push(fetch(SERVER_URL + "/api/numTickets/" + licensePlate, {
                         method: "GET",
                         credentials: "include"
                     }))
-                    promises.push(await fetch(SERVER_URL + "/api/totalCost/" + licensePlate, {
+                    promises.push(fetch(SERVER_URL + "/api/totalCost/" + licensePlate, {
                         method: "GET",
                         credentials: "include"
                     }))
@@ -125,22 +122,22 @@ export const ParkingHistoryPage = () => {
                 const json = await Promise.all(responses.map(response => response.json()));
                 console.log(json)
                 if (!responses[0].ok) {
-                    alert("Vehicle not found");
+                  alert("Summary not found");
                 } else {
-                    const summary = await responses[0].json();
-                    setSummary(summary);
+                    const summary = json[0];
+                    setSummary(summary.result);
                 }
                 if (!responses[1].ok) {
-                    alert("Summary not found");
-                } else {
-                    const history = await responses[1].json();
-                    setParkingHistory(history);
-                }
-                if (!responses[2].ok) {
                     alert("Parking history not found");
                 } else {
-                    const tickets = await responses[2].json();
-                    setTicketHistory(tickets);
+                    const history = json[1];
+                    setParkingHistory(history.result);
+                }
+                if (!responses[2].ok) {
+                    alert("Ticket history not found");
+                } else {
+                    const tickets = json[2];
+                    setTicketHistory(tickets.result);
                 }
                 if (licensePlate) {
                     if (!responses[3].ok) {
@@ -160,14 +157,14 @@ export const ParkingHistoryPage = () => {
                     if (!responses[4].ok) {
                         alert("Num Tickets not found");
                     } else {
-                        const numTickets = await responses[4].json();
-                        setNumTickets(numTickets);
+                        const numTickets = json[4];
+                        setNumTickets(numTickets.numtickets);
                     }
                     if (!responses[5].ok) {
                         alert("Total cost not found");
                     } else {
-                        const totalCost = await responses[5].json();
-                        setTotalCost(totalCost);
+                        const totalCost = json[5];
+                        setTotalCost(totalCost.totalcost);
                     }
                 }
             } catch (e) {
@@ -176,8 +173,8 @@ export const ParkingHistoryPage = () => {
             }
         }
         // TODO: uncomment this line
-        // fetchData();
-    }, [licensePlate]);
+        fetchData();
+    }, [licensePlate, parkingCols, ticketCols]);
 
     return (
         <Container fluid className="mx-auto">
@@ -245,37 +242,37 @@ export const ParkingHistoryPage = () => {
                                                     <th>Start Date</th>
                                                     <th>Start Time</th>
                                                     <th>Active</th>
-                                                    <th>Allotted Time (mins)</th>
-                                                    <th>Charging used?</th>
+                                                    {parkingCols.includes('p.allottedTime') && <th>Allotted Time (mins)</th>}
+                                                    {parkingCols.includes('p.isCharging') && <th>Charging used?</th>}
                                                     <th>Parking Lot</th>
                                                     <th>Parking Lot Address</th>
-                                                    <th>Spot Number</th>
-                                                    <th>Spot Type</th>
+                                                    {parkingCols.includes('p.spotID') && <th>Spot Number</th>}
+                                                    {parkingCols.includes('ps.spotType') && <th>Spot Type</th>}
                                                     <th>Accessibility Type</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
                                                 {parkingHistory.map((elem) => (
                                                     <tr
-                                                        key={elem.sessionId}
+                                                        key={elem.sessionid}
                                                     >
                                                         {!licensePlate && (
                                                             <td>
                                                                 <Link
-                                                                    to='/vehicles'>{elem.vehicleLicensePlate}</Link>
+                                                                    to='/vehicles'>{elem.vehiclelicenseplate}</Link>
                                                             </td>
                                                         )}
-                                                        <td>{elem.sessionId}</td>
-                                                        <td>{elem.startTime.split('T')[0]}</td>
-                                                        <td>{elem.startTime.split('T')[1]}</td>
-                                                        <td>{elem.isActive ? 'Yes' : 'No'}</td>
-                                                        <td>{elem.allottedTime}</td>
-                                                        <td>{elem.isElectricSpot ? elem.isCharging ? 'Yes' : 'No' : '-'}</td>
-                                                        <td>{elem.parkingLotId}</td>
-                                                        <td>{elem.parkingLotAddress}</td>
-                                                        <td>{elem.spotId}</td>
-                                                        <td>{elem.spotType}</td>
-                                                        <td>{elem.isAccessibilitySpot ? elem.accessibilityType : '-'}</td>
+                                                        <td>{elem.sessionid}</td>
+                                                        <td>{elem.starttime.split('T')[0]}</td>
+                                                        <td>{elem.starttime.split('T')[1]}</td>
+                                                        <td>{elem.isactive ? 'Yes' : 'No'}</td>
+                                                        {parkingCols.includes('p.allottedTime') && <td>{elem.allottedtime}</td>}
+                                                        {parkingCols.includes('p.isCharging') && <td>{elem.iselectricspot ? elem.ischarging ? 'Yes' : 'No' : '-'}</td>}
+                                                        <td>{elem.parkinglotid}</td>
+                                                        <td>{elem.parkinglotaddress}</td>
+                                                        {parkingCols.includes('p.spotID') && <td>{elem.spotid}</td>}
+                                                        {parkingCols.includes('ps.spotType') && <td>{elem.spottype}</td>}
+                                                        <td>{elem.isaccessibilityspot ? elem.accessibilitytype : '-'}</td>
                                                     </tr>
                                                 ))}
                                                 </tbody>
@@ -315,27 +312,31 @@ export const ParkingHistoryPage = () => {
                                                 <tr>
                                                     {!licensePlate && (<th>Vehicle</th>)}
                                                     <th>Ticket Number</th>
+                                                    {ticketCols.includes('p.sessionId') && (<th>Session Id</th>)}
                                                     <th>Date Received</th>
                                                     <th>Time Received</th>
                                                     <th>Paid?</th>
-                                                    <th>Amount ($)</th>
+                                                    {ticketCols.includes('t.cost') && (<th>Amount ($)</th>)}
+                                                    {ticketCols.includes('t.details') && (<th>Details</th>)}
                                                 </tr>
                                                 </thead>
                                                 <tbody>
                                                 {ticketHistory.map((ticket) => (
                                                     <tr
-                                                        key={ticket.ticketNumber}
+                                                        key={ticket.ticketnumber}
                                                     >
                                                         {!licensePlate && (
                                                             <td>
-                                                                <Link to='/vehicles'>{ticket.vehicleLicensePlate}</Link>
+                                                                <Link to='/vehicles'>{ticket.licenseplate}</Link>
                                                             </td>
                                                         )}
-                                                        <td>{ticket.ticketNumber}</td>
-                                                        <td>{ticket.dateReceived.split('T')[0]}</td>
-                                                        <td>{ticket.dateReceived.split('T')[1]}</td>
+                                                        <td>{ticket.ticketnumber}</td>
+                                                        {ticketCols.includes('p.sessionId') && (<td>{ticket.sessionid}</td>)}
+                                                        <td>{ticket.datereceived.split('T')[0]}</td>
+                                                        <td>{ticket.datereceived.split('T')[1]}</td>
                                                         <td>{ticket.paid ? 'Yes' : 'No'}</td>
-                                                        <td>{ticket.cost}</td>
+                                                        {ticketCols.includes('t.cost') && (<td>{ticket.cost}</td>)}
+                                                        {ticketCols.includes('t.details') && (<td>{ticket.details}</td>)}
                                                     </tr>
                                                 ))}
                                                 </tbody>
@@ -359,15 +360,15 @@ export const ParkingHistoryPage = () => {
                                             <tbody>
                                             {summary.map((elem) => (
                                                 <tr
-                                                    key={elem.parkingLotId + elem.vehicleLicensePlate}
+                                                    key={elem.parkinglotid + elem.vehiclelicenseplate}
                                                 >
                                                     {!licensePlate && (
                                                         <td>
-                                                            <Link to='/vehicles'>{elem.vehicleLicensePlate}</Link>
+                                                            <Link to='/vehicles'>{elem.vehiclelicenseplate}</Link>
                                                         </td>
                                                     )}
-                                                    <td>{elem.parkingLotId}</td>
-                                                    <td>{elem.parkingLotAddress}</td>
+                                                    <td>{elem.parkinglotid}</td>
+                                                    <td>{elem.parkinglotaddress}</td>
                                                     <td>{elem.count}</td>
                                                 </tr>
                                             ))}

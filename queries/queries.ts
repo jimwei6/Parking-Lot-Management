@@ -311,6 +311,7 @@ function getParkingHistory(username: string, licensePlate: string | null | undef
         p.lotID AS parkingLotId,
         p.startTime,
         p.isActive,
+        p.sessionid,
         CONCAT(l.postalCode, ' ', l.city, ', ', l.province) AS parkingLotAddress,
         p.licensePlate AS vehicleLicensePlate, ` + projectionAttr + 
         `CASE
@@ -504,7 +505,7 @@ function getTicketHistory(username: string, licensePlate: string | null | undefi
   let query = `SELECT p.licensePlate,
            p.startTime + (p.allottedTime / 3600 * interval '1 hour') AS dateReceived,
            t.paid, ` + projectionAttr +
-           `t.cost
+           `t.ticketnumber
     FROM parkingSessions p
     JOIN vehicle v
         ON p.licensePlate = v.licensePlate
