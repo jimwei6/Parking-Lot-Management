@@ -121,7 +121,8 @@
 **EXPECT**: username and password in cookies else 401 <br/>
 **FULFILLS**: JOIN, PROJECTION <br/>
 **RESPONSE**:
-  - 200: [{ sessionid, starttime, isactive, allottedtime, ischarging, parkinglotid, parkinglotaddress, vehiclelicenseplate, spotid, spottype, accessibilitytype, isaccessibilityspot, iselectricspot}]
+  - 200: [{ sessionid, starttime, isactive, allottedtime, ischarging, parkinglotid, parkinglotaddress, 
+            vehiclelicenseplate, spotid, spottype, accessibilitytype, isaccessibilityspot, iselectricspot}]
 
 <hr/>
 
@@ -143,8 +144,7 @@
 **FULFILLS**: SELECTION <br/>
 **RESPONSE**:
   - 200: { result: [{ spotid, lotid, availabletime, plugtype, accessibilitytype,
-          postalcode, city, province, spottype}]
-      }
+                      postalcode, city, province, spottype}]}
 
 <hr/>
 
@@ -153,7 +153,7 @@
 **EXPECT**: username and password in cookies else 401 <br/>
 **FULFILLS**: JOIN, PROJECTION <br/>
 **RESPONSE**:
-- 200: [{ licensePlate, ticketNumber, dateReceived, paid, cost }]
+  - 200: [{ licensePlate, ticketNumber, dateReceived, paid, cost }]
 
 <hr/>
 
@@ -162,7 +162,7 @@
 **EXPECT**: username and password in cookies else 401 <br/>
 **FULFILLS**: JOIN, PROJECTION, AGGREGATION GB <br/>
 **RESPONSE**:
-- 200: [{ parkinglotid, parkinglotaddress, vehiclelicenseplate, count }]
+  - 200: [{ parkinglotid, parkinglotaddress, vehiclelicenseplate, count }]
 
 <hr/>
 
@@ -172,8 +172,8 @@
 **EXPECT**: username and password in cookies else 401 <br/>
 **FULFILLS**: PROJECTION, INSERT <br/>
 **RESPONSE**:
-- 200: {message: "session started"}
-- 4xx: user cannot park at spot due to message or have existing session
+  - 200: {message: "session started"}
+  - 4xx: user cannot park at spot due to message or have existing session
 
 <hr/>
 
@@ -183,7 +183,25 @@
 **EXPECT**: username and password in cookies else 401 <br/>
 **FULFILLS**: UPDATE, INSERT <br/>
 **RESPONSE**:
-- 200: {message: "session ended"}
-- 4xx: No session found etc
+  - 200: {message: "session ended"}
+  - 4xx: No session found etc
+
+<hr/>
+
+**ROUTE**: /api/totalCost/:licensePlate <br/>
+**METHOD**: GET <br/>
+**EXPECT**: username and password in cookies else 401 <br/>
+**FULFILLS**: JOIN <br/>
+**RESPONSE**:
+  - 200: { totalCost }
+
+<hr/>
+
+**ROUTE**: /api/numTickets/:licensePlate <br/>
+**METHOD**: GET <br/>
+**EXPECT**: username and password in cookies else 401 <br/>
+**FULFILLS**: JOIN <br/>
+**RESPONSE**:
+  - 200: { numTickets }
 
 <hr/>

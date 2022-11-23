@@ -81,7 +81,7 @@ export const ParkingHistoryPage = () => {
                 details: 'Parking in a no parking zone',
                 vehicleLicensePlate: licensePlate,
             }])
-            // TODO: Only exists if licensePlate exists, that is, route is /history/:licensePlate
+            // TODO: Only exists if licensePlate exists, that is, route is /history/:licensePlate <= DONE
             setTotalCost(71.5);
             setNumTickets(7);
             // TODO: Fetch summary from the server (for the given vehicle) <= DONE

@@ -167,4 +167,20 @@ router.put('/session/end', util.asyncHandler(async (req: Request, res: Response,
   })
 }));
 
+router.get("/totalCost/:licensePlate", util.asyncHandler(async (req: Request, res: Response, next: Function) => {
+  const param = req.params;
+  const totalCost = await queries.getTotalCost(res.locals.account.username, param.licensePlate);
+  res.json({
+    ...totalCost[0]
+  })
+}));
+
+router.get("/numTickets/:licensePlate", util.asyncHandler(async (req: Request, res: Response, next: Function) => {
+  const param = req.params;
+  const numTickets = await queries.getNumTickets(res.locals.account.username, param.licensePlate);
+  res.json({
+    ...numTickets[0]
+  })
+}));
+
 export default router;
