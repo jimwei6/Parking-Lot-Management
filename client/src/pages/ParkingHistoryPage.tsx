@@ -1,7 +1,8 @@
 import { Link, useParams } from "react-router-dom";
-import { Col, Container, Row, Tab, Table, Tabs } from "react-bootstrap";
+import { Col, Container, Form, Row, Tab, Table, Tabs } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { Vehicle } from "./VehicleListPage";
+import { SERVER_URL } from "../constants/constants";
 
 interface ParkingHistory {
     sessionId: number;
@@ -43,102 +44,139 @@ export const ParkingHistoryPage = () => {
     const [totalCost, setTotalCost] = useState(0);
     const [numTickets, setNumTickets] = useState(0);
     const [summary, setSummary] = useState<Summary[]>([]);
+    const ticketColsArray = [{
+        label: "Ticket Number",
+        value: "t.ticketNumber"
+    }, {
+        label: "Session ID",
+        value: "p.sessionId"
+    }, {
+        label: "Details",
+        value: "t.details"
+    }]
+    const [ticketCols, setTicketCols] = useState([
+        "t.ticketNumber",
+        "t.details"
+    ])
+    const parkingColsArray = [{
+        label: "Allotted Time",
+        value: "p.allottedTime"
+    }, {
+        label: "Charging used?",
+        value: "p.isCharging"
+    }, {
+        label: "Session ID",
+        value: "p.sessionID"
+    }, {
+        label: "Spot ID",
+        value: "p.spotID"
+    }, {
+        label: "Spot Type",
+        value: "p.spotType"
+    }]
+    const [parkingCols, setParkingCols] = useState([
+        "p.allottedTime",
+        "p.isCharging",
+        "p.spotType"
+    ])
 
     useEffect(() => {
-        if (licensePlate) {
-            // TODO: Fetch vehicle data from the server <= DONE
-            setVehicle({
-                licensePlate: licensePlate,
-                model: 'Tesla Model 3',
-                height: 1800,
-                color: '#FF0000',
-                isElectric: true,
-                plugType: 'Type 2',
-                permits: ['accessibility', 'company', 'vip'],
-            })
-            // TODO: Fetch parking history from the server (for the given vehicle) <= DONE
-            setParkingHistory([{
-                    sessionId: 1,
-                    startTime: '2021-04-01T12:00:00',
-                    isActive: false,
-                    allottedTime: 60,
-                    isCharging: true,
-                    parkingLotId: 1,
-                    parkingLotAddress: 'V6T 1Z4 Vancouver, BC',
-                    vehicleLicensePlate: licensePlate,
-                    spotId: 1,
-                    spotType: 'normal',
-                    isAccessibilitySpot: false,
-                    isElectricSpot: true,
-                }]
-            )
-            // TODO: Fetch ticket history from the server (for the given vehicle) <= DONE
-            setTicketHistory([{
-                ticketNumber: 1,
-                dateReceived: '2021-04-01T12:00:00',
-                paid: false,
-                cost: 100,
-                details: 'Parking in a no parking zone',
-                vehicleLicensePlate: licensePlate,
-            }])
-            // TODO: Only exists if licensePlate exists, that is, route is /history/:licensePlate <= DONE
-            setTotalCost(71.5);
-            setNumTickets(7);
-            // TODO: Fetch summary from the server (for the given vehicle) <= DONE
-            setSummary([{
-                parkingLotId: 1,
-                parkingLotAddress: 'V6T 1Z4 Vancouver, BC',
-                vehicleLicensePlate: licensePlate,
-                count: 5,
-            }, {
-                parkingLotId: 2,
-                parkingLotAddress: 'M5T 1Z4 Toronto, ON',
-                vehicleLicensePlate: licensePlate,
-                count: 20,
-            }])
-        } else {
-            // TODO: Fetch parking history from the server (for all vehicles owned by the user) <= DONE
-            setParkingHistory([{
-                sessionId: 100,
-                startTime: '2022-10-01T12:00:00',
-                isActive: false,
-                allottedTime: 90,
-                isCharging: false,
-                parkingLotId: 1,
-                parkingLotAddress: 'V6T 1Z4 Vancouver, BC',
-                vehicleLicensePlate: 'ABC123',
-                spotId: 1,
-                spotType: 'vip',
-                accessibilityType: 'infant',
-                isAccessibilitySpot: true,
-                isElectricSpot: false,
-            }])
-            // TODO: Fetch ticket history from the server (for all vehicles owned by the user) <= DONE
-            setTicketHistory([{
-                vehicleLicensePlate: 'ABC123',
-                ticketNumber: 1,
-                dateReceived: '2021-04-01T12:00:00',
-                paid: false,
-                cost: 100
-            }])
-            // TODO: Fetch summary from the server (for all vehicles owned by the user) <= DONE
-            setSummary([{
-                parkingLotId: 10,
-                parkingLotAddress: 'V6T 1Z4 Vancouver, BC',
-                vehicleLicensePlate: 'ABC123',
-                count: 10,
-            }, {
-                parkingLotId: 5,
-                parkingLotAddress: 'M5T 1Z4 Toronto, ON',
-                vehicleLicensePlate: 'XYZ987',
-                count: 7,
-            }, {
-                parkingLotId: 2,
-                parkingLotAddress: 'M5T 1Z4 Toronto, ON',
-                vehicleLicensePlate: 'ABC123',
-                count: 20,
-            }])
+        // TODO: store fetched data in state
+        const fetchData = async () => {
+            try {
+                const promises = []
+                const summaryUrl = new URL(`${SERVER_URL}/api/summary`);
+                const historyUrl = new URL(`${SERVER_URL}/api/parkingHistory`);
+                const ticketUrl = new URL(`${SERVER_URL}/api/ticketHistory`);
+                if (licensePlate) {
+                    summaryUrl.searchParams.append("licensePlate", licensePlate);
+                    historyUrl.searchParams.append("licensePlate", licensePlate);
+                    ticketUrl.searchParams.append("licensePlate", licensePlate);
+                }
+                promises.push(await fetch(summaryUrl, {
+                    method: "GET",
+                    credentials: "include"
+                }))
+                historyUrl.searchParams.append("attr", `[${parkingCols.join(",")}]`)
+                promises.push(await fetch(historyUrl, {
+                    method: "GET",
+                    credentials: "include"
+                }))
+                ticketUrl.searchParams.append("attr", `[${ticketCols.join(",")}]`)
+                promises.push(await fetch(ticketUrl, {
+                    method: "GET",
+                    credentials: "include"
+                }))
+                if (licensePlate) {
+                    promises.push(await fetch(SERVER_URL + "/api/vehicle?licensePlate=" + licensePlate, {
+                        method: "GET",
+                        credentials: "include"
+                    }))
+                    promises.push(await fetch(SERVER_URL + "/api/numTickets/" + licensePlate, {
+                        method: "GET",
+                        credentials: "include"
+                    }))
+                    promises.push(await fetch(SERVER_URL + "/api/totalCost/" + licensePlate, {
+                        method: "GET",
+                        credentials: "include"
+                    }))
+                }
+                const responses = await Promise.all(promises);
+                const json = await Promise.all(responses.map(response => response.json()));
+                console.log(json)
+                if (!responses[0].ok) {
+                    alert("Vehicle not found");
+                } else {
+                    const summary = await responses[0].json();
+                    setSummary(summary);
+                }
+                if (!responses[1].ok) {
+                    alert("Summary not found");
+                } else {
+                    const history = await responses[1].json();
+                    setParkingHistory(history);
+                }
+                if (!responses[2].ok) {
+                    alert("Parking history not found");
+                } else {
+                    const tickets = await responses[2].json();
+                    setTicketHistory(tickets);
+                }
+                if (licensePlate) {
+                    if (!responses[3].ok) {
+                        alert("Vehicle not found");
+                    } else {
+                        const vehicle = json[3].result.find((vehicle: any) => vehicle.licenseplate === licensePlate);
+                        const permits = vehicle.permits.filter((permit: any) => permit !== null)
+                        setVehicle({
+                            ...vehicle,
+                            licensePlate: vehicle.licenseplate,
+                            plugType: vehicle.plugtype,
+                            isElectric: vehicle.iselectric,
+                            color: '#' + vehicle.color,
+                            permits: permits
+                        });
+                    }
+                    if (!responses[4].ok) {
+                        alert("Num Tickets not found");
+                    } else {
+                        const numTickets = await responses[4].json();
+                        setNumTickets(numTickets);
+                    }
+                    if (!responses[5].ok) {
+                        alert("Total cost not found");
+                    } else {
+                        const totalCost = await responses[5].json();
+                        setTotalCost(totalCost);
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+                alert("Failed to fetch vehicles");
+            }
         }
+        // TODO: uncomment this line
+        // fetchData();
     }, [licensePlate]);
 
     return (
@@ -175,6 +213,28 @@ export const ParkingHistoryPage = () => {
                                 className="mb-3"
                             >
                                 <Tab eventKey="Parking" title="Parking History">
+                                    <Row xs={1}>
+                                        <Form.Group as={Col}>
+                                            {parkingColsArray.map(({ label, value }) => (
+                                                <Form.Check
+                                                    key={value}
+                                                    inline
+                                                    label={label}
+                                                    type="checkbox"
+                                                    name="parkingHistoryColumns"
+                                                    value={value}
+                                                    defaultChecked={parkingCols.includes(value)}
+                                                    onChange={() => {
+                                                        if (parkingCols.includes(value)) {
+                                                            setParkingCols(parkingCols.filter(col => col !== value));
+                                                        } else {
+                                                            setParkingCols([...parkingCols, value]);
+                                                        }
+                                                    }}
+                                                />
+                                            ))}
+                                        </Form.Group>
+                                    </Row>
                                     {parkingHistory.length > 0 ? (
                                         <Row xs={1}>
                                             <Table bordered responsive>
@@ -201,7 +261,8 @@ export const ParkingHistoryPage = () => {
                                                     >
                                                         {!licensePlate && (
                                                             <td>
-                                                                <Link to='/vehicles'>{elem.vehicleLicensePlate}</Link>
+                                                                <Link
+                                                                    to='/vehicles'>{elem.vehicleLicensePlate}</Link>
                                                             </td>
                                                         )}
                                                         <td>{elem.sessionId}</td>
@@ -225,6 +286,28 @@ export const ParkingHistoryPage = () => {
                                     )}
                                 </Tab>
                                 <Tab eventKey="Ticket" title="Ticket History">
+                                    <Row xs={1}>
+                                        <Form.Group as={Col}>
+                                            {ticketColsArray.map(({ label, value }) => (
+                                                <Form.Check
+                                                    key={value}
+                                                    inline
+                                                    label={label}
+                                                    type="checkbox"
+                                                    name="ticketHistoryColumns"
+                                                    value={value}
+                                                    defaultChecked={ticketCols.includes(value)}
+                                                    onChange={() => {
+                                                        if (ticketCols.includes(value)) {
+                                                            setTicketCols(ticketCols.filter(col => col !== value));
+                                                        } else {
+                                                            setTicketCols([...ticketCols, value]);
+                                                        }
+                                                    }}
+                                                />
+                                            ))}
+                                        </Form.Group>
+                                    </Row>
                                     {ticketHistory.length > 0 ? (
                                         <Row xs={1}>
                                             <Table bordered responsive>
