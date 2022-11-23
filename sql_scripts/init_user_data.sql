@@ -109,6 +109,11 @@ INSERT INTO parkingSessions(licensePlate, spotID, lotID, allottedTime, isActive,
     ('CA762X', 2, 1, 7200, FALSE, '2022-11-10 07:05:35-08', FALSE), -- electric, normal
     ('CA762X', 2, 1, 7200, FALSE, '2022-11-22 07:05:35-08', FALSE), -- electric, normal
     ('DE310T', 5, 1, 7200, FALSE, '2022-11-01 09:19:05-08', FALSE), -- electric, normal
+    ('DE310T', 1, 1, 3600, FALSE, '2022-11-02 09:19:05-08', FALSE), -- electric, normal
+    ('DE310T', 1, 2, 3600, FALSE, '2022-11-03 09:19:05-08', FALSE), -- electric, normal
+    ('DE310T', 1, 3, 3600, FALSE, '2022-11-04 09:19:05-08', FALSE), -- electric, normal
+    ('DE310T', 1, 4, 3600, FALSE, '2022-11-05 09:19:05-08', FALSE), -- electric, normal
+    ('DE310T', 1, 5, 3600, FALSE, '2022-11-06 09:19:05-08', FALSE), -- electric, normal
     ('XNK656', 31, 1, 28800, FALSE, '2022-11-01 10:01:09-08', FALSE), -- electric, company
     ('XNK656', 31, 1, 28800, FALSE, '2022-11-04 10:01:09-08', FALSE), -- electric, company
     ('XNK656', 31, 1, 28800, FALSE, '2022-11-06 10:01:09-08', FALSE), -- electric, company
@@ -176,6 +181,16 @@ INSERT INTO parkingActivities(timeStamp, licensePlate, spotID, lotID, activityTy
     ('2022-11-22 10:03:01-08', 'CA762X', 2, 1, 'removed'),
     ('2022-11-01 09:19:05-08', 'DE310T', 5, 1, 'in'),
     ('2022-11-01 09:30:19-08', 'DE310T', 5, 1, 'out'),
+    ('2022-11-02 09:19:05-08', 'DE310T', 1, 1, 'in'),
+    ('2022-11-02 09:30:19-08', 'DE310T', 1, 1, 'out'),
+    ('2022-11-03 09:19:05-08', 'DE310T', 1, 2, 'in'),
+    ('2022-11-03 09:30:19-08', 'DE310T', 1, 2, 'out'),
+    ('2022-11-04 09:19:05-08', 'DE310T', 1, 3, 'in'),
+    ('2022-11-04 09:30:19-08', 'DE310T', 1, 3, 'out'),
+    ('2022-11-05 09:19:05-08', 'DE310T', 1, 4, 'in'),
+    ('2022-11-05 09:30:19-08', 'DE310T', 1, 4, 'out'),
+    ('2022-11-06 09:19:05-08', 'DE310T', 1, 5, 'in'),
+    ('2022-11-06 09:30:19-08', 'DE310T', 1, 5, 'out'),
     ('2022-11-01 10:01:09-08', 'XNK656', 31, 1, 'in'), -- ticket
     ('2022-11-01 20:25:39-08', 'XNK656', 31, 1, 'removed'),
     ('2022-11-04 10:01:09-08', 'XNK656', 31, 1, 'in'), -- ticket

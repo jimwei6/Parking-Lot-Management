@@ -17,7 +17,7 @@ export const AnalyticsPage = () => {
         }[]
     }
 
-    const [overviewData, setOverviewData] = useState<{ anylot: string; alllots: string } | null>(null);
+    const [overviewData, setOverviewData] = useState<{ anylot: string; alllots: string, alllotsuser: {name:string, email: string}[] } | null>(null);
     const [locations, setLocations] = useState<{ lotid: number; postalcode: string, city: string, province: string }[]>([]);
     const [selectedValue, setSelectedValue] = useState<number | null>(null);
     const [locationData, setLocationData] = useState<LocationData | null>(null);
@@ -88,6 +88,11 @@ export const AnalyticsPage = () => {
                                 <Col>
                                     <h6>Number of people parked at any parking lot: {overviewData?.anylot}</h6>
                                     <h6>Number of people parked at all parking lots: {overviewData?.alllots}</h6>
+                                    <ul>
+                                      {overviewData?.alllotsuser.map(({ name, email }) => (
+                                          <li key={name + email}>{`Name: ${name}, Email: ${email}`}</li>
+                                      ))}
+                                    </ul>
                                 </Col>
                             </Row>
                         </Col>
@@ -121,13 +126,13 @@ export const AnalyticsPage = () => {
                                 <h6>Users with 3+ tickets: </h6>
                                 <ul>
                                     {locationData?.listOfUsersWithTickets.map(({ name, email, num_tickets }) => (
-                                        <li key={name + email + num_tickets}>{`${name} (${email}): ${num_tickets}`}</li>
+                                        <li key={name + email + num_tickets}>{`Name: ${name}, Email: ${email}, Tickets: ${num_tickets}`}</li>
                                     ))}
                                 </ul>
                                 <h6>Users who parked 3+ times: </h6>
                                 <ul>
                                     {locationData?.listOfUsersWhoParked10Times.map(({ name, email, parked }) => (
-                                        <li key={name + email + parked}>{`${name} (${email}): ${parked}`}</li>
+                                        <li key={name + email + parked}>{`Name: ${name}, Email: ${email}, Times Parked: ${parked}`}</li>
                                     ))}
                                 </ul>
                             </Col>
