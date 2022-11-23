@@ -19,6 +19,7 @@ interface ParkingHistory {
     isaccessibilityspot: boolean;
     iselectricspot: boolean;
     sessionend: string;
+    ticketnumber: number;
 }
 
 interface TicketHistory {
@@ -257,6 +258,7 @@ export const ParkingHistoryPage = () => {
                                                     <th>Start Date</th>
                                                     <th>Start Time</th>
                                                     <th>Active</th>
+                                                    <th>Received Ticket</th>
                                                     {parkingCols.includes('p.allottedTime') && <th>Allotted Time (mins)</th>}
                                                     {parkingCols.includes('p.isCharging') && <th>Charging used?</th>}
                                                     <th>Parking Lot</th>
@@ -282,6 +284,7 @@ export const ParkingHistoryPage = () => {
                                                         <td>{elem.starttime.split('T')[0]}</td>
                                                         <td>{elem.starttime.split('T')[1]}</td>
                                                         <td>{elem.isactive ? 'Yes' : 'No'}</td>
+                                                        <td>{elem.ticketnumber !== null ? 'Yes' : 'No'} </td>
                                                         {parkingCols.includes('p.allottedTime') && <td>{elem.allottedtime}</td>}
                                                         {parkingCols.includes('p.isCharging') && <td>{elem.iselectricspot ? elem.ischarging ? 'Yes' : 'No' : '-'}</td>}
                                                         <td>{elem.parkinglotid}</td>

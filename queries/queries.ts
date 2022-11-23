@@ -329,7 +329,8 @@ function getParkingHistory(username: string, licensePlate: string | null | undef
           AND pa.licenseplate = p.licenseplate 
           AND pa.lotid = p.lotid
           AND pa.spotid = p.spotid
-          AND pa.activitytype IN ('removed', 'out')) as sessionend
+          AND pa.activitytype IN ('removed', 'out')) as sessionend,
+        t.ticketnumber
     FROM parkingSessions p
     JOIN parkingSpots ps
         ON p.spotID = ps.spotID AND p.lotID = ps.lotID
@@ -345,6 +346,8 @@ function getParkingHistory(username: string, licensePlate: string | null | undef
         ON p.spotID = a.spotID AND p.lotID = a.lotID
     LEFT JOIN electricSpots e
         ON p.spotID = e.spotID AND p.lotID = e.lotID
+    LEFT JOIN tickets t
+        ON t.sessionid = p.sessionid
     WHERE vo.username = $1 `;
 
   if (licensePlate !== null && licensePlate !== undefined) {
