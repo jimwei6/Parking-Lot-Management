@@ -18,6 +18,7 @@ interface ParkingHistory {
     accessibilitytype?: string;
     isaccessibilityspot: boolean;
     iselectricspot: boolean;
+    sessionend: string;
 }
 
 interface TicketHistory {
@@ -263,7 +264,7 @@ export const ParkingHistoryPage = () => {
                                                     {parkingCols.includes('p.spotID') && <th>Spot Number</th>}
                                                     {parkingCols.includes('ps.spotType') && <th>Spot Type</th>}
                                                     <th>Accessibility Type</th>
-                                                    <th>End Session</th>
+                                                    <th>End Date</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -288,7 +289,7 @@ export const ParkingHistoryPage = () => {
                                                         {parkingCols.includes('p.spotID') && <td>{elem.spotid}</td>}
                                                         {parkingCols.includes('ps.spotType') && <td>{elem.spottype}</td>}
                                                         <td>{elem.isaccessibilityspot ? elem.accessibilitytype : '-'}</td>
-                                                        <td>{elem.isactive ? <Button onClick={async () => {await endSession(elem.sessionid)}}>End Session</Button> : null }</td>
+                                                        <td>{elem.isactive ? <Button onClick={async () => {await endSession(elem.sessionid)}}>End Session</Button> : elem.sessionend }</td>
                                                     </tr>
                                                 ))}
                                                 </tbody>

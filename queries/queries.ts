@@ -324,7 +324,12 @@ function getParkingHistory(username: string, licensePlate: string | null | undef
         CASE
             WHEN e.plugType IS NULL THEN FALSE
             ELSE TRUE
-        END AS isElectricSpot
+        END AS isElectricSpot,
+        (SELECT MIN(pa.timestamp) FROM parkingactivities as pa WHERE pa.timestamp > p.starttime 
+          AND pa.licenseplate = p.licenseplate 
+          AND pa.lotid = p.lotid
+          AND pa.spotid = p.spotid
+          AND pa.activitytype IN ('removed', 'out')) as sessionend
     FROM parkingSessions p
     JOIN parkingSpots ps
         ON p.spotID = ps.spotID AND p.lotID = ps.lotID
