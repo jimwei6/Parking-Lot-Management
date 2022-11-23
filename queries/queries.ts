@@ -343,9 +343,9 @@ function getParkingHistory(username: string, licensePlate: string | null | undef
     WHERE vo.username = $1 `;
 
   if (licensePlate !== null && licensePlate !== undefined) {
-    return executeQuery(query + ` AND p.licensePlate = $2`, [username, licensePlate]);
+    return executeQuery(query + ` AND p.licensePlate = $2 ORDER BY p.isActive DESC, p.startTime DESC`, [username, licensePlate]);
   } else {
-    return executeQuery(query, [username]);
+    return executeQuery(query + ` ORDER BY p.isActive DESC, p.startTime DESC`, [username]);
   }
 }
 
