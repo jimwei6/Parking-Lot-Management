@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { Col, Container, Form, Row, Tab, Table, Tabs } from "react-bootstrap";
+import { Col, Container, Form, Row, Tab, Table, Tabs, Button } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { Vehicle } from "./VehicleListPage";
 import { SERVER_URL } from "../constants/constants";
@@ -45,6 +45,7 @@ export const ParkingHistoryPage = () => {
     const [totalCost, setTotalCost] = useState(0);
     const [numTickets, setNumTickets] = useState(0);
     const [summary, setSummary] = useState<Summary[]>([]);
+    const [reload, setReload] = useState<boolean>();
     const ticketColsArray = [{
         label: "Session ID",
         value: "p.sessionId"
@@ -76,7 +77,20 @@ export const ParkingHistoryPage = () => {
         "p.isCharging",
         "ps.spotType"
     ])
-
+    const endSession = (sessionid: number) => {
+      return fetch(`${SERVER_URL}/api/session/end`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          sessionid: sessionid
+        })
+      }).then(() => {
+        setReload(!reload);
+      });
+    }
     useEffect(() => {
         // TODO: store fetched data in state
         const fetchData = async () => {
@@ -174,7 +188,7 @@ export const ParkingHistoryPage = () => {
         }
         // TODO: uncomment this line
         fetchData();
-    }, [licensePlate, parkingCols, ticketCols]);
+    }, [licensePlate, parkingCols, ticketCols, reload]);
 
     return (
         <Container fluid className="mx-auto">
@@ -249,6 +263,7 @@ export const ParkingHistoryPage = () => {
                                                     {parkingCols.includes('p.spotID') && <th>Spot Number</th>}
                                                     {parkingCols.includes('ps.spotType') && <th>Spot Type</th>}
                                                     <th>Accessibility Type</th>
+                                                    <th>End Session</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -273,6 +288,7 @@ export const ParkingHistoryPage = () => {
                                                         {parkingCols.includes('p.spotID') && <td>{elem.spotid}</td>}
                                                         {parkingCols.includes('ps.spotType') && <td>{elem.spottype}</td>}
                                                         <td>{elem.isaccessibilityspot ? elem.accessibilitytype : '-'}</td>
+                                                        <td>{elem.isactive ? <Button onClick={async () => {await endSession(elem.sessionid)}}>End Session</Button> : null }</td>
                                                     </tr>
                                                 ))}
                                                 </tbody>
