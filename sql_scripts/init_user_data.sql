@@ -101,9 +101,17 @@ INSERT INTO electricVehicle(licensePlate, plugType) VALUES
 -- sessionID: serial (automatically increments)
 INSERT INTO parkingSessions(licensePlate, spotID, lotID, allottedTime, isActive, startTime, isCharging) VALUES
     ('CF346E', 21, 1, 7200, FALSE, '2022-11-01 06:29:10-08', FALSE), -- electric, vip
+    ('CF346E', 21, 1, 7200, FALSE, '2022-11-11 06:29:10-08', FALSE), -- electric, vip
+    ('CF346E', 21, 1, 7200, FALSE, '2022-11-22 06:29:10-08', FALSE), -- electric, vip
+    ('CF346E', 21, 1, 7200, FALSE, '2022-11-21 06:29:10-08', FALSE), -- electric, vip
     ('CA762X', 2, 1, 7200, FALSE, '2022-11-01 07:05:35-08', FALSE), -- electric, normal
+    ('CA762X', 2, 1, 7200, FALSE, '2022-11-05 07:05:35-08', FALSE), -- electric, normal
+    ('CA762X', 2, 1, 7200, FALSE, '2022-11-10 07:05:35-08', FALSE), -- electric, normal
+    ('CA762X', 2, 1, 7200, FALSE, '2022-11-22 07:05:35-08', FALSE), -- electric, normal
     ('DE310T', 5, 1, 7200, FALSE, '2022-11-01 09:19:05-08', FALSE), -- electric, normal
     ('XNK656', 31, 1, 28800, FALSE, '2022-11-01 10:01:09-08', FALSE), -- electric, company
+    ('XNK656', 31, 1, 28800, FALSE, '2022-11-04 10:01:09-08', FALSE), -- electric, company
+    ('XNK656', 31, 1, 28800, FALSE, '2022-11-06 10:01:09-08', FALSE), -- electric, company
     ('KD978P', 46, 1, 3600, FALSE, '2022-11-01 15:30:03-08', FALSE), -- reserved
     ('896REN', 16, 2, 3600, FALSE, '2022-11-02 05:59:48-08', FALSE), -- infant, normal
     ('706SGL', 9, 2, 3600, FALSE, '2022-11-02 07:23:36-08', FALSE), -- electric, normal
@@ -117,60 +125,103 @@ INSERT INTO parkingSessions(licensePlate, spotID, lotID, allottedTime, isActive,
     ('589WGN', 31, 5, 28800, FALSE, '2022-11-04 14:39:00-08', FALSE), -- company
     ('CD7172', 12, 1, 7200, FALSE, '2022-11-04 16:18:49-08', FALSE), -- infant, normal
     ('MBG091', 10, 2, 3600, FALSE, '2022-11-04 18:07:58-08', FALSE), -- electric, normal
-    ('229KBX', 16, 1, 3600, TRUE, '2022-11-05 11:05:28-08', FALSE), -- normal
-    ('VVF388', 10, 4, 10800, TRUE, '2022-11-05 11:27:01-08', FALSE), -- normal
-    ('BH909R', 25, 4, 3600, TRUE, '2022-11-05 12:00:49-08', FALSE); -- reserved
+    ('229KBX', 16, 1, 3600, FALSE, '2022-11-05 11:05:28-08', FALSE), -- normal
+    ('VVF388', 10, 4, 10800, FALSE, '2022-11-05 11:27:01-08', FALSE), -- normal
+    ('BH909R', 25, 4, 3600, FALSE, '2022-11-05 12:00:49-08', FALSE), -- reserved
+    ('BH909R', 25, 4, 3600, FALSE, '2022-11-06 12:00:49-08', FALSE), -- reserved
+    ('BH909R', 25, 4, 3600, FALSE, '2022-11-07 12:00:49-08', FALSE), -- reserved
+    ('BH909R', 25, 4, 3600, FALSE, '2022-11-08 12:00:49-08', FALSE), -- reserved
+    ('BH909R', 25, 4, 3600, FALSE, '2022-11-09 12:00:49-08', FALSE); -- reserved
 
 -- ticketNumber: serial (automatically increments), cost: 50 (default?)
 INSERT INTO tickets(cost, paid, details, sessionId) VALUES
     (50, TRUE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-01 07:05:35-08' AND licensePlate = 'CA762X')),
+    (50, TRUE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-05 07:05:35-08' AND licensePlate = 'CA762X')),
+    (50, TRUE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-10 07:05:35-08' AND licensePlate = 'CA762X')),
+    (50, TRUE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-22 07:05:35-08' AND licensePlate = 'CA762X')),
     (50, TRUE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-01 10:01:09-08' AND licensePlate = 'XNK656')),
+    (50, TRUE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-04 10:01:09-08' AND licensePlate = 'XNK656')),
+    (50, TRUE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-06 10:01:09-08' AND licensePlate = 'XNK656')),
     (50, FALSE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-02 05:59:48-08' AND licensePlate = '896REN')),
     (50, TRUE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-02 09:10:38-08' AND licensePlate = 'GDM839')),
     (50, TRUE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-02 12:31:07-08' AND licensePlate = 'DPU597')),
     (50, TRUE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-03 10:05:39-08' AND licensePlate = '245AFC')),
     (50, FALSE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-04 14:39:00-08' AND licensePlate = '589WGN')),
     (50, FALSE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-04 16:18:49-08' AND licensePlate = 'CD7172')),
-    (50, TRUE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-04 18:07:58-08' AND licensePlate = 'MBG091'));
+    (50, TRUE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-05 11:05:28-08' AND licensePlate = '229KBX')),
+    (50, TRUE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-05 11:27:01-08' AND licensePlate = 'VVF388')),
+    (50, TRUE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-05 12:00:49-08' AND licensePlate = 'BH909R')),
+    (50, TRUE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-06 12:00:49-08' AND licensePlate = 'BH909R')),
+    (50, TRUE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-07 12:00:49-08' AND licensePlate = 'BH909R')),
+    (50, TRUE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-08 12:00:49-08' AND licensePlate = 'BH909R')),
+    (50, TRUE, NULL, (SELECT sessionid FROM parkingSessions WHERE starttime = '2022-11-09 12:00:49-08' AND licensePlate = 'BH909R'));
+
 
 INSERT INTO parkingActivities(timeStamp, licensePlate, spotID, lotID, activityType) VALUES
     ('2022-11-01 06:29:10-08', 'CF346E', 21, 1, 'in'),
     ('2022-11-01 06:59:29-08', 'CF346E', 21, 1, 'out'),
+    ('2022-11-11 06:29:10-08', 'CF346E', 21, 1, 'in'),
+    ('2022-11-11 06:59:29-08', 'CF346E', 21, 1, 'out'),
+    ('2022-11-22 06:29:10-08', 'CF346E', 21, 1, 'in'),
+    ('2022-11-22 06:59:29-08', 'CF346E', 21, 1, 'out'),
+    ('2022-11-21 06:29:10-08', 'CF346E', 21, 1, 'in'),
+    ('2022-11-21 06:59:29-08', 'CF346E', 21, 1, 'out'),
     ('2022-11-01 07:05:35-08', 'CA762X', 2, 1, 'in'), -- ticket
-    ('2022-11-01 10:03:01-08', 'CA762X', 2, 1, 'out'),
+    ('2022-11-01 10:03:01-08', 'CA762X', 2, 1, 'removed'),
+    ('2022-11-05 07:05:35-08', 'CA762X', 2, 1, 'in'), -- ticket
+    ('2022-11-05 10:03:01-08', 'CA762X', 2, 1, 'removed'),
+    ('2022-11-10 07:05:35-08', 'CA762X', 2, 1, 'in'), -- ticket
+    ('2022-11-10 10:03:01-08', 'CA762X', 2, 1, 'removed'),
+    ('2022-11-22 07:05:35-08', 'CA762X', 2, 1, 'in'), -- ticket
+    ('2022-11-22 10:03:01-08', 'CA762X', 2, 1, 'removed'),
     ('2022-11-01 09:19:05-08', 'DE310T', 5, 1, 'in'),
     ('2022-11-01 09:30:19-08', 'DE310T', 5, 1, 'out'),
     ('2022-11-01 10:01:09-08', 'XNK656', 31, 1, 'in'), -- ticket
-    ('2022-11-01 20:25:39-08', 'XNK656', 31, 1, 'out'),
+    ('2022-11-01 20:25:39-08', 'XNK656', 31, 1, 'removed'),
+    ('2022-11-04 10:01:09-08', 'XNK656', 31, 1, 'in'), -- ticket
+    ('2022-11-04 20:25:39-08', 'XNK656', 31, 1, 'removed'),
+    ('2022-11-06 10:01:09-08', 'XNK656', 31, 1, 'in'), -- ticket
+    ('2022-11-06 20:25:39-08', 'XNK656', 31, 1, 'removed'),
     ('2022-11-01 15:30:03-08', 'KD978P', 46, 1, 'in'),
     ('2022-11-01 15:48:40-08', 'KD978P', 46, 1, 'out'),
     ('2022-11-02 05:59:48-08', '896REN', 16, 2, 'in'), -- ticket
-    ('2022-11-02 07:03:19-08', '896REN', 16, 2, 'out'),
+    ('2022-11-02 07:03:19-08', '896REN', 16, 2, 'removed'),
     ('2022-11-02 07:23:36-08', '706SGL', 9, 2, 'in'),
     ('2022-11-02 07:48:01-08', '706SGL', 9, 2, 'out'),
     ('2022-11-02 09:10:38-08', 'GDM839', 17, 2, 'in'), -- ticket
-    ('2022-11-02 10:39:58-08', 'GDM839', 17, 2, 'out'),
+    ('2022-11-02 10:39:58-08', 'GDM839', 17, 2, 'removed'),
     ('2022-11-02 12:31:07-08', 'DPU597', 10, 2, 'in'), -- ticket
-    ('2022-11-02 13:35:39-08', 'DPU597', 10, 2, 'out'),
+    ('2022-11-02 13:35:39-08', 'DPU597', 10, 2, 'removed'),
     ('2022-11-02 18:45:49-08', '985HDE', 48, 2, 'in'),
     ('2022-11-02 19:57:28-08', '985HDE', 48, 2, 'out'),
     ('2022-11-03 10:00:15-08', 'DHR427', 11, 3, 'in'),
     ('2022-11-03 10:38:29-08', 'DHR427', 11, 3, 'out'),
     ('2022-11-03 10:05:39-08', '245AFC', 8, 3, 'in'), -- ticket
-    ('2022-11-03 11:51:19-08', '245AFC', 8, 3, 'out'),
+    ('2022-11-03 11:51:19-08', '245AFC', 8, 3, 'removed'),
     ('2022-11-03 10:06:08-08', '144PKF', 17, 3, 'in'),
     ('2022-11-03 10:39:10-08', '144PKF', 17, 3, 'out'),
     ('2022-11-03 10:27:19-08', '645RTM', 6, 3, 'in'),
     ('2022-11-03 10:37:20-08', '645RTM', 6, 3, 'out'),
     ('2022-11-04 14:39:00-08', '589WGN', 31, 5, 'in'), -- ticket
-    ('2022-11-04 23:59:03-08', '589WGN', 31, 5, 'out'),
+    ('2022-11-04 23:59:03-08', '589WGN', 31, 5, 'removed'),
     ('2022-11-04 16:18:49-08', 'CD7172', 12, 1, 'in'), -- ticket
-    ('2022-11-04 19:20:20-08', 'CD7172', 12, 1, 'out'),
+    ('2022-11-04 19:20:20-08', 'CD7172', 12, 1, 'removed'),
     ('2022-11-04 18:07:58-08', 'MBG091', 10, 2, 'in'), -- ticket
-    ('2022-11-04 21:05:39-08', 'MBG091', 10, 2, 'out'),
-    ('2022-11-05 11:05:28-08', '229KBX', 16, 1, 'in'), -- active
-    ('2022-11-05 11:27:01-08', 'VVF388', 10, 4, 'in'), -- active
-    ('2022-11-05 12:00:49-08', 'BH909R', 25, 4, 'in'); -- active
+    ('2022-11-04 21:05:39-08', 'MBG091', 10, 2, 'removed'),
+    ('2022-11-05 11:05:28-08', '229KBX', 16, 1, 'in'), -- ticket
+    ('2022-11-05 11:27:01-08', 'VVF388', 10, 4, 'in'), -- ticket
+    ('2022-11-05 12:00:49-08', 'BH909R', 25, 4, 'in'), -- ticket
+    ('2022-11-06 12:00:49-08', 'BH909R', 25, 4, 'in'), -- ticket
+    ('2022-11-07 12:00:49-08', 'BH909R', 25, 4, 'in'), -- ticket
+    ('2022-11-08 12:00:49-08', 'BH909R', 25, 4, 'in'), -- ticket
+    ('2022-11-09 12:00:49-08', 'BH909R', 25, 4, 'in'), -- ticket
+    ('2022-11-05 14:05:28-08', '229KBX', 16, 1, 'removed'),
+    ('2022-11-05 12:27:01-08', 'VVF388', 10, 4, 'removed'),
+    ('2022-11-05 13:00:49-08', 'BH909R', 25, 4, 'removed'),
+    ('2022-11-06 13:00:49-08', 'BH909R', 25, 4, 'removed'),
+    ('2022-11-07 13:00:49-08', 'BH909R', 25, 4, 'removed'),
+    ('2022-11-08 13:00:49-08', 'BH909R', 25, 4, 'removed'),
+    ('2022-11-09 13:00:49-08', 'BH909R', 25, 4, 'removed');
 
 -- permitType: vip, company, reserved, infant, accessibility
 INSERT INTO permits(licensePlate, permitType) VALUES
