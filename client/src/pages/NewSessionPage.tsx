@@ -5,21 +5,16 @@ import { boolean, number, object, string } from "yup";
 import { useNavigate, useParams } from "react-router-dom";
 import { Vehicle } from "./VehicleListPage";
 import { FormikHelpers } from "formik/dist/types";
+import { SERVER_URL } from "../constants/constants";
 
 export const NewSessionPage = () => {
 
     const { licensePlate } = useParams();
     const [spots, setSpots] = useState<Spot[]>([]);
     const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null);
-    const [locations, setLocations] = useState<{
-        postalCode: string;
-        city: string;
-        province: string;
-        lotId: number;
-    }[]>([]);
+    const [locations, setLocations] = useState<{ lotid: number; postalcode: string, city: string, province: string }[]>([]);
     const [vehicle, setVehicle] = useState<Vehicle>();
     const [isCreating, setIsCreating] = useState(false);
-    const [isFiltering, setIsFiltering] = useState(false);
     const [hasFiltered, setHasFiltered] = useState(false);
     const navigate = useNavigate();
 
@@ -35,8 +30,6 @@ export const NewSessionPage = () => {
         postalCode: string;
         city: string;
         province: string;
-        lotCapacity: number; // total number of spots in the lot
-        lotAvailability: number;  // total number of unoccupied spots in the lot
     }
 
     interface FormFields {
@@ -59,130 +52,129 @@ export const NewSessionPage = () => {
     });
 
     useEffect(() => {
-        //  TODO: make a request to the server to get vehicle info using licensePlate
-        const v: Vehicle = {
-            licensePlate: licensePlate || '',
-            model: 'Tesla Model 3',
-            height: 1800,
-            color: '#FF0000',
-            isElectric: true,
-            plugType: 'Type 2',
-            permits: ['accessibility', 'company', 'vip'],
-        };
-        setVehicle(v);
-        setSpotTypes(spotTypes.filter(spotType => v.permits.includes(spotType)));
-        setAccessibilityTypes(accessibilityTypes.filter(accessibilityType => v.permits.includes(accessibilityType)));
-        //  TODO: make a request to the server to get the set of locations of all the lots
-        setLocations([{
-            postalCode: 'M5V 1A1',
-            city: 'Toronto',
-            province: 'Ontario',
-            lotId: 0
-        }, {
-            postalCode: 'V6T 1Z4',
-            city: 'Vancouver',
-            province: 'BC',
-            lotId: 1
-        }, {
-            postalCode: 'O6T 1Z4',
-            city: 'Ottawa',
-            province: 'Ontario',
-            lotId: 2
-        }, {
-            postalCode: 'V1V 1V1',
-            city: 'Victoria',
-            province: 'BC',
-            lotId: 3
-        }])
+        const fetchData = async () => {
+            try {
+                const promises = []
+                promises.push(await fetch(SERVER_URL + "/api/vehicle?licensePlate=" + licensePlate, {
+                    method: "GET",
+                    credentials: "include"
+                }))
+                promises.push(await fetch(SERVER_URL + '/api/location', {
+                    method: 'GET',
+                    credentials: 'include'
+                }));
+                const responses = await Promise.all(promises);
+                if (!responses[0].ok) {
+                    alert("Vehicle not found");
+                } else if (!responses[1].ok) {
+                    alert("Locations not found");
+                }
+                const json = await Promise.all(responses.map(response => response.json()));
+                const vehicle = json[0].result.find((vehicle: any) => vehicle.licenseplate === licensePlate);
+                const permits = vehicle.permits.filter((permit: any) => permit !== null)
+                setLocations(json[1].result);
+                setVehicle({
+                    ...vehicle,
+                    licensePlate: vehicle.licenseplate,
+                    plugType: vehicle.plugtype,
+                    isElectric: vehicle.iselectric,
+                    color: '#' + vehicle.color,
+                    permits: permits
+                });
+                setSpotTypes(spotTypes.filter(spotType => permits.includes(spotType)));
+                setAccessibilityTypes(accessibilityTypes.filter(accessibilityType => permits.includes(accessibilityType)));
+            } catch (e) {
+                console.error(e);
+                alert("Failed to fetch vehicles");
+            }
+        }
+        fetchData();
     }, []);
 
-    const createSession = () => {
-        //  TODO: make a request to the server to create a new session using selectedSpot and vehicle
+    const createSession = async () => {
         setIsCreating(true);
-        setTimeout(() => {
-            setIsCreating(false);
-            navigate(`/history/${licensePlate}`);
-        }, 1000);
+        try {
+            // TODO: NOT WORKING, server error
+            const response = await fetch(SERVER_URL + "/api/session", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    lotId: selectedSpot?.lotId,
+                    licensePlate: vehicle?.licensePlate,
+                    spotId: selectedSpot?.spotId,
+                })
+            });
+            if (!response.ok) {
+                alert("Failed to create session");
+            } else {
+                navigate(`/history/${licensePlate}`);
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Failed to create session");
+        }
+        setIsCreating(false);
     }
 
-    const findSpots = (values: FormFields, actions: FormikHelpers<FormFields>) => {
-        //  TODO: make a request to the server to get the set of spots that match the criteria
-        //        accessibilityType, spotType be arrays of strings or a single string
-        //          a single string means that the user has selected a specific type
-        //          an array of strings means that the user has selected has opted for any type in the array
-        //        city and province can be * to indicate all locations (both will be *)
-        //        city and province can be a specific location (both will be a specific location)
-        //        needsCharging can be true (charging on) or false (charging off)
-        //        duration is the number of minutes the user wants to park for
-        //        the query will also accept vehicle height to filter the spots by height
-        //        the query will also accept vehicle plugType to filter the spots if needsCharging is true
-
-        const height = vehicle?.height || 0;
-        const plugType = vehicle?.plugType || '';
-        const vehiclePermits = vehicle?.permits || '';
+    const findSpots = async (values: FormFields, actions: FormikHelpers<FormFields>) => {
         const { accessibilityType, spotType, duration, location, needsCharging } = values;
-        const accessibilityArray = accessibilityType === '*' ? accessibilityTypes : [accessibilityType];
-        const spotArray = spotType === '*' ? spotTypes : [spotType];
-        const city = location === '*' ? '*' : location.split(',')[0];
-        const province = location === '*' ? '*' : location.split(',')[1];
         const { setSubmitting } = actions;
-        console.log(accessibilityArray, spotArray, city, province, duration, needsCharging);
-        setTimeout(() => {
-            setHasFiltered(true);
-            setSpots([{
-                spotId: 1,
-                availableTime: 7200,
-                spotType: 'normal',
-                isElectric: false,
-                isAccessible: false,
-                lotId: 1,
-                postalCode: 'V6T 1Z4',
-                city: 'Vancouver',
-                province: 'BC',
-                lotCapacity: 10,
-                lotAvailability: 5
-            }, {
-                spotId: 2,
-                availableTime: 10800,
-                spotType: 'vip',
-                isElectric: true,
-                plugType: 'J1772',
-                isAccessible: false,
-                lotId: 1,
-                postalCode: 'V6T 1Z4',
-                city: 'Vancouver',
-                province: 'BC',
-                lotCapacity: 10,
-                lotAvailability: 5
-            }, {
-                spotId: 2,
-                availableTime: 10800,
-                spotType: 'vip',
-                isElectric: true,
-                plugType: 'J1772',
-                isAccessible: false,
-                lotId: 5,
-                postalCode: 'O6T 1Z4',
-                city: 'Ottawa',
-                province: 'ON',
-                lotCapacity: 300,
-                lotAvailability: 200
-            }, {
-                spotId: 1,
-                availableTime: 3600,
-                spotType: 'reserved',
-                isElectric: false,
-                isAccessible: true,
-                accessibilityType: 'infant',
-                lotId: 2,
-                postalCode: 'V1V 1V1',
-                city: 'Victoria',
-                province: 'BC',
-                lotCapacity: 45,
-                lotAvailability: 25
-            }])
-            setSubmitting(false);
-        }, 1000);
+        try {
+            const url = new URL(SERVER_URL + "/api/parkingSpots");
+            const params: {
+                [key: string]: string
+            } = {
+                licensePlate: licensePlate || '',
+                needsCharging: needsCharging?.toString() || "false",
+                duration: duration.toString(),
+            }
+            if (location !== '*') {
+                params['location'] = location;
+            }
+            if (accessibilityType !== '*') {
+                params['accessType'] = accessibilityType;
+            }
+            if (spotType !== '*') {
+                params['spotType'] = spotType;
+            }
+            Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+            // TODO: filter by plugType in SQL query (vehicle?.plugType)
+            //       THIS IS IMPORTANT BECAUSE OTHERWISE INVALID SPOTS WILL BE RETURNED, I THINK
+            //       filter by height in SQL query (vehicle?.height || 0)
+            //       Change no spotType to normal
+            //       Change no accessType to normal parking spots
+            const response = await fetch(url, {
+                method: "GET",
+                credentials: "include",
+            });
+            if (!response.ok) {
+                alert("Failed to find spots");
+            } else {
+                const json = await response.json();
+                let spots: Spot[] = json.result.map((spot: any) => ({
+                    availableTime: spot.availabletime,
+                    city: spot.city,
+                    lotId: spot.lotid,
+                    plugType: spot.plugtype,
+                    postalCode: spot.postalcode,
+                    province: spot.province,
+                    spotId: spot.spotid,
+                    spotType: spot.spottype,
+                    accessibilityType: spot.accessibilitytype,
+                    isElectric: spot.plugtype !== null,
+                    isAccessible: spot.accessibilitytype !== null
+                }));
+                setSpots(spots);
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Failed to find spots");
+        }
+        setHasFiltered(true);
+        setSubmitting(false);
     }
 
     return (
@@ -237,10 +229,10 @@ export const NewSessionPage = () => {
                                                 onChange={handleChange}
                                             >
                                                 <option value="*">All locations</option>
-                                                {locations.map(({ postalCode, city, province, lotId }) => (
-                                                    <option key={postalCode + city + province + lotId }
-                                                            value={`${lotId}`}>
-                                                        {postalCode + ', ' + city + ', ' + province}
+                                                {locations.map(({ postalcode, city, province, lotid }) => (
+                                                    <option key={postalcode + city + province + lotid}
+                                                            value={`${lotid}`}>
+                                                        {postalcode + ', ' + city + ', ' + province}
                                                     </option>
                                                 ))}
                                             </Form.Select>
@@ -255,7 +247,7 @@ export const NewSessionPage = () => {
                                                 value={values.spotType}
                                                 onChange={handleChange}
                                             >
-                                                <option value="*">Any spot type</option>
+                                                <option value="*">normal</option>
                                                 {spotTypes.map(type => <option key={type} value={type}>{type}</option>)}
                                             </Form.Select>
                                             <Form.Control.Feedback type="invalid">
@@ -269,7 +261,7 @@ export const NewSessionPage = () => {
                                                 value={values.accessibilityType}
                                                 onChange={handleChange}
                                             >
-                                                <option value="*">No preference</option>
+                                                <option value="*">none</option>
                                                 {accessibilityTypes.map(type => {
                                                     return <option key={type} value={type}>{type}</option>
                                                 })}
@@ -334,8 +326,6 @@ export const NewSessionPage = () => {
                                     <th>Postal Code</th>
                                     <th>City</th>
                                     <th>Province</th>
-                                    <th>Lot Capacity</th>
-                                    <th>Lot Availability</th>
                                     <th>Available Time</th>
                                     <th>Spot Type</th>
                                     <th>Plug Type</th>
@@ -354,8 +344,6 @@ export const NewSessionPage = () => {
                                         <td>{spot.postalCode}</td>
                                         <td>{spot.city}</td>
                                         <td>{spot.province}</td>
-                                        <td>{spot.lotCapacity}</td>
-                                        <td>{spot.lotAvailability}</td>
                                         <td>{spot.availableTime}</td>
                                         <td>{spot.spotType}</td>
                                         <td>{spot.isElectric ? spot.plugType : '-'}</td>
