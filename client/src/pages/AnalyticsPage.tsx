@@ -17,7 +17,7 @@ export const AnalyticsPage = () => {
         }[]
     }
 
-    const [overviewData, setOverviewData] = useState<{ anylot: string; alllots: string, alllotsuser: {name:string, email: string}[], overavg: {name:string, count:string}[] } | null>(null);
+    const [overviewData, setOverviewData] = useState<{ anylot: string; alllots: string, alllotsuser: {name:string, email: string}[], overavg: {name:string, count:string}[] , avg: string} | null>(null);
     const [locations, setLocations] = useState<{ lotid: number; postalcode: string, city: string, province: string }[]>([]);
     const [selectedValue, setSelectedValue] = useState<number | null>(null);
     const [locationData, setLocationData] = useState<LocationData | null>(null);
@@ -93,7 +93,7 @@ export const AnalyticsPage = () => {
                                           <li key={name + email}>{`Name: ${name}, Email: ${email}`}</li>
                                       ))}
                                     </ul>
-                                    <h6>Number of people with over average vehicles: {overviewData?.overavg?.length}</h6>
+                                    <h6>Number of people with over average ({overviewData?.avg}) vehicles: {overviewData?.overavg?.length}</h6>
                                     <ul>
                                       {overviewData?.overavg?.map(({ name, count }) => (
                                           <li key={name + count}>{`Name: ${name}, Vehicles: ${count}`}</li>
