@@ -46,7 +46,7 @@ export const ParkingHistoryPage = () => {
 
     useEffect(() => {
         if (licensePlate) {
-            // TODO: Fetch vehicle data from the server
+            // TODO: Fetch vehicle data from the server <= DONE
             setVehicle({
                 licensePlate: licensePlate,
                 model: 'Tesla Model 3',
@@ -56,7 +56,7 @@ export const ParkingHistoryPage = () => {
                 plugType: 'Type 2',
                 permits: ['accessibility', 'company', 'vip'],
             })
-            // TODO: Fetch parking history from the server (for the given vehicle)
+            // TODO: Fetch parking history from the server (for the given vehicle) <= DONE
             setParkingHistory([{
                     sessionId: 1,
                     startTime: '2021-04-01T12:00:00',
@@ -72,7 +72,7 @@ export const ParkingHistoryPage = () => {
                     isElectricSpot: true,
                 }]
             )
-            // TODO: Fetch ticket history from the server (for the given vehicle)
+            // TODO: Fetch ticket history from the server (for the given vehicle) <= DONE
             setTicketHistory([{
                 ticketNumber: 1,
                 dateReceived: '2021-04-01T12:00:00',
@@ -84,7 +84,7 @@ export const ParkingHistoryPage = () => {
             // TODO: Only exists if licensePlate exists, that is, route is /history/:licensePlate
             setTotalCost(71.5);
             setNumTickets(7);
-            // TODO: Fetch summary from the server (for the given vehicle)
+            // TODO: Fetch summary from the server (for the given vehicle) <= DONE
             setSummary([{
                 parkingLotId: 1,
                 parkingLotAddress: 'V6T 1Z4 Vancouver, BC',

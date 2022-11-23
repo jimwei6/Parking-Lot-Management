@@ -2,6 +2,9 @@ SELECT p.licensePlate,
        t.ticketNumber,
        p.startTime + (p.allottedTime / 3600 * interval '1 hour') AS dateReceived,
        t.paid,
+       CASE
+           WHEN t.details IS NOT NULL THEN t.details
+       END AS details,
        t.cost
 FROM parkingSessions p
 JOIN vehicle v

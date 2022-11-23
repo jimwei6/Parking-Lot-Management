@@ -265,8 +265,8 @@ function getLocations() {
     WHERE l.postalCode = pl.postalCode`);
 }
 
-function getParkingHistory(username: string) {
-  return executeQuery(`SELECT
+function getParkingHistory(username: string, licensePlate: string | null | undefined): any {
+  let query = `SELECT
         p.sessionID,
         p.startTime,
         p.isActive,
@@ -303,7 +303,13 @@ function getParkingHistory(username: string) {
         ON p.spotID = a.spotID AND p.lotID = a.lotID
     LEFT JOIN electricSpots e
         ON p.spotID = e.spotID AND p.lotID = e.lotID
-    WHERE vo.username = $1`, [username]);
+    WHERE vo.username = $1 `;
+
+  if (licensePlate !== null && licensePlate !== undefined) {
+    return executeQuery(query + ` AND p.licensePlate = $2`, [username, licensePlate]);
+  } else {
+    return executeQuery(query, [username]);
+  }
 }
 
 async function getParkingLotStats(lotId: number) {
@@ -432,12 +438,15 @@ async function checkSessionAndIssueTickets() {
   });
 }
 
-function getTicketHistory(username: string) {
-  return executeQuery(`SELECT p.licensePlate,
-       t.ticketNumber,
-       p.startTime + (p.allottedTime / 3600 * interval '1 hour') AS dateReceived,
-       t.paid,
-       t.cost
+function getTicketHistory(username: string, licensePlate: string | null | undefined): any {
+  let query = `SELECT p.licensePlate,
+           t.ticketNumber,
+           p.startTime + (p.allottedTime / 3600 * interval '1 hour') AS dateReceived,
+           t.paid,
+           CASE
+               WHEN t.details IS NOT NULL THEN t.details
+           END AS details,
+           t.cost
     FROM parkingSessions p
     JOIN vehicle v
         ON p.licensePlate = v.licensePlate
@@ -445,11 +454,17 @@ function getTicketHistory(username: string) {
         ON v.ownerID = vo.ownerID
     JOIN tickets t
         ON p.sessionID = t.sessionID
-    WHERE vo.username = $1`, [username]);
+    WHERE vo.username = $1 `;
+
+  if (licensePlate !== null && licensePlate !== undefined) {
+    return executeQuery(query + ` AND p.licensePlate = $2`, [username, licensePlate]);
+  } else {
+    return executeQuery(query, [username]);
+  }
 }
 
-function getSummary(username: string) {
-  return executeQuery(`SELECT
+function getSummary(username: string, licensePlate: string | null | undefined): any {
+  let query = `SELECT
         p.lotID AS parkingLotID,
         CONCAT(l.postalCode, ' ', l.city, ', ', l.province) AS parkingLotAddress,
         p.licensePlate AS vehicleLicensePlate,
@@ -465,8 +480,13 @@ function getSummary(username: string) {
         ON p.licensePlate = v.licensePlate
     JOIN vehicleOwner vo
         ON v.ownerID = vo.ownerID
-    WHERE vo.username = $1
-    GROUP BY p.licensePlate, p.lotID, l.postalCode`, [username]);
+    WHERE vo.username = $1 `;
+
+  if (licensePlate !== null && licensePlate !== undefined) {
+    return executeQuery(query + ` AND p.licensePlate = $2 GROUP BY p.licensePlate, p.lotID, l.postalCode`, [username, licensePlate]);
+  } else {
+    return executeQuery(query + ` GROUP BY p.licensePlate, p.lotID, l.postalCode`, [username]);
+  }
 }
 
 function createParkingSession(lotId: number, spotId: number, licensePlate: string, username: string) {
