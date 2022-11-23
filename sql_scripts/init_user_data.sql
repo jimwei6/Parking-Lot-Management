@@ -68,6 +68,8 @@ INSERT INTO personalDetails(ownerID, phoneNumber, pronouns, gender, dob) VALUES
 -- height: mm, color: hex
 INSERT INTO vehicle(licensePlate, modelName, ownerID, height, color) VALUES -- -- vip, company, reserved, infant, accessibility
     ('CF346E', 'Model 3', 1, 1443, 'FF0000'), -- permits: vip, company, reserved
+    ('CF346B', 'Model 3', 2, 1443, 'FF0000'), -- permits: vip, company, reserved
+    ('CF346C', 'Model 3', 3, 1443, 'FF0000'), -- permits: vip, company, reserved
     ('CA762X', 'Model X', 2, 1684, 'FFFFFF'),
     ('DE310T', 'Model Y', 3, 1624, '000000'),
     ('XNK656', 'Model S', 4, 1445, '0000FF'), -- permits: company

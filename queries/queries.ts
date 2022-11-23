@@ -237,7 +237,7 @@ async function deleteVehicle(username: string, vehicle: vehicle) {
 }
 
 async function getOverview() {
-  const [anyLot, allLots, alllotsuser] = await Promise.all([executeQuery(`SELECT COUNT(DISTINCT v.ownerID) AS AnyLot
+  const [anyLot, allLots, alllotsuser, vehicleOwnersGTA] = await Promise.all([executeQuery(`SELECT COUNT(DISTINCT v.ownerID) AS AnyLot
     FROM parkingSessions ps
     JOIN vehicle v ON ps.licensePlate = v.licensePlate
     WHERE ps.startTime > CURRENT_TIMESTAMP - INTERVAL '60 day'`),
@@ -267,11 +267,24 @@ async function getOverview() {
               FROM parkingSessions ps1
               JOIN vehicle v1 ON ps1.licensePlate = v1.licensePlate
               WHERE v1.ownerID = v0.ownerID))
-    GROUP BY vo.name, a.email`)]);
+    GROUP BY vo.name, a.email`),
+    executeQuery(`SELECT COUNT(DISTINCT v.licenseplate), vo.name
+    FROM vehicleowner as vo 
+    INNER JOIN vehicle as v ON vo.ownerid = v.ownerid
+    GROUP BY vo.ownerid
+    HAVING COUNT(DISTINCT v.licenseplate) > 
+    (SELECT AVG(c) 
+    FROM (SELECT COUNT(v2.licenseplate) as c
+      FROM vehicleowner as vo2 
+      INNER JOIN vehicle as v2 ON vo2.ownerid = v2.ownerid
+      GROUP BY vo2.ownerid) AS ic
+    )`)]);
+
   return {
     ...anyLot[0],
     ...allLots[0],
-    alllotsuser: alllotsuser
+    alllotsuser: alllotsuser,
+    overavg: vehicleOwnersGTA
   }
 }
 
