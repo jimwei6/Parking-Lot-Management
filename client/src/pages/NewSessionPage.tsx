@@ -35,7 +35,7 @@ export const NewSessionPage = () => {
     interface FormFields {
         duration: number;
         location: string; // city, province
-        spotType: '*' | 'reserved' | 'company' | 'vip';
+        spotType: '*' | 'normal' | 'reserved' | 'company' | 'vip';
         accessibilityType: '*' | 'accessibility' | 'infant';
         needsCharging?: boolean;
     }
@@ -247,7 +247,8 @@ export const NewSessionPage = () => {
                                                 value={values.spotType}
                                                 onChange={handleChange}
                                             >
-                                                <option value="*">normal</option>
+                                                <option value="*"> All </option>
+                                                <option value="normal"> Normal </option>
                                                 {spotTypes.map(type => <option key={type} value={type}>{type}</option>)}
                                             </Form.Select>
                                             <Form.Control.Feedback type="invalid">
@@ -261,7 +262,7 @@ export const NewSessionPage = () => {
                                                 value={values.accessibilityType}
                                                 onChange={handleChange}
                                             >
-                                                <option value="*">none</option>
+                                                <option value="*">Any</option>
                                                 {accessibilityTypes.map(type => {
                                                     return <option key={type} value={type}>{type}</option>
                                                 })}

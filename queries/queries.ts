@@ -401,9 +401,11 @@ async function getParkingSpots(filters: spotFilter) {
 
     let andClauses = '';
     let args = [vehicle[0].height];
-    if(filters.needsCharging && vehicle[0].plugType) {
+    if(filters.needsCharging && vehicle[0].plugtype) {
       andClauses += ` AND es.plugType = $${args.length + 1}`;
-      args.push(vehicle[0].plugType);
+      args.push(vehicle[0].plugtype);
+    } else {
+      andClauses += ` AND es.plugType IS NULL `;
     }
 
     if(filters.lotId) {
@@ -416,14 +418,29 @@ async function getParkingSpots(filters: spotFilter) {
       args.push(filters.duration);
     }
 
+    let permits_str = ``;
+      vehicle[0].permits.forEach((p:string, index:number) => {
+        permits_str += `${index !== 0 ? ',' : ''} $${args.length + 1 + index}`;
+      });
+    let usePermitString = false;
+
     if(filters.accessType) {
       andClauses += ` AND accs.accessibilitytype = $${args.length + 1}`;
       args.push(filters.accessType);
-    } 
+    } else {
+      andClauses += ` AND (accs.accessibilitytype IS NULL OR accs.accessibilitytype IN ( ` + permits_str + `) )`;
+      args.push(...vehicle[0].permits);
+      usePermitString = true;
+    }
     
     if(filters.spotType) {
       andClauses += ` AND ps.spottype = $${args.length + 1}`;
       args.push(filters.spotType);
+    } else {
+      andClauses += ` AND ps.spottype IN ('normal', ` + permits_str + `)`;
+      if(!usePermitString) {
+        args.push(...vehicle[0].permits);
+      }
     }
 
     const results = await executeQuery(`SELECT ps.spotid,
@@ -453,7 +470,7 @@ async function checkSessionAndIssueTickets() {
     const expiredSessions = await executeQuery(`UPDATE parkingsessions
       SET isactive = false
       WHERE isactive = true
-          AND starttime + make_interval(secs => allottedtime) < CURRENT_TIMESTAMP
+          AND (starttime + allottedtime * interval '1 second') < CURRENT_TIMESTAMP
       RETURNING *`, [], client);
     if(expiredSessions && expiredSessions.length) { // Add parking activities kicked out, add tickets
       let ticketInserts = expiredSessions.map((p, index) => {
