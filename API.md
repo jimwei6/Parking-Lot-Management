@@ -104,7 +104,7 @@
 **EXPECT**: username and password in cookies else 401 <br/>
 **FULFILLS**: DIVISION  <br/>
 **RESPONSE**:
-  - 200: { anylot, alllots }
+  - 200: { anylot, alllots, alllotsuser, overavg, avg }
 
 <hr/>
 
