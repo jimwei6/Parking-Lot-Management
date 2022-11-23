@@ -118,6 +118,13 @@
 
 **ROUTE**: /api/parkingHistory <br/>
 **METHOD**: GET <br/>
+**QUERY**: licenseplate (string) (optional), 
+  attr (string of array JSON string array)
+    // p.allottedTime,
+    // p.isCharging,
+    // p.sessionID
+    // p.spotID,
+    // ps.spotType
 **EXPECT**: username and password in cookies else 401 <br/>
 **FULFILLS**: JOIN, PROJECTION <br/>
 **RESPONSE**:
@@ -150,6 +157,11 @@
 
 **ROUTE**: /api/ticketHistory <br/>
 **METHOD**: GET <br/>
+**QUERY**: licenseplate (string) (optional), 
+  attr (string of array JSON string array)
+  // t.ticketNumber,
+  // p.sessionid,
+  // t.details
 **EXPECT**: username and password in cookies else 401 <br/>
 **FULFILLS**: JOIN, PROJECTION <br/>
 **RESPONSE**:

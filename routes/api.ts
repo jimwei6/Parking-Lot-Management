@@ -112,8 +112,8 @@ router.get('/location', util.asyncHandler(async (req: Request, res: Response, ne
 }));
 
 router.get('/parkingHistory', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
-  const param: {licensePlate: string} = req.query as {licensePlate: string};
-  const parkingHistory = await queries.getParkingHistory(res.locals.account.username, param ? param.licensePlate : null);
+  const param: {licensePlate: string, attr:string} = req.query as {licensePlate: string, attr:string};
+  const parkingHistory = await queries.getParkingHistory(res.locals.account.username, param ? param.licensePlate : null, JSON.parse(param.attr));
   res.json({
     result: parkingHistory
   })
@@ -136,8 +136,8 @@ router.get('/parkingSpots', util.asyncHandler(async (req: Request, res: Response
 }));
 
 router.get('/ticketHistory', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
-  const param: {licensePlate: string} = req.query as {licensePlate: string};
-  const ticketHistory = await queries.getTicketHistory(res.locals.account.username, param ? param.licensePlate : null);
+  const param: {licensePlate: string, attr: string} = req.query as {licensePlate: string, attr: string};
+  const ticketHistory = await queries.getTicketHistory(res.locals.account.username, param ? param.licensePlate : null, JSON.parse(param.attr));
   res.json({
     result: ticketHistory
   })

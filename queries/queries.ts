@@ -300,19 +300,20 @@ function getLocations() {
     WHERE l.postalCode = pl.postalCode`);
 }
 
-function getParkingHistory(username: string, licensePlate: string | null | undefined): any {
+function getParkingHistory(username: string, licensePlate: string | null | undefined, attr: string[]): any {
+  let projectionAttr = '';
+  if(attr && attr.length) {
+    projectionAttr = attr.join(', ');
+    projectionAttr += ', ';
+  }
+
   let query = `SELECT
-        p.sessionID,
+        p.lotID AS parkingLotId,
         p.startTime,
         p.isActive,
-        p.allottedTime,
-        p.isCharging,
-        p.lotID AS parkingLotId,
         CONCAT(l.postalCode, ' ', l.city, ', ', l.province) AS parkingLotAddress,
-        p.licensePlate AS vehicleLicensePlate,
-        p.spotID,
-        ps.spotType,
-        CASE
+        p.licensePlate AS vehicleLicensePlate, ` + projectionAttr + 
+        `CASE
             WHEN a.accessibilityType IS NOT NULL THEN a.accessibilityType
         END AS accessibilityType,
         CASE
@@ -473,15 +474,20 @@ async function checkSessionAndIssueTickets() {
   });
 }
 
-function getTicketHistory(username: string, licensePlate: string | null | undefined): any {
+function getTicketHistory(username: string, licensePlate: string | null | undefined, attr: string[]): any {
+  let projectionAttr = '';
+  if(attr && attr.length) {
+    projectionAttr = attr.join(', ');
+    projectionAttr += ', ';
+  }
+  // t.ticketNumber,
+  // p.sessionid,
+  // t.details
+  
   let query = `SELECT p.licensePlate,
-           t.ticketNumber,
            p.startTime + (p.allottedTime / 3600 * interval '1 hour') AS dateReceived,
-           t.paid,
-           CASE
-               WHEN t.details IS NOT NULL THEN t.details
-           END AS details,
-           t.cost
+           t.paid, ` + projectionAttr +
+           `t.cost
     FROM parkingSessions p
     JOIN vehicle v
         ON p.licensePlate = v.licensePlate
