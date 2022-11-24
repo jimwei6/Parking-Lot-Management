@@ -468,7 +468,8 @@ async function getParkingSpots(filters: spotFilter) {
       LEFT JOIN electricspots as es ON es.spotid = ps.spotid AND es.lotid = ps.lotid
       LEFT JOIN accessibilityspots as accs ON accs.spotid = ps.spotid AND accs.lotid = ps.lotid
       WHERE (pl.heightlimit IS NULL OR pl.heightlimit >= $1)
-          AND (ps.height IS NULL OR ps.height >= $1)` + andClauses, args, client);
+          AND (ps.height IS NULL OR ps.height >= $1)
+          AND NOT EXISTS(SELECT * FROM parkingsessions AS pss WHERE pss.isactive = true AND ps.lotid = pl.lotid AND pss.spotid = ps.spotid)` + andClauses, args, client);
     
     return results;
   });
