@@ -20,10 +20,10 @@ export interface vehicle {
 }
 
 export interface spotFilter {
-  lotId: number;
+  location: string;
   spotType: string;  // company or vip
   licensePlate: string; //gets is electric, plug type if need charging. Also gets permits they have
-  needsCharging: boolean; 
+  needsCharging: string; 
   duration: number; // duration in minutes 
   accessType: string;
 }
