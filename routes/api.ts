@@ -144,8 +144,8 @@ router.get('/ticketHistory', util.asyncHandler(async (req: Request, res: Respons
 }));
 
 router.get('/summary', util.asyncHandler(async (req: Request, res: Response, next: Function) => {
-  const param: {licensePlate: string} = req.query as {licensePlate: string};
-  const summary = await queries.getSummary(res.locals.account.username, param ? param.licensePlate : null);
+  const param: {licensePlate: string, attr: string} = req.query as {licensePlate: string, attr:string};
+  const summary = await queries.getSummary(res.locals.account.username, param ? param.licensePlate : null, JSON.parse(param.attr));
   res.json({
     result: summary
   })

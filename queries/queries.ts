@@ -531,11 +531,17 @@ function getTicketHistory(username: string, licensePlate: string | null | undefi
   }
 }
 
-function getSummary(username: string, licensePlate: string | null | undefined): any {
+function getSummary(username: string, licensePlate: string | null | undefined, attr: string[]): any {
+  let projectionAttr = '';
+  if(attr && attr.length) {
+    projectionAttr = attr.join(', ');
+    projectionAttr += ', ';
+  }
+
   let query = `SELECT
-        p.lotID AS parkingLotID,
-        CONCAT(l.postalCode, ' ', l.city, ', ', l.province) AS parkingLotAddress,
-        p.licensePlate AS vehicleLicensePlate,
+        p.lotID AS parkingLotID, ` +
+        projectionAttr +
+        ` p.licensePlate AS vehicleLicensePlate,
         COUNT(DISTINCT p.sessionID) AS count
     FROM parkingSessions p
     JOIN parkingSpots ps
