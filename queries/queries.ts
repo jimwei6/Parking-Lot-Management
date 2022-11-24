@@ -375,7 +375,7 @@ async function getParkingLotStats(lotId: number) {
       WHERE pa.timestamp > CURRENT_TIMESTAMP - INTERVAL '60 day' 
           AND pa.activitytype = 'in' 
           AND pa.lotid = $1
-      GROUP BY DATE(pa.timestamp)) as cbd`, [lotId]);
+      GROUP BY pa.timestamp::DATE) as cbd`, [lotId]);
 
   const userParked10 = executeQuery(`SELECT vo.name, a.email, COUNT(*) as parked
       FROM parkingactivities as pa
