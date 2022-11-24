@@ -179,7 +179,7 @@ async function addVehicle(username: string, vehicle: vehicle) {
 
     const id = userOwnerID[0].ownerid;
     const newVehicle = await executeQuery(`INSERT INTO vehicle (licensePlate, modelName, ownerID, height, color) 
-      VALUES ($1, $2, $3, $4, $5) RETURNING *`, [vehicle.licensePlate, vehicle.model, id, vehicle.height, vehicle.color])
+      VALUES ($1, $2, $3, $4, $5) RETURNING *`, [vehicle.licensePlate, vehicle.model, id, vehicle.height, vehicle.color], client)
     
     const promises = [];
     if (vehicle.isElectric) {
