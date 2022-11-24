@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { Col, Container, Form, Row, Tab, Table, Tabs, Button } from "react-bootstrap";
+import { Button, Col, Container, Form, Row, Tab, Table, Tabs } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { Vehicle } from "./VehicleListPage";
 import { SERVER_URL } from "../constants/constants";
@@ -34,7 +34,9 @@ interface TicketHistory {
 
 interface Summary {
     parkinglotid: number;
-    parkinglotaddress: string; // postalCode city, Province eg. "V6T 1Z4 Vancouver, BC"
+    postalcode: string;
+    city: string;
+    province: string;
     vehiclelicenseplate: string;
     count: number;
 }
@@ -55,8 +57,8 @@ export const ParkingHistoryPage = () => {
         label: "Details",
         value: "t.details"
     }, {
-      label:"Cost",
-      value:"t.cost"
+        label: "Cost",
+        value: "t.cost"
     }]
     const [ticketCols, setTicketCols] = useState([
         "t.details"
@@ -79,22 +81,37 @@ export const ParkingHistoryPage = () => {
         "p.isCharging",
         "ps.spotType"
     ])
+    const summaryColsArray = [{
+        label: "Postal Code",
+        value: "l.postalCode"
+    }, {
+        label: "City",
+        value: "l.city"
+    }, {
+        label: "Province",
+        value: "l.province"
+    }]
+    const [summaryCols, setSummaryCols] = useState([
+        "l.postalCode",
+        "l.city",
+        "l.province"
+    ])
+
     const endSession = (sessionid: number) => {
-      return fetch(`${SERVER_URL}/api/session/end`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          sessionid: sessionid
-        })
-      }).then(() => {
-        setReload(!reload);
-      });
+        return fetch(`${SERVER_URL}/api/session/end`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                sessionid: sessionid
+            })
+        }).then(() => {
+            setReload(!reload);
+        });
     }
     useEffect(() => {
-        // TODO: store fetched data in state
         const fetchData = async () => {
             try {
                 const promises = []
@@ -106,6 +123,7 @@ export const ParkingHistoryPage = () => {
                     historyUrl.searchParams.append("licensePlate", licensePlate);
                     ticketUrl.searchParams.append("licensePlate", licensePlate);
                 }
+                summaryUrl.searchParams.append("attr", JSON.stringify(summaryCols));
                 promises.push(fetch(summaryUrl, {
                     method: "GET",
                     credentials: "include"
@@ -136,9 +154,8 @@ export const ParkingHistoryPage = () => {
                 }
                 const responses = await Promise.all(promises);
                 const json = await Promise.all(responses.map(response => response.json()));
-                console.log(json)
                 if (!responses[0].ok) {
-                  alert("Summary not found");
+                    alert("Summary not found");
                 } else {
                     const summary = json[0];
                     setSummary(summary.result);
@@ -188,9 +205,8 @@ export const ParkingHistoryPage = () => {
                 alert("Failed to fetch vehicles");
             }
         }
-        // TODO: uncomment this line
         fetchData();
-    }, [licensePlate, parkingCols, ticketCols, reload]);
+    }, [licensePlate, parkingCols, ticketCols, summaryCols, reload]);
 
     return (
         <Container fluid className="mx-auto">
@@ -259,7 +275,8 @@ export const ParkingHistoryPage = () => {
                                                     <th>Start Time</th>
                                                     <th>Active</th>
                                                     <th>Received Ticket</th>
-                                                    {parkingCols.includes('p.allottedTime') && <th>Allotted Time (mins)</th>}
+                                                    {parkingCols.includes('p.allottedTime') &&
+														<th>Allotted Time (mins)</th>}
                                                     {parkingCols.includes('p.isCharging') && <th>Charging used?</th>}
                                                     <th>Parking Lot</th>
                                                     <th>Parking Lot Address</th>
@@ -285,14 +302,19 @@ export const ParkingHistoryPage = () => {
                                                         <td>{elem.starttime.split('T')[1]}</td>
                                                         <td>{elem.isactive ? 'Yes' : 'No'}</td>
                                                         <td>{elem.ticketnumber !== null ? 'Yes' : 'No'} </td>
-                                                        {parkingCols.includes('p.allottedTime') && <td>{elem.allottedtime}</td>}
-                                                        {parkingCols.includes('p.isCharging') && <td>{elem.iselectricspot ? elem.ischarging ? 'Yes' : 'No' : '-'}</td>}
+                                                        {parkingCols.includes('p.allottedTime') &&
+															<td>{elem.allottedtime}</td>}
+                                                        {parkingCols.includes('p.isCharging') &&
+															<td>{elem.iselectricspot ? elem.ischarging ? 'Yes' : 'No' : '-'}</td>}
                                                         <td>{elem.parkinglotid}</td>
                                                         <td>{elem.parkinglotaddress}</td>
                                                         {parkingCols.includes('p.spotID') && <td>{elem.spotid}</td>}
-                                                        {parkingCols.includes('ps.spotType') && <td>{elem.spottype}</td>}
+                                                        {parkingCols.includes('ps.spotType') &&
+															<td>{elem.spottype}</td>}
                                                         <td>{elem.isaccessibilityspot ? elem.accessibilitytype : '-'}</td>
-                                                        <td>{elem.isactive ? <Button onClick={async () => {await endSession(elem.sessionid)}}>End Session</Button> : elem.sessionend }</td>
+                                                        <td>{elem.isactive ? <Button onClick={async () => {
+                                                            await endSession(elem.sessionid)
+                                                        }}>End Session</Button> : elem.sessionend}</td>
                                                     </tr>
                                                 ))}
                                                 </tbody>
@@ -351,12 +373,14 @@ export const ParkingHistoryPage = () => {
                                                             </td>
                                                         )}
                                                         <td>{ticket.ticketnumber}</td>
-                                                        {ticketCols.includes('p.sessionId') && (<td>{ticket.sessionid}</td>)}
+                                                        {ticketCols.includes('p.sessionId') && (
+                                                            <td>{ticket.sessionid}</td>)}
                                                         <td>{ticket.datereceived.split('T')[0]}</td>
                                                         <td>{ticket.datereceived.split('T')[1]}</td>
                                                         <td>{ticket.paid ? 'Yes' : 'No'}</td>
                                                         {ticketCols.includes('t.cost') && (<td>{ticket.cost}</td>)}
-                                                        {ticketCols.includes('t.details') && (<td>{ticket.details}</td>)}
+                                                        {ticketCols.includes('t.details') && (
+                                                            <td>{ticket.details}</td>)}
                                                     </tr>
                                                 ))}
                                                 </tbody>
@@ -368,12 +392,34 @@ export const ParkingHistoryPage = () => {
                                 </Tab>
                                 <Tab eventKey="Summary" title="Summary">
                                     <Row xs={1}>
+                                        <Form.Group as={Col}>
+                                            {summaryColsArray.map(({ label, value }) => (
+                                                <Form.Check
+                                                    key={value}
+                                                    inline
+                                                    label={label}
+                                                    type="checkbox"
+                                                    name="summaryColumns"
+                                                    value={value}
+                                                    defaultChecked={summaryCols.includes(value)}
+                                                    onChange={() => {
+                                                        if (summaryCols.includes(value)) {
+                                                            setSummaryCols(summaryCols.filter(col => col !== value));
+                                                        } else {
+                                                            setSummaryCols([...summaryCols, value]);
+                                                        }
+                                                    }}
+                                                />
+                                            ))}
+                                        </Form.Group>
                                         <Table bordered responsive>
                                             <thead>
                                             <tr>
                                                 {!licensePlate && (<th>Vehicle</th>)}
                                                 <th>Parking Lot ID</th>
-                                                <th>Parking Lot Address</th>
+                                                {summaryCols.includes('l.postalCode') && (<th>Postal Code</th>)}
+                                                {summaryCols.includes('l.city') && (<th>City</th>)}
+                                                {summaryCols.includes('l.province') && (<th>Province</th>)}
                                                 <th>Number of times parked</th>
                                             </tr>
                                             </thead>
@@ -388,7 +434,10 @@ export const ParkingHistoryPage = () => {
                                                         </td>
                                                     )}
                                                     <td>{elem.parkinglotid}</td>
-                                                    <td>{elem.parkinglotaddress}</td>
+                                                    {summaryCols.includes('l.postalCode') && (
+                                                        <td>{elem.postalcode}</td>)}
+                                                    {summaryCols.includes('l.city') && (<td>{elem.city}</td>)}
+                                                    {summaryCols.includes('l.province') && (<td>{elem.province}</td>)}
                                                     <td>{elem.count}</td>
                                                 </tr>
                                             ))}
