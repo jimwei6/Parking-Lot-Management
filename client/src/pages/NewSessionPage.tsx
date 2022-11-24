@@ -94,7 +94,6 @@ export const NewSessionPage = () => {
     const createSession = async () => {
         setIsCreating(true);
         try {
-            // TODO: NOT WORKING, server error
             const response = await fetch(SERVER_URL + "/api/session", {
                 method: "POST",
                 credentials: "include",
@@ -141,11 +140,6 @@ export const NewSessionPage = () => {
                 params['spotType'] = spotType;
             }
             Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-            // TODO: filter by plugType in SQL query (vehicle?.plugType)
-            //       THIS IS IMPORTANT BECAUSE OTHERWISE INVALID SPOTS WILL BE RETURNED, I THINK
-            //       filter by height in SQL query (vehicle?.height || 0)
-            //       Change no spotType to normal
-            //       Change no accessType to normal parking spots
             const response = await fetch(url, {
                 method: "GET",
                 credentials: "include",
@@ -247,8 +241,8 @@ export const NewSessionPage = () => {
                                                 value={values.spotType}
                                                 onChange={handleChange}
                                             >
-                                                <option value="*"> All </option>
-                                                <option value="normal"> Normal </option>
+                                                <option value="*"> All</option>
+                                                <option value="normal"> Normal</option>
                                                 {spotTypes.map(type => <option key={type} value={type}>{type}</option>)}
                                             </Form.Select>
                                             <Form.Control.Feedback type="invalid">
