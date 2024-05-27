@@ -17,6 +17,3 @@ Parking lot manager (PLM) is a web application that oversees parking spaces, all
 - Jim 'Ming Chun' Wei (jimwei/jimwei6)
 - Asad Dhorajiwala (AnimeAllstar/ad2001)
 - Richard Lee (Richard Lee/rlee2002)
-
-## Short demo video
-[Link](https://youtu.be/noXBwhWmNEY)
